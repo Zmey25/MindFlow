@@ -1,96 +1,69 @@
 <?php
 // telegram_handler.php
-// This file acts as a webhook endpoint for a Telegram bot.
+// Цей файл слугує точкою входу для вебхука Telegram бота.
 
-// Set up error reporting for debugging. In a production environment, you might
-// want to log errors without displaying them directly to the user.
+// Налаштовуємо виведення помилок для налагодження. У продакшн-середовищі краще лише логувати помилки.
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Define the path to the project root. Since this file is assumed to be
-// in the root, __DIR__ will be the project's main directory.
+// Визначаємо шлях до кореня проекту.
+// Оскільки цей файл передбачається в корені, __DIR__ буде головною директорією проекту.
 define('ROOT_DIR', __DIR__);
 
-// Load environment variables from the .env file.
-// The .env file is expected to be in the project root.
+// Завантажуємо змінні оточення з файлу .env.
 require_once ROOT_DIR . '/includes/env-loader.php';
 loadEnv(ROOT_DIR . '/../.env');
 
-// Load general utility functions, including `custom_log`.
+// Завантажуємо загальні службові функції, включаючи `custom_log` та `readJsonFile`.
 require_once ROOT_DIR . '/includes/functions.php';
 
-// Retrieve the Telegram Bot Token from environment variables.
-// getenv() is generally preferred over $_ENV for environment variables,
-// especially if loaded by a web server, but $_ENV also works if loadEnv sets it.
+// Завантажуємо функції взаємодії з Gemini API.
+require_once ROOT_DIR . '/includes/gemini_api.php'; // <--- НОВЕ: Підключаємо файл з функціями Gemini
+
+// Отримуємо Telegram Bot Token зі змінних оточення.
 $telegramToken = getenv('TELEGRAM_TOKEN');
 
 if (!$telegramToken) {
-    // Log an error if the token is not found.
-    custom_log('TELEGRAM_TOKEN is not set in the .env file. Cannot process Telegram webhook.', 'telegram_error');
-    // Respond with a server error status code to indicate a configuration issue.
+    custom_log('TELEGRAM_TOKEN не встановлено в файлі .env. Неможливо обробити вебхук Telegram.', 'telegram_error');
     http_response_code(500);
-    die('Configuration error: Telegram token missing.');
+    die('Помилка конфігурації: відсутній токен Telegram.');
 }
 
-// Get the raw JSON data sent by Telegram via the webhook.
+// Отримуємо сирі JSON дані, надіслані Telegram через вебхук.
 $input = file_get_contents('php://input');
 $update = json_decode($input, true);
 
-// Log the received update for debugging purposes. You can check logs/telegram_webhook.log
-custom_log('Received Telegram Webhook Update: ' . $input, 'telegram_webhook');
+custom_log('Отримано оновлення Telegram Webhook: ' . $input, 'telegram_webhook');
 
-// Check for JSON decoding errors.
 if (json_last_error() !== JSON_ERROR_NONE) {
-    custom_log('Failed to decode JSON from Telegram webhook: ' . json_last_error_msg(), 'telegram_error');
-    http_response_code(400); // Bad Request
-    die('Invalid JSON input received.');
+    custom_log('Не вдалося декодувати JSON з вебхука Telegram: ' . json_last_error_msg(), 'telegram_error');
+    http_response_code(400); // Поганий запит
+    die('Отримано недійсний JSON ввід.');
 }
 
-// Process only 'message' updates for now. Other update types (e.g., edited_message, callback_query)
-// would require additional logic.
-if (isset($update['message'])) {
-    $message = $update['message'];
-    $chatId = $message['chat']['id'];
-    $text = $message['text'] ?? ''; // The text of the message, if it's a text message.
-
-    custom_log("Processing message from Chat ID: {$chatId}. Text: '{$text}'", 'telegram_webhook');
-
-    $responseText = '';
-
-    // Simple command handling based on the message text.
-    // Commands are usually prefixed with a slash (e.g., /start, /help).
-    if (strpos($text, '/start') === 0) {
-        $responseText = "Вітаю! Я ваш персональний бот. Я тут, щоб допомогти вам з інформацією про проект.";
-    } elseif (strpos($text, '/help') === 0) {
-        $responseText = "Я розумію кілька простих команд, наприклад /start. Спробуйте їх!";
-    } elseif (strpos($text, '/test_log') === 0) {
-        // Example command to test if custom_log is working correctly.
-        custom_log("User {$chatId} issued /test_log command.", 'telegram_test');
-        $responseText = "Перевіряю лог. Якщо все працює, ви побачите запис в `logs/telegram_test.log`.";
-    } elseif (!empty($text)) {
-        // Default response for any other non-empty text message.
-        $responseText = "Ви сказали: \"" . htmlspecialchars($text) . "\"\nЯ поки що не розумію складніші запити, але вчуся!";
-    } else {
-        // Response for non-text messages (e.g., stickers, photos, voice messages).
-        $responseText = "Я отримав ваше повідомлення, але воно не містить тексту. Будь ласка, надсилайте текстові повідомлення.";
-    }
-
-    // Prepare data for sending a message back to Telegram using the sendMessage method.
+/**
+ * Функція для надсилання повідомлення назад до Telegram.
+ *
+ * @param int $chatId ID чату, куди надсилати повідомлення.
+ * @param string $text Текст повідомлення.
+ * @param string $telegramToken Токен Telegram бота.
+ * @return void
+ */
+function sendTelegramMessage(int $chatId, string $text, string $telegramToken): void {
     $apiUrl = "https://api.telegram.org/bot{$telegramToken}/sendMessage";
     $postFields = [
         'chat_id' => $chatId,
-        'text' => $responseText,
-        'parse_mode' => 'HTML' // Use 'HTML' or 'MarkdownV2' for text formatting, or remove for plain text.
+        'text' => $text,
+        'parse_mode' => 'HTML' // Використовуємо 'HTML' або 'MarkdownV2' для форматування тексту
     ];
 
-    // Use cURL to send the POST request to the Telegram Bot API.
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiUrl);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postFields));
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return the transfer as a string of the return value
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -98,21 +71,124 @@ if (isset($update['message'])) {
     curl_close($ch);
 
     if ($response === false) {
-        custom_log("cURL Error sending message to Chat ID {$chatId}: " . $curlError, 'telegram_error');
-        // Do not die() here, as Telegram might retry the webhook if no 200 OK is received.
+        custom_log("Помилка cURL при надсиланні повідомлення до Chat ID {$chatId}: " . $curlError, 'telegram_error');
     } elseif ($httpCode !== 200) {
-        custom_log("Telegram API returned HTTP {$httpCode} for Chat ID {$chatId}: " . $response, 'telegram_error');
+        custom_log("Telegram API повернув HTTP {$httpCode} для Chat ID {$chatId}: " . $response, 'telegram_error');
     } else {
-        custom_log("Successfully sent message to Chat ID {$chatId}: '{$responseText}'", 'telegram_webhook');
+        custom_log("Успішно надіслано повідомлення до Chat ID {$chatId}", 'telegram_webhook');
+    }
+}
+
+
+if (isset($update['message'])) {
+    $message = $update['message'];
+    $chatId = $message['chat']['id'];
+    $text = trim($message['text'] ?? '');
+
+    custom_log("Обробка повідомлення з Chat ID: {$chatId}. Текст: '{$text}'", 'telegram_webhook');
+
+    $responseText = '';
+
+    if (strpos($text, '/start') === 0) {
+        $responseText = "Вітаю! Я ваш персональний бот для аналізу особистості. Ви можете запитати мене про користувачів, питання, риси чи бейджи. Спробуйте '/ask [ваше питання]'";
+    } elseif (strpos($text, '/help') === 0) {
+        $responseText = "Я розумію кілька команд: \n/start - почати діалог.\n/help - отримати допомогу.\n/ask [питання] - задати питання про дані проекту (користувачі, питання, риси, бейджи, тощо).";
+    } elseif (strpos($text, '/test_log') === 0) {
+        custom_log("Користувач {$chatId} використав команду /test_log.", 'telegram_test');
+        $responseText = "Перевіряю лог. Якщо все працює, ви побачите запис в `logs/telegram_test.log`.";
+    } elseif (strpos($text, '/ask') === 0) {
+        $userQuestion = trim(substr($text, strlen('/ask')));
+        if (empty($userQuestion)) {
+            $responseText = "Будь ласка, сформулюйте своє питання після команди /ask. Наприклад: /ask Які питання є в категорії Інтелект?";
+        } else {
+            // Надсилаємо негайний відгук користувачу, оскільки LLM-виклики можуть зайняти час
+            sendTelegramMessage($chatId, "Обробляю ваш запит, зачекайте...", $telegramToken);
+
+            // --- Логіка взаємодії з LLM ---
+            $geminiRoute = determineRelevantData($userQuestion);
+
+            if (isset($geminiRoute['error'])) {
+                $responseText = "Вибачте, виникла помилка під час обробки вашого запиту: " . $geminiRoute['error'];
+            } else {
+                $fileType = $geminiRoute['file_type'];
+                $targetUsername = $geminiRoute['target_username'];
+                $followUpQuery = $geminiRoute['follow_up_query'];
+                $contextData = [];
+                $contextDataJson = '';
+
+                // Завантажуємо дані контексту на основі рішення першого LLM
+                switch ($fileType) {
+                    case 'users':
+                        $contextData = readJsonFile(ROOT_DIR . '/data/users.json');
+                        // Видаляємо чутливі дані (хеші паролів) з контексту для LLM
+                        foreach ($contextData as &$user) {
+                            unset($user['password_hash'], $user['password']);
+                        }
+                        $contextDataJson = json_encode($contextData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                        break;
+                    case 'questions':
+                        $contextData = readJsonFile(ROOT_DIR . '/data/questions.json');
+                        $contextDataJson = json_encode($contextData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                        break;
+                    case 'traits':
+                        $contextData = readJsonFile(ROOT_DIR . '/data/traits.json');
+                        $contextDataJson = json_encode($contextData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                        break;
+                    case 'badges':
+                        $contextData = readJsonFile(ROOT_DIR . '/data/badges.json');
+                        $contextDataJson = json_encode($contextData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                        break;
+                    case 'about':
+                        $contextData = file_get_contents(ROOT_DIR . '/data/about.txt');
+                        $contextDataJson = json_encode(['about_text' => $contextData], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                        break;
+                    case 'dashboard_warning':
+                        $contextData = file_get_contents(ROOT_DIR . '/data/dashboard_warning.txt');
+                        $contextDataJson = json_encode(['warning_text' => $contextData], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                        break;
+                    case 'user_answers':
+                        if ($targetUsername) {
+                            $contextData = loadUserData($targetUsername); // Ця функція використовує readJsonFile всередині
+                            $contextDataJson = json_encode($contextData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                        } else {
+                            $responseText = "Не вдалося визначити ім'я користувача для запиту про відповіді. Будь ласка, уточніть ім'я користувача.";
+                        }
+                        break;
+                    case 'none':
+                    default:
+                        // Немає потреби в конкретному файлі, запит може бути загальним або повертатися до LLM для відкритих питань
+                        $contextDataJson = json_encode(['info' => 'Для цього типу запиту не завантажено конкретний файл контексту.']);
+                        break;
+                }
+
+                // Викликаємо другий LLM з контекстом
+                if (!empty($followUpQuery)) {
+                    $finalAnswer = getGeminiAnswer($followUpQuery, $contextDataJson);
+                    if ($finalAnswer) {
+                        $responseText = $finalAnswer;
+                    } else {
+                        $responseText = "Вибачте, не вдалося отримати відповідь від ШІ. Можливо, питання занадто складне або не має достатнього контексту.";
+                    }
+                } else {
+                    $responseText = "Запит не був уточнений для отримання кінцевої відповіді.";
+                }
+            }
+        }
+    } elseif (!empty($text)) {
+        // Стандартна відповідь для не-командних текстових повідомлень
+        $responseText = "Ви сказали: \"" . htmlspecialchars($text) . "\"\nЯ поки що не розумію складніші запити, але вчуся! Спробуйте команду /ask [ваше питання].";
+    } else {
+        // Відповідь для нетекстових повідомлень (наприклад, стікерів, фото)
+        $responseText = "Я отримав ваше повідомлення, але воно не містить тексту. Будь ласка, надсилайте текстові повідомлення.";
     }
 
-    // Always respond with 200 OK to Telegram to acknowledge successful receipt and avoid re-sends.
+    sendTelegramMessage($chatId, $responseText, $telegramToken);
     http_response_code(200);
 
 } else {
-    // If it's not a 'message' update (e.g., an 'edited_message', 'channel_post', 'callback_query', etc.),
-    // just log it and return 200 OK to Telegram. This prevents Telegram from re-sending the same update.
-    custom_log('Received non-message or unsupported Telegram update type. Update content: ' . $input, 'telegram_webhook');
+    // Якщо це не оновлення типу 'message' (наприклад, 'edited_message', 'channel_post', 'callback_query' тощо),
+    // просто логуємо це і повертаємо 200 OK до Telegram.
+    custom_log('Отримано не-повідомлення або непідтримуваний тип оновлення Telegram. Вміст оновлення: ' . $input, 'telegram_webhook');
     http_response_code(200);
 }
 ?>
