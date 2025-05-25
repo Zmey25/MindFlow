@@ -15,7 +15,7 @@ define('ROOT_DIR', __DIR__);
 // Load environment variables from the .env file.
 // The .env file is expected to be in the project root.
 require_once ROOT_DIR . '/includes/env-loader.php';
-loadEnv(ROOT_DIR . '/../.env');
+loadEnv(ROOT_DIR . '/.env');
 
 // Load general utility functions, including `custom_log`.
 require_once ROOT_DIR . '/includes/functions.php';
