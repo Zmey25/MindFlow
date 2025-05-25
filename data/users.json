@@ -1,0 +1,336 @@
+[
+    {
+        "id": "user_67e98ba8df12a0.39404586",
+        "username": "Zmey",
+        "password_hash": "$2y$12$zSTNw6O6bOh4qpcXBWJHkuFkDFcE1P8wL0lO7trnKXEcsNm.kd.3O",
+        "first_name": "Олександр",
+        "last_name": "Змієвський",
+        "hide_results": false,
+        "email": "Zmeyker25@gmail.com",
+        "custom_question": "Горькая правда или сладкая ложь?",
+        "google_id": "109108253208658545083",
+        "is_google_user": true
+    },
+    {
+        "id": "user_681cedb3edcd54.26807288",
+        "username": "l_guerro",
+        "password_hash": "$2y$12$S.qkm3L36JEVN2haQY6ZXe\/84gEyC9XA65pZ1VNkmoJwY\/TjjNnVK",
+        "first_name": "Guerro",
+        "last_name": "-"
+    },
+    {
+        "id": "user_681cedb3edcd54.26807281",
+        "username": "Testing_Catalogue",
+        "password_hash": "$2y$12$S.qkm3L36JEVN2haQY6ZXe\/84gEyC9XA65pZ1VNkmoJwY\/TjjNnVK",
+        "first_name": "",
+        "last_name": "-"
+    },
+    {
+        "id": "user_68209b65289088.50437513",
+        "username": "la.hexadecimal",
+        "password": "$2y$12$zuUmQNVLAIYtBsoQ8SsyUeFp2rjtmjF5K6byqlbc3W5It7MzlR.j.",
+        "email": "la.hexadecimal@gmail.com",
+        "first_name": "Аліса",
+        "last_name": "-",
+        "google_id": "115810767803524561252",
+        "registration_date": "2025-05-11 14:43:17",
+        "is_google_user": true,
+        "custom_question": "",
+        "hide_results": true
+    },
+    {
+        "id": "user_682220a0b75057.84334910",
+        "username": "bjulie",
+        "password_hash": "$2y$12$OdW2cILPA49ROWn9qr864.dbPEAWKcrDuX.d5bL00ZgWAcCrMhMSa",
+        "first_name": "Юля",
+        "last_name": "Бондар"
+    },
+    {
+        "id": "user_a1f830c2e3ab12.12345678",
+        "username": "olegnova",
+        "password_hash": "$2y$12$x0Gv4tL3v8mZWlKcAq6H.eKrEEdQ5n0O1h1GU\/NZ6Uwz0aYl7zZrG",
+        "first_name": "Олег",
+        "last_name": "Новацький"
+    },
+    {
+        "id": "user_7c2e63e8f93a54.89011234",
+        "username": "katya_rain",
+        "password_hash": "$2y$12$AjK9OeH3zPfAqnYG8mu4suUX61dJcBdJkY5N1jzXuYDwRQOBVG9h6",
+        "first_name": "Катерина"
+    },
+    {
+        "id": "user_89dcee14213b28.11223344",
+        "username": "denys001",
+        "password_hash": "$2y$12$WlZ8YUE1wMuLJdZsNdU8V.Dtn8PMs6eSXB4V0YXvM9YzFZc\/4GeMK",
+        "first_name": "Denys",
+        "last_name": "Prokopchuk"
+    },
+    {
+        "id": "user_6b9981d2f01945.55667788",
+        "username": "marichka_23",
+        "password_hash": "$2y$12$8zEGcqkE\/xMLgKHmZb8V\/Oxz6MNbiWQAbQPMUqjJlNOpjqjJlcHRW",
+        "first_name": "Марічка",
+        "last_name": "Коваль"
+    },
+    {
+        "id": "user_229e77d84a0e76.99224411",
+        "username": "t.sasha",
+        "password_hash": "$2y$12$RaZxPfQyHRqGpXjFqA1aXuHRyxsqABQ9t6T6VRnIhsR\/zy03XDToK",
+        "first_name": "Sasha",
+        "last_name": "Tkachenko"
+    },
+    {
+        "id": "user_143abfed98cbd9.76438901",
+        "username": "vitalik_dev",
+        "password_hash": "$2y$12$M45bHhkbsSmQ5GhLjZb1wOsakGXNZsZqmdfnMw5cTHM8GfKQGtsb2",
+        "first_name": "Віталій",
+        "last_name": "Жук"
+    },
+    {
+        "id": "user_3aa04c1ea92761.43211098",
+        "username": "arina.blue",
+        "password_hash": "$2y$12$5qZn6nAepZ1X0OtqG7FLJeIDnOelNIMhxvKiD14Mv09xXZ8P7BCE2",
+        "first_name": "Arina"
+    },
+    {
+        "id": "user_1e60c37e7d34a7.98124567",
+        "username": "maksym_p",
+        "password_hash": "$2y$12$fGr02AlDKZ.H7oVCAGAj8eh9S7MT1n1ieYhyYJ56ffOgxfjbTVYh2",
+        "first_name": "Максим",
+        "last_name": "Петренко"
+    },
+    {
+        "id": "user_f71d89b0846fa3.20486017",
+        "username": "nadiya_star",
+        "password_hash": "$2y$12$TSeNk1kZsjILNuNO8Py0NOz5V5KTO4kaDxWYG7fpbEqYo3.LcEMc6",
+        "first_name": "Надія",
+        "last_name": "Зоряна"
+    },
+    {
+        "id": "user_325cd930eaa6b2.10894321",
+        "username": "vova.lviv",
+        "password_hash": "$2y$12$88RXowjzUMpDpk5j5T1a5uJg4UJb4cO1YUi.XY9OfvRZ6Uu5Oq8wa",
+        "first_name": "Вова"
+    },
+    {
+        "id": "user_d04bfc8c67eac3.76530984",
+        "username": "mari.sun",
+        "password_hash": "$2y$12$jR0LhdhZAAE1nF3uH8fQROzOTY13XG1FV\/jD2xDjY6.AZe0PE80jW",
+        "first_name": "Марі",
+        "last_name": "Сонцева"
+    },
+    {
+        "id": "user_80f27617b954e8.60214897",
+        "username": "dmytro_steel",
+        "password_hash": "$2y$12$kW1QJGvtFzZt4Rz0YuUPuejLtU7eflNgvo7LsMGjX4q92m9p3ZVKe",
+        "first_name": "Dmytro",
+        "last_name": "Stalny"
+    },
+    {
+        "id": "user_7b6e40ad97a341.13094876",
+        "username": "irynka_88",
+        "password_hash": "$2y$12$BwsbMjq2sAiqMi\/XKnuy0.fJbLbzDG95y0Hghe0f2mnDU5Tn0xLeK",
+        "first_name": "Іринка"
+    },
+    {
+        "id": "user_5d11e9b2ca043a.76230481",
+        "username": "sergii_x",
+        "password_hash": "$2y$12$2iK9Vp0evG\/.T.yhFT8CSuAQAk6E4xKxnG72PgK3Rz7RhnAkxpsQi",
+        "first_name": "Сергій",
+        "last_name": "Хоменко"
+    },
+    {
+        "id": "user_93a6b92fa6d1e7.76420984",
+        "username": "nastya.m",
+        "password_hash": "$2y$12$eJtnFBoKzP2hxKyh6PaVnOpav7bEoO0RMLmfLPi9R9Tq5kRjsQnBq",
+        "first_name": "Настя"
+    },
+    {
+        "id": "user_2a508ede0b7724.34981234",
+        "username": "yarik_dev",
+        "password_hash": "$2y$12$fnSwni9xhGNBdMfD1We4AuWtsqXcMkTI\/TVa0gF\/t7LaSLGByyFhC",
+        "first_name": "Yaroslav",
+        "last_name": "Taranenko"
+    },
+    {
+        "id": "user_f6d733a7e04a92.67895432",
+        "username": "vika.cloud",
+        "password_hash": "$2y$12$REbKZVzxuT0Lbn3A8M1RXeIQVgMfMoL49o0PbNhT9QlN9sZszE9mG",
+        "first_name": "Віка",
+        "last_name": "Облак"
+    },
+    {
+        "id": "user_c11a73d0b214ed.32098475",
+        "username": "andriyX",
+        "password_hash": "$2y$12$ro8VKrZaQ8GiCqCKePX2kON9jOwOMObq5KmsHKIWhF9rSCdWZ4vpi",
+        "first_name": "Андрій"
+    },
+    {
+        "id": "user_efb74c6eab19a6.90348126",
+        "username": "lena_free",
+        "password_hash": "$2y$12$6GMVvXpGGrj1zhAy69WvleRAIUGaLzpL8B7IFquGg6H0NmFuM7AfS",
+        "first_name": "Lena",
+        "last_name": "Bond"
+    },
+    {
+        "id": "user_3a70c8b18b946c.12987461",
+        "username": "ilya.ghost",
+        "password_hash": "$2y$12$ZLOZAsB0zv3q8MeIRb1SmeAnWW7aMTm9NTZc3fQvTCtHvXn9wBgxK",
+        "first_name": "Ілля"
+    },
+    {
+        "id": "user_68222114d20602.75157329",
+        "username": "nmarchuk",
+        "password_hash": "$2y$12$.qplb1GupMyDVVOE7Ipvge8qORStXyFvqLMtpOlLqZBnKL.lGLb4.",
+        "first_name": "Настя",
+        "last_name": "Марчук",
+        "email": "",
+        "custom_question": "Розовый или голубой?",
+        "hide_results": false
+    },
+    {
+        "id": "user_6827309c08bee1.36991249",
+        "username": "kfc-poznyakoff",
+        "password": "$2y$12$eFQB8Xu5ZVev351e0EqmsOzAXhsjd3D\/yJPFiHuI863A6XKoiOF6K",
+        "email": "kfc-poznyakoff@grgua.com",
+        "first_name": "KFC",
+        "last_name": "Poznyakoff",
+        "google_id": "118186500591300912599",
+        "registration_date": "2025-05-16 14:33:32",
+        "is_google_user": true
+    },
+    {
+        "id": "user_682760677e4af1.75286694",
+        "username": "trololo66699",
+        "password": "$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm",
+        "email": "trololo66699@gmail.com",
+        "first_name": "Владлена",
+        "last_name": "Бородавко",
+        "google_id": "114966613262144585049",
+        "registration_date": "2025-05-16 17:57:27",
+        "is_google_user": true
+    },
+    {
+        "id": "user_6828cfb9c42fa6.14604945",
+        "username": "ybondar",
+        "password": "$2y$12$jQzPqfbkPt7Oko7joeq.Sec7lt4UiNtIYT5wjOakh2ooP0YhNGgvq",
+        "email": "ybondar@grgua.com",
+        "first_name": "Yuliia",
+        "last_name": "Bondar",
+        "google_id": "107864067015458466422",
+        "registration_date": "2025-05-17 20:04:42",
+        "is_google_user": true
+    },
+    {
+        "id": "user_6828e8b95d8b49.23663522",
+        "username": "Check_out",
+        "password_hash": "$2y$12$yyn11KI5F7TFS2w.wU7iCOnBXegPA4\/NatMSXCr\/z3WyiPYMyOk92",
+        "email": "dan03nau@gmail.com",
+        "first_name": "Chek",
+        "last_name": "Out",
+        "registration_date": "2025-05-17 21:51:21",
+        "is_google_user": false,
+        "hide_results": true,
+        "custom_question": ""
+    },
+    {
+        "id": "user_682a07e41a8ee0.40597578",
+        "username": "aya1a9a.v",
+        "password": "$2y$12$QIqY2wNtI6g7t4\/9fiRkdeGd1hzYlynTv.m2hz6XF3i6AVSdjjVHy",
+        "email": "aya1a9a.v@gmail.com",
+        "first_name": "Анастасія",
+        "last_name": "П'ятовол",
+        "google_id": "113352607516433193286",
+        "registration_date": "2025-05-18 18:16:36",
+        "is_google_user": true
+    },
+    {
+        "id": "user_682a080a92d531.65938180",
+        "username": "genius04.99",
+        "password": "$2y$12$P.QjCqgVJCEGUaqgkAbXN.dzy7ZVaojq.eReBhOZzcojvO.LIWPxm",
+        "email": "genius04.99@gmail.com",
+        "first_name": "Vlad",
+        "last_name": "Slyusarenko",
+        "google_id": "117860022737667673870",
+        "registration_date": "2025-05-18 18:17:14",
+        "is_google_user": true
+    },
+    {
+        "id": "user_682a0813c76c16.74100638",
+        "username": "cleanboroda",
+        "password": "$2y$12$idrnDVOxCobqbZ.1KKSt4uf2o43Yh\/5eETA3F85nTfke\/XkHjskCy",
+        "email": "cleanboroda@gmail.com",
+        "first_name": "Данил",
+        "last_name": "Бородавко",
+        "google_id": "114821357703756695575",
+        "registration_date": "2025-05-18 18:17:24",
+        "is_google_user": true
+    },
+    {
+        "id": "user_682a08d1189e68.09071605",
+        "username": "kunah4sveta",
+        "password": "$2y$12$u16qDBYV.a0h5cIVO98GLuEmYIcpKMaCNb4Wok.ESxA\/7.S48pTuy",
+        "email": "kunah4sveta@gmail.com",
+        "first_name": "Світлана",
+        "last_name": "Кунах",
+        "google_id": "104411948753524420866",
+        "registration_date": "2025-05-18 18:20:33",
+        "is_google_user": true
+    },
+    {
+        "id": "user_682a09dd5b7525.41968867",
+        "username": "orazapkina",
+        "password": "$2y$12$L6hKisfjEck1miGTT.UnEOHSAIc06TWXQ16T.q8\/nV0ddTau8hbT.",
+        "email": "orazapkina@gmail.com",
+        "first_name": "Олександра",
+        "last_name": "Рязяпкіна",
+        "google_id": "112741020697222410452",
+        "registration_date": "2025-05-18 18:25:01",
+        "is_google_user": true
+    },
+    {
+        "id": "user_682a143c198594.18856217",
+        "username": "korol2yulia234",
+        "password": "$2y$12$t3dvjhmICrWgS.VyMRgiYucaq2OKU9spceNQn0DfShYLekIj6H7VG",
+        "email": "korol2yulia234@gmail.com",
+        "first_name": "Yulia",
+        "last_name": "Korol",
+        "google_id": "106439160137045324607",
+        "registration_date": "2025-05-18 19:09:16",
+        "is_google_user": true
+    },
+    {
+        "id": "user_682cd2285e5697.07198144",
+        "username": "try_to_lama_this41",
+        "password_hash": "$2y$12$eAwhjiL4PqWwB9X5YTN8h.w6I0vIYDl3XIQajVSbm0nfTryUqpJtq",
+        "email": "safa2@esga.ags",
+        "first_name": "Vitya",
+        "last_name": "Kulish",
+        "registration_date": "2025-05-20 21:04:08",
+        "is_google_user": false,
+        "hide_results": false,
+        "custom_question": ""
+    },
+    {
+        "id": "user_683077dd1dbfa9.42663444",
+        "username": "fire247lol",
+        "password": "$2y$12$pWc5gJRJSSB1BGyZXmCEQeTyrGIFXFQQuJjsghH74Z3.T6Aci4Pxe",
+        "email": "fire247lol@gmail.com",
+        "first_name": "Oleksii",
+        "last_name": "Ostrovskyi",
+        "google_id": "103086871239486408740",
+        "registration_date": "2025-05-23 15:27:57",
+        "is_google_user": true
+    },
+    {
+        "id": "user_68307cebadb2d3.90074222",
+        "username": "yor4eg",
+        "password": "$2y$12$Wg9JkmNuBDU4ICEDXHelt.JF3rSv\/R5ZrbNg\/EwEny1hUPPPI2.Aq",
+        "email": "yor4eg@gmail.com",
+        "first_name": "Юрий",
+        "last_name": "Канаровский",
+        "google_id": "103353242277594520303",
+        "registration_date": "2025-05-23 15:49:31",
+        "is_google_user": true
+    }
+]

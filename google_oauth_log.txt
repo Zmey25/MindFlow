@@ -1,0 +1,491 @@
+2025-04-29 02:30:06 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 02:34:33 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 02:34:37 - Отримано код: 4/0Ab_5qllW-z4_KTfP5aKMzj4bz5BHaCM4lOsh6o5OSa8u4LiY1F0SQoV9FRPOBPMEAP6PAw
+2025-04-29 02:34:37 - Отримано стан: 62e9dda7876add4ae0be6ef212337182
+2025-04-29 02:34:37 - Початок processGoogleLogin - {"code":"4\/0Ab_5qll...","state":"62e9dda7876add4ae0be6ef212337182"}
+2025-04-29 02:34:37 - Стан перевірено успішно і очищено - {"session_state":"62e9dda7876add4ae0be6ef212337182"}
+2025-04-29 02:34:37 - Запит токену доступу
+2025-04-29 02:34:37 - Токен доступу отримано успішно
+2025-04-29 02:34:37 - Запит інформації про користувача
+2025-04-29 02:34:37 - Інформація про користувача отримана успішно
+2025-04-29 02:34:37 - Результат: {"success":true,"action":"register","user":{"id":6,"username":"zmeyker25","password":"$2y$12$d3AaPv9eAmG57EHbkd4b0ufO97Yx4sRz1N57UdvKULyK2gZRJnu96","email":"zmeyker25@gmail.com","first_name":"Alex","last_name":"Zmiievsky","google_id":"109108253208658545083","registration_date":"2025-04-29 02:34:37","is_google_user":true}}
+2025-04-29 02:35:02 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 02:35:04 - Отримано код: 4/0Ab_5qlkUbWDPfxAz-NZzuHAYQjW526FgcSnJQBrRB4wASiCYEZDTYl0RO2M4ccYksxnOZQ
+2025-04-29 02:35:04 - Отримано стан: 71dc460e55280d5db8613722a355dbbb
+2025-04-29 02:35:04 - Початок processGoogleLogin - {"code":"4\/0Ab_5qlk...","state":"71dc460e55280d5db8613722a355dbbb"}
+2025-04-29 02:35:04 - Стан перевірено успішно і очищено - {"session_state":"71dc460e55280d5db8613722a355dbbb"}
+2025-04-29 02:35:04 - Запит токену доступу
+2025-04-29 02:35:05 - Токен доступу отримано успішно
+2025-04-29 02:35:05 - Запит інформації про користувача
+2025-04-29 02:35:05 - Інформація про користувача отримана успішно
+2025-04-29 02:35:05 - Результат: {"success":true,"action":"login","user":{"id":6,"username":"zmeyker25","password":"$2y$12$d3AaPv9eAmG57EHbkd4b0ufO97Yx4sRz1N57UdvKULyK2gZRJnu96","email":"zmeyker25@gmail.com","first_name":"Alex","last_name":"Zmiievsky","google_id":"109108253208658545083","registration_date":"2025-04-29 02:34:37","is_google_user":true}}
+2025-04-29 02:38:33 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 02:38:35 - Отримано код: 4/0Ab_5qlnQSsr-SY9xTrOiofHEO86esj0XaLPhLJKk1bPp9s_w0xXEn_imIrjGFD9pS-9WfQ
+2025-04-29 02:38:35 - Отримано стан: 1c5e5cbe0ae69f4871e96e6e2cfeb143
+2025-04-29 02:38:35 - Початок processGoogleLogin - {"code":"4\/0Ab_5qln...","state":"1c5e5cbe0ae69f4871e96e6e2cfeb143"}
+2025-04-29 02:38:35 - Стан перевірено успішно і очищено - {"session_state":"1c5e5cbe0ae69f4871e96e6e2cfeb143"}
+2025-04-29 02:38:35 - Запит токену доступу
+2025-04-29 02:38:36 - Токен доступу отримано успішно
+2025-04-29 02:38:36 - Запит інформації про користувача
+2025-04-29 02:38:36 - Інформація про користувача отримана успішно
+2025-04-29 02:38:36 - Результат: {"success":true,"action":"login","user":{"id":6,"username":"zmeyker25","password":"$2y$12$d3AaPv9eAmG57EHbkd4b0ufO97Yx4sRz1N57UdvKULyK2gZRJnu96","email":"zmeyker25@gmail.com","first_name":"Alex","last_name":"Zmiievsky","google_id":"109108253208658545083","registration_date":"2025-04-29 02:34:37","is_google_user":true}}
+2025-04-29 02:38:44 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 02:38:55 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 02:39:00 - Отримано код: 4/0Ab_5qllVBrGnFjSib-22eEcpqjpeWyHLG5t4kmED0FHOyBUfzLqiYwmqNCWslg5VvHqZXQ
+2025-04-29 02:39:00 - Отримано стан: b6d0dc784f68de17448db6de236eb282
+2025-04-29 02:39:00 - Початок processGoogleLogin - {"code":"4\/0Ab_5qll...","state":"b6d0dc784f68de17448db6de236eb282"}
+2025-04-29 02:39:00 - Стан перевірено успішно і очищено - {"session_state":"b6d0dc784f68de17448db6de236eb282"}
+2025-04-29 02:39:00 - Запит токену доступу
+2025-04-29 02:39:00 - Токен доступу отримано успішно
+2025-04-29 02:39:00 - Запит інформації про користувача
+2025-04-29 02:39:00 - Інформація про користувача отримана успішно
+2025-04-29 02:39:01 - Результат: {"success":true,"action":"register","user":{"id":7,"username":"la.hexadecimal","password":"$2y$12$jHPZKuUC.2Gg6ZyUD4n6NOpNwBx7KFseFstf2HKraoc4q\/f\/viHgi","email":"la.hexadecimal@gmail.com","first_name":"Alice","last_name":"Cooper","google_id":"115810767803524561252","registration_date":"2025-04-29 02:39:01","is_google_user":true}}
+2025-04-29 02:46:42 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 02:46:45 - Отримано код: 4/0Ab_5qln2ATEQhmmQxn7CEKXg0-Q-AoUcuD_DjWYI_EzIgd54aiU1nMvgv8sEXuB3IAB3EA
+2025-04-29 02:46:45 - Отримано стан: 74d01ce50490d62ad6d545c8454642be
+2025-04-29 02:46:45 - Початок processGoogleLogin - {"code":"4\/0Ab_5qln...","state":"74d01ce50490d62ad6d545c8454642be"}
+2025-04-29 02:46:45 - Стан перевірено успішно і очищено - {"session_state":"74d01ce50490d62ad6d545c8454642be"}
+2025-04-29 02:46:45 - Запит токену доступу
+2025-04-29 02:46:45 - Токен доступу отримано успішно
+2025-04-29 02:46:45 - Запит інформації про користувача
+2025-04-29 02:46:45 - Інформація про користувача отримана успішно
+2025-04-29 02:46:46 - Результат: {"success":true,"action":"register","user":{"id":"user_68102175c133c1.68483035","username":"zmeyker25","password":"$2y$12$nkWm9JGIJCAkI1EQgP6CW.ZXTmdJnX97Ngy1NWcIMqMEP2wiNn7Fm","email":"zmeyker25@gmail.com","first_name":"Alex","last_name":"Zmiievsky","google_id":"109108253208658545083","registration_date":"2025-04-29 02:46:46","is_google_user":true}}
+2025-04-29 11:45:08 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 11:45:13 - Отримано код: 4/0Ab_5qln38qBXwGt6g7aIERmNjLnrTpTYJ1Ai9IkQgnjOgyH4AWEQzc7Rgsk_ELPYR6fYhw
+2025-04-29 11:45:13 - Отримано стан: 566aef9cd928a871a63b3606d532d3af
+2025-04-29 11:45:13 - Початок processGoogleLogin - {"code":"4\/0Ab_5qln...","state":"566aef9cd928a871a63b3606d532d3af"}
+2025-04-29 11:45:13 - Стан перевірено успішно і очищено - {"session_state":"566aef9cd928a871a63b3606d532d3af"}
+2025-04-29 11:45:13 - Запит токену доступу
+2025-04-29 11:45:13 - Токен доступу отримано успішно
+2025-04-29 11:45:13 - Запит інформації про користувача
+2025-04-29 11:45:13 - Інформація про користувача отримана успішно
+2025-04-29 11:45:13 - Результат: {"success":true,"action":"login","user":{"id":"user_68102175c133c1.68483035","username":"zmeyker25","password":"$2y$12$nkWm9JGIJCAkI1EQgP6CW.ZXTmdJnX97Ngy1NWcIMqMEP2wiNn7Fm","email":"zmeyker25@gmail.com","first_name":"Alex","last_name":"Zmiievsky","google_id":"109108253208658545083","registration_date":"2025-04-29 02:46:46","is_google_user":true,"password_hash":"$2y$12$ZF1jBVuvQ.J5DmNmCYC1kuPkhT96u2B7LziggJemKzqf0usyAIBEe"}}
+2025-04-29 11:55:08 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 11:56:53 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 21:11:05 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 21:12:40 - Згенеровано URL авторизації - {"success":true}
+2025-04-29 21:12:52 - Отримано код: 4/0Ab_5qlm-ZxCs7NvX6B4frlBdEnqlxYRMvd8M6XeOGiUyqKAyJh5wGnDE5t-5auIf-NojhQ
+2025-04-29 21:12:52 - Отримано стан: b1c3dca1f310f47d6f6a9f2ee87261d3
+2025-04-29 21:12:52 - Початок processGoogleLogin - {"code":"4\/0Ab_5qlm...","state":"b1c3dca1f310f47d6f6a9f2ee87261d3"}
+2025-04-29 21:12:52 - Стан перевірено успішно і очищено - {"session_state":"b1c3dca1f310f47d6f6a9f2ee87261d3"}
+2025-04-29 21:12:52 - Запит токену доступу
+2025-04-29 21:12:52 - Токен доступу отримано успішно
+2025-04-29 21:12:52 - Запит інформації про користувача
+2025-04-29 21:12:53 - Інформація про користувача отримана успішно
+2025-04-29 21:12:53 - Результат: {"success":true,"action":"register","user":{"id":"user_681124b510f453.41924236","username":"la.hexadecimal","password":"$2y$12$Hk.otXGWwX3zkKS4P6QSR.z4jac6kHaJByrouzOY1mw9IZ4ftuGG.","email":"la.hexadecimal@gmail.com","first_name":"Alice","last_name":"Cooper","google_id":"115810767803524561252","registration_date":"2025-04-29 21:12:53","is_google_user":true}}
+2025-05-08 19:39:55 - Згенеровано URL авторизації - {"success":true}
+2025-05-08 19:39:58 - Отримано код: 4/0Ab_5qllesvMfcypFZ8Oi99bQNXDyi031pexNVaB2QD16RL6xEgAgVxgEAhTlT_FjSxWugA
+2025-05-08 19:39:58 - Отримано стан: 5bc133c1239ad546a5cbc652d5eddf04
+2025-05-08 19:39:58 - Початок processGoogleLogin - {"code":"4\/0Ab_5qll...","state":"5bc133c1239ad546a5cbc652d5eddf04"}
+2025-05-08 19:39:58 - Стан перевірено успішно і очищено - {"session_state":"5bc133c1239ad546a5cbc652d5eddf04"}
+2025-05-08 19:39:58 - Запит токену доступу
+2025-05-08 19:39:59 - Токен доступу отримано успішно
+2025-05-08 19:39:59 - Запит інформації про користувача
+2025-05-08 19:39:59 - Інформація про користувача отримана успішно
+2025-05-08 19:39:59 - Результат: {"success":true,"action":"register","user":{"id":"user_681cec6f2cd720.75319580","username":"zmeyker25","password":"$2y$12$jhb\/8G4t90Q2\/PGO54lc5ONEcjSuTm0M6vDkSjrbxJ3k9g4\/iCIly","email":"zmeyker25@gmail.com","first_name":"Alex","last_name":"Zmiievsky","google_id":"109108253208658545083","registration_date":"2025-05-08 19:39:59","is_google_user":true}}
+2025-05-08 22:42:32 - Згенеровано URL авторизації - {"success":true}
+2025-05-08 22:42:35 - Отримано код: 4/0Ab_5qllUm49J8sqZZn0-mNjAJ7gATBcFR_fVkymlda3ypBPwyGRMC7dZP_fFDCdGfv1gWw
+2025-05-08 22:42:35 - Отримано стан: 7b11940653243ed425ac3549576798a4
+2025-05-08 22:42:35 - Початок processGoogleLogin - {"code":"4\/0Ab_5qll...","state":"7b11940653243ed425ac3549576798a4"}
+2025-05-08 22:42:35 - Стан перевірено успішно і очищено - {"session_state":"7b11940653243ed425ac3549576798a4"}
+2025-05-08 22:42:35 - Запит токену доступу
+2025-05-08 22:42:35 - Токен доступу отримано успішно
+2025-05-08 22:42:35 - Запит інформації про користувача
+2025-05-08 22:42:35 - Інформація про користувача отримана успішно
+2025-05-08 22:42:35 - Результат: {"success":true,"action":"login","user":{"id":"user_681cec6f2cd720.75319580","username":"zmeyker25","password":"$2y$12$jhb\/8G4t90Q2\/PGO54lc5ONEcjSuTm0M6vDkSjrbxJ3k9g4\/iCIly","email":"zmeyker25@gmail.com","first_name":"Alex","last_name":"Zmiievsky","google_id":"109108253208658545083","registration_date":"2025-05-08 19:39:59","is_google_user":true}}
+2025-05-09 17:22:25 - Згенеровано URL авторизації - {"success":true}
+2025-05-11 14:42:35 - Згенеровано URL авторизації - {"success":true}
+2025-05-11 14:42:40 - Отримано код: 4/0AUJR-x70-pYtr-NP_0u-yDkF5vY1xyWb-ERtsjaApuWavcs1xwq2chv89tKil6l81IZi6g
+2025-05-11 14:42:40 - Отримано стан: 300043a4c7e2ed0db5e1fd76e66940a5
+2025-05-11 14:42:40 - Початок processGoogleLogin - {"code":"4\/0AUJR-x7...","state":"300043a4c7e2ed0db5e1fd76e66940a5"}
+2025-05-11 14:42:40 - Стан перевірено успішно і очищено - {"session_state":"300043a4c7e2ed0db5e1fd76e66940a5"}
+2025-05-11 14:42:40 - Запит токену доступу
+2025-05-11 14:42:40 - Токен доступу отримано успішно
+2025-05-11 14:42:40 - Запит інформації про користувача
+2025-05-11 14:42:40 - Інформація про користувача отримана успішно
+2025-05-11 14:42:40 - Результат: {"success":true,"action":"login","user":{"id":"user_67e98ba8df12a0.39404586","username":"Zmey","password_hash":"$2y$12$v\/NK7TvzP5fsgkgcAbv9s.SWpPLJ\/AB\/fFBjbHYfa.\/5fEr3JfqWK","first_name":"Олександр","last_name":"Змієвський","hide_results":true,"email":"Zmeyker25@gmail.com","custom_question":"привіт","google_id":"109108253208658545083","is_google_user":true}}
+2025-05-11 14:43:13 - Згенеровано URL авторизації - {"success":true}
+2025-05-11 14:43:16 - Отримано код: 4/0AUJR-x6TSlduXgYmb475ziDmhtdtg79PpheJvzzUEmaH-so0dYul-YnJHWz0BqyU1y5sww
+2025-05-11 14:43:16 - Отримано стан: 2c43d304eb6f03c7af42c60f39894a6d
+2025-05-11 14:43:16 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"2c43d304eb6f03c7af42c60f39894a6d"}
+2025-05-11 14:43:16 - Стан перевірено успішно і очищено - {"session_state":"2c43d304eb6f03c7af42c60f39894a6d"}
+2025-05-11 14:43:16 - Запит токену доступу
+2025-05-11 14:43:17 - Токен доступу отримано успішно
+2025-05-11 14:43:17 - Запит інформації про користувача
+2025-05-11 14:43:17 - Інформація про користувача отримана успішно
+2025-05-11 14:43:17 - Результат: {"success":true,"action":"register","user":{"id":"user_68209b65289088.50437513","username":"la.hexadecimal","password":"$2y$12$zuUmQNVLAIYtBsoQ8SsyUeFp2rjtmjF5K6byqlbc3W5It7MzlR.j.","email":"la.hexadecimal@gmail.com","first_name":"Alice","last_name":"Cooper","google_id":"115810767803524561252","registration_date":"2025-05-11 14:43:17","is_google_user":true}}
+2025-05-11 19:02:33 - Згенеровано URL авторизації - {"success":true}
+2025-05-11 19:02:45 - Отримано код: 4/0AUJR-x4JAxSeG0TXPyjzZFTpIXog1CX19bOFCk3UwqzHcH6iAUnStjwR8qYIs_oGwSi1JQ
+2025-05-11 19:02:45 - Отримано стан: 9a0f34007d93ff499db78bc6cb504fd7
+2025-05-11 19:02:45 - Початок processGoogleLogin - {"code":"4\/0AUJR-x4...","state":"9a0f34007d93ff499db78bc6cb504fd7"}
+2025-05-11 19:02:45 - Стан перевірено успішно і очищено - {"session_state":"9a0f34007d93ff499db78bc6cb504fd7"}
+2025-05-11 19:02:45 - Запит токену доступу
+2025-05-11 19:02:45 - Токен доступу отримано успішно
+2025-05-11 19:02:45 - Запит інформації про користувача
+2025-05-11 19:02:45 - Інформація про користувача отримана успішно
+2025-05-11 19:02:45 - Результат: {"success":true,"action":"login","user":{"id":"user_67e98ba8df12a0.39404586","username":"Zmey","password_hash":"$2y$12$v\/NK7TvzP5fsgkgcAbv9s.SWpPLJ\/AB\/fFBjbHYfa.\/5fEr3JfqWK","first_name":"Олександр","last_name":"Змієвський","hide_results":true,"email":"Zmeyker25@gmail.com","custom_question":"привіт","google_id":"109108253208658545083","is_google_user":true}}
+2025-05-11 19:03:56 - Згенеровано URL авторизації - {"success":true}
+2025-05-11 19:03:58 - Отримано код: 4/0AUJR-x7PbU92K8b4dRJMgniWKIxw0P1zR8SBmSNrqktRAo3x4-Ug8ffcaZvWBvWy67lpdQ
+2025-05-11 19:03:58 - Отримано стан: 1d53a197c314bcb0225d26274774c04a
+2025-05-11 19:03:58 - Початок processGoogleLogin - {"code":"4\/0AUJR-x7...","state":"1d53a197c314bcb0225d26274774c04a"}
+2025-05-11 19:03:58 - Стан перевірено успішно і очищено - {"session_state":"1d53a197c314bcb0225d26274774c04a"}
+2025-05-11 19:03:58 - Запит токену доступу
+2025-05-11 19:03:59 - Токен доступу отримано успішно
+2025-05-11 19:03:59 - Запит інформації про користувача
+2025-05-11 19:03:59 - Інформація про користувача отримана успішно
+2025-05-11 19:03:59 - Результат: {"success":true,"action":"login","user":{"id":"user_67e98ba8df12a0.39404586","username":"Zmey","password_hash":"$2y$12$v\/NK7TvzP5fsgkgcAbv9s.SWpPLJ\/AB\/fFBjbHYfa.\/5fEr3JfqWK","first_name":"Олександр","last_name":"Змієвський","hide_results":true,"email":"Zmeyker25@gmail.com","custom_question":"привіт","google_id":"109108253208658545083","is_google_user":true}}
+2025-05-11 21:17:51 - Згенеровано URL авторизації - {"success":true}
+2025-05-11 21:17:55 - Отримано код: 4/0AUJR-x6aeN1VckfJgB3AQfanqsaOIfSZD_dk0pni8o9WvWp53z0nWc_Zerib9bnXrV-C2A
+2025-05-11 21:17:55 - Отримано стан: 3c3bb037a5dff3e672fc1ec2289d2769
+2025-05-11 21:17:55 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"3c3bb037a5dff3e672fc1ec2289d2769"}
+2025-05-11 21:17:55 - Стан перевірено успішно і очищено - {"session_state":"3c3bb037a5dff3e672fc1ec2289d2769"}
+2025-05-11 21:17:55 - Запит токену доступу
+2025-05-11 21:17:55 - Токен доступу отримано успішно
+2025-05-11 21:17:55 - Запит інформації про користувача
+2025-05-11 21:17:55 - Інформація про користувача отримана успішно
+2025-05-11 21:17:55 - Результат: {"success":true,"action":"login","user":{"id":"user_68209b65289088.50437513","username":"la.hexadecimal","password":"$2y$12$zuUmQNVLAIYtBsoQ8SsyUeFp2rjtmjF5K6byqlbc3W5It7MzlR.j.","email":"la.hexadecimal@gmail.com","first_name":"Аліса","last_name":"-","google_id":"115810767803524561252","registration_date":"2025-05-11 14:43:17","is_google_user":true}}
+2025-05-12 13:53:10 - Згенеровано URL авторизації - {"success":true}
+2025-05-12 13:53:14 - Отримано код: 4/0AUJR-x5U2tK6Z5W54umXGJwmAZwz_W4hgwtSz1VtAgGf9KMK95FeVKC2_Ve1M-uPkO1OVg
+2025-05-12 13:53:14 - Отримано стан: fd649697ae5b7b53aaef62128c58679d
+2025-05-12 13:53:14 - Початок processGoogleLogin - {"code":"4\/0AUJR-x5...","state":"fd649697ae5b7b53aaef62128c58679d"}
+2025-05-12 13:53:14 - Стан перевірено успішно і очищено - {"session_state":"fd649697ae5b7b53aaef62128c58679d"}
+2025-05-12 13:53:14 - Запит токену доступу
+2025-05-12 13:53:15 - Токен доступу отримано успішно
+2025-05-12 13:53:15 - Запит інформації про користувача
+2025-05-12 13:53:15 - Інформація про користувача отримана успішно
+2025-05-12 13:53:15 - Результат: {"success":true,"action":"login","user":{"id":"user_67e98ba8df12a0.39404586","username":"Zmey","password_hash":"$2y$12$v\/NK7TvzP5fsgkgcAbv9s.SWpPLJ\/AB\/fFBjbHYfa.\/5fEr3JfqWK","first_name":"Олександр","last_name":"Змієвський","hide_results":true,"email":"Zmeyker25@gmail.com","custom_question":"привіт","google_id":"109108253208658545083","is_google_user":true}}
+2025-05-16 14:31:17 - Згенеровано URL авторизації - {"success":true}
+2025-05-16 14:31:26 - Згенеровано URL авторизації - {"success":true}
+2025-05-16 14:32:59 - Згенеровано URL авторизації - {"success":true}
+2025-05-16 14:33:31 - Отримано код: 4/0AUJR-x4-SdbBtb-J37RasyNBIPKC7FnARoi23riyKQ2VTffxpUc8TkLIS36uTXO2ZfFFmw
+2025-05-16 14:33:31 - Отримано стан: c725172510e554114af011ee86ec572d
+2025-05-16 14:33:31 - Початок processGoogleLogin - {"code":"4\/0AUJR-x4...","state":"c725172510e554114af011ee86ec572d"}
+2025-05-16 14:33:31 - Стан перевірено успішно і очищено - {"session_state":"c725172510e554114af011ee86ec572d"}
+2025-05-16 14:33:31 - Запит токену доступу
+2025-05-16 14:33:31 - Токен доступу отримано успішно
+2025-05-16 14:33:31 - Запит інформації про користувача
+2025-05-16 14:33:32 - Інформація про користувача отримана успішно
+2025-05-16 14:33:32 - Результат: {"success":true,"action":"register","user":{"id":"user_6827309c08bee1.36991249","username":"kfc-poznyakoff","password":"$2y$12$eFQB8Xu5ZVev351e0EqmsOzAXhsjd3D\/yJPFiHuI863A6XKoiOF6K","email":"kfc-poznyakoff@grgua.com","first_name":"KFC","last_name":"Poznyakoff","google_id":"118186500591300912599","registration_date":"2025-05-16 14:33:32","is_google_user":true}}
+2025-05-16 16:53:15 - Згенеровано URL авторизації - {"success":true}
+2025-05-16 17:56:45 - Згенеровано URL авторизації - {"success":true}
+2025-05-16 17:57:27 - Отримано код: 4/0AUJR-x62F4YZ85toVEMpUB-wHvpGXEEXSzB8uHWUFNapAAQlsXD27A8F0QXK-HaJsLMGAA
+2025-05-16 17:57:27 - Отримано стан: 2abc07e2cfd0eb5fc81a2d76c5862404
+2025-05-16 17:57:27 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"2abc07e2cfd0eb5fc81a2d76c5862404"}
+2025-05-16 17:57:27 - Стан перевірено успішно і очищено - {"session_state":"2abc07e2cfd0eb5fc81a2d76c5862404"}
+2025-05-16 17:57:27 - Запит токену доступу
+2025-05-16 17:57:27 - Токен доступу отримано успішно
+2025-05-16 17:57:27 - Запит інформації про користувача
+2025-05-16 17:57:27 - Інформація про користувача отримана успішно
+2025-05-16 17:57:27 - Результат: {"success":true,"action":"register","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-17 08:40:30 - Згенеровано URL авторизації - {"success":true}
+2025-05-17 08:40:33 - Отримано код: 4/0AUJR-x6HzSk1RBiOWT5j04_0VeLZmlxTPMhmTRPluLboTC0r0RFMzoBdCIFOwfqMe5T9UQ
+2025-05-17 08:40:33 - Отримано стан: 673c7924556fa5a2b2d0a23f275deb34
+2025-05-17 08:40:33 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"673c7924556fa5a2b2d0a23f275deb34"}
+2025-05-17 08:40:33 - Стан перевірено успішно і очищено - {"session_state":"673c7924556fa5a2b2d0a23f275deb34"}
+2025-05-17 08:40:33 - Запит токену доступу
+2025-05-17 08:40:33 - Токен доступу отримано успішно
+2025-05-17 08:40:33 - Запит інформації про користувача
+2025-05-17 08:40:34 - Інформація про користувача отримана успішно
+2025-05-17 08:40:34 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-17 09:02:44 - Згенеровано URL авторизації - {"success":true}
+2025-05-17 09:02:47 - Отримано код: 4/0AUJR-x6ktuFQHnsWKiOJAQ-6Y8iZyCe0MWZxiRq_jaDBDbOMsL-kzN9lbaWZFRUzKm4tUg
+2025-05-17 09:02:47 - Отримано стан: 79663ac1fc37171895a14a97ad60156f
+2025-05-17 09:02:47 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"79663ac1fc37171895a14a97ad60156f"}
+2025-05-17 09:02:47 - Стан перевірено успішно і очищено - {"session_state":"79663ac1fc37171895a14a97ad60156f"}
+2025-05-17 09:02:47 - Запит токену доступу
+2025-05-17 09:02:47 - Токен доступу отримано успішно
+2025-05-17 09:02:47 - Запит інформації про користувача
+2025-05-17 09:02:47 - Інформація про користувача отримана успішно
+2025-05-17 09:02:47 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-17 09:04:55 - Згенеровано URL авторизації - {"success":true}
+2025-05-17 09:04:58 - Отримано код: 4/0AUJR-x4VOFagZZ1mHTCibBzJ-5QUKBLUs0gE7ldO2VnlyoSUGhRaKDdB1ubm56OFPLod1Q
+2025-05-17 09:04:58 - Отримано стан: a01af2c50ecc4ce30d93c1121e561bdc
+2025-05-17 09:04:58 - Початок processGoogleLogin - {"code":"4\/0AUJR-x4...","state":"a01af2c50ecc4ce30d93c1121e561bdc"}
+2025-05-17 09:04:58 - Стан перевірено успішно і очищено - {"session_state":"a01af2c50ecc4ce30d93c1121e561bdc"}
+2025-05-17 09:04:58 - Запит токену доступу
+2025-05-17 09:04:58 - Токен доступу отримано успішно
+2025-05-17 09:04:58 - Запит інформації про користувача
+2025-05-17 09:04:58 - Інформація про користувача отримана успішно
+2025-05-17 09:04:58 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-17 09:09:04 - Згенеровано URL авторизації - {"success":true}
+2025-05-17 09:09:08 - Отримано код: 4/0AUJR-x7PT9OTpQPbUkROvpAdG_6WLy9imvPLqkVHV9OiBGd8R4jkOX7Cr5Eq13FFf26Zhw
+2025-05-17 09:09:08 - Отримано стан: 4c597f0cceac109a356c54ac7b827c9b
+2025-05-17 09:09:08 - Початок processGoogleLogin - {"code":"4\/0AUJR-x7...","state":"4c597f0cceac109a356c54ac7b827c9b"}
+2025-05-17 09:09:08 - Стан перевірено успішно і очищено - {"session_state":"4c597f0cceac109a356c54ac7b827c9b"}
+2025-05-17 09:09:08 - Запит токену доступу
+2025-05-17 09:09:08 - Токен доступу отримано успішно
+2025-05-17 09:09:08 - Запит інформації про користувача
+2025-05-17 09:09:08 - Інформація про користувача отримана успішно
+2025-05-17 09:09:08 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-17 20:04:35 - Згенеровано URL авторизації - {"success":true}
+2025-05-17 20:04:41 - Отримано код: 4/0AUJR-x6mM_GNW9USM7mNdVNlfhG2O_TYadYL0y-XyiV9FikFlX_S1e2OyX4LXEdiGd2FNA
+2025-05-17 20:04:41 - Отримано стан: 6995198d68318c1c585c36a4a91be8e7
+2025-05-17 20:04:41 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"6995198d68318c1c585c36a4a91be8e7"}
+2025-05-17 20:04:41 - Стан перевірено успішно і очищено - {"session_state":"6995198d68318c1c585c36a4a91be8e7"}
+2025-05-17 20:04:41 - Запит токену доступу
+2025-05-17 20:04:41 - Токен доступу отримано успішно
+2025-05-17 20:04:41 - Запит інформації про користувача
+2025-05-17 20:04:41 - Інформація про користувача отримана успішно
+2025-05-17 20:04:42 - Результат: {"success":true,"action":"register","user":{"id":"user_6828cfb9c42fa6.14604945","username":"ybondar","password":"$2y$12$jQzPqfbkPt7Oko7joeq.Sec7lt4UiNtIYT5wjOakh2ooP0YhNGgvq","email":"ybondar@grgua.com","first_name":"Yuliia","last_name":"Bondar","google_id":"107864067015458466422","registration_date":"2025-05-17 20:04:42","is_google_user":true}}
+2025-05-18 13:20:15 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 13:20:19 - Отримано код: 4/0AUJR-x5ntaEo9WobySGCn54gjk7faUUxIkK-vL6DtfntJQ2xhmSQOPuX59lilKFcL0pvdQ
+2025-05-18 13:20:19 - Отримано стан: 2ab419d906b962c2d16e62c25efb8c5a
+2025-05-18 13:20:19 - Початок processGoogleLogin - {"code":"4\/0AUJR-x5...","state":"2ab419d906b962c2d16e62c25efb8c5a"}
+2025-05-18 13:20:19 - Стан перевірено успішно і очищено - {"session_state":"2ab419d906b962c2d16e62c25efb8c5a"}
+2025-05-18 13:20:19 - Запит токену доступу
+2025-05-18 13:20:19 - Токен доступу отримано успішно
+2025-05-18 13:20:19 - Запит інформації про користувача
+2025-05-18 13:20:19 - Інформація про користувача отримана успішно
+2025-05-18 13:20:19 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-18 17:28:36 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 17:28:39 - Отримано код: 4/0AUJR-x6P0ubZEvmplDp11lSIZNBxV_BaxfsWcSZTIvKaguolqSplNp2hLu98GMvsnHky-A
+2025-05-18 17:28:39 - Отримано стан: 308292acb5f1ae697299975420cbe3eb
+2025-05-18 17:28:39 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"308292acb5f1ae697299975420cbe3eb"}
+2025-05-18 17:28:39 - Стан перевірено успішно і очищено - {"session_state":"308292acb5f1ae697299975420cbe3eb"}
+2025-05-18 17:28:39 - Запит токену доступу
+2025-05-18 17:28:39 - Токен доступу отримано успішно
+2025-05-18 17:28:39 - Запит інформації про користувача
+2025-05-18 17:28:39 - Інформація про користувача отримана успішно
+2025-05-18 17:28:39 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-18 18:08:37 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 18:08:40 - Отримано код: 4/0AUJR-x4VROJPNyfud0NbY1z78r1LWGJ31g7gJrdq9fRVa2Xc2VkvEpGjuPoRGg-gYqcaKQ
+2025-05-18 18:08:40 - Отримано стан: 9da5b05160ab72de0bd5adc057c3b16c
+2025-05-18 18:08:40 - Початок processGoogleLogin - {"code":"4\/0AUJR-x4...","state":"9da5b05160ab72de0bd5adc057c3b16c"}
+2025-05-18 18:08:40 - Стан перевірено успішно і очищено - {"session_state":"9da5b05160ab72de0bd5adc057c3b16c"}
+2025-05-18 18:08:40 - Запит токену доступу
+2025-05-18 18:08:40 - Токен доступу отримано успішно
+2025-05-18 18:08:40 - Запит інформації про користувача
+2025-05-18 18:08:41 - Інформація про користувача отримана успішно
+2025-05-18 18:08:41 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-18 18:14:45 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 18:16:28 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 18:16:35 - Отримано код: 4/0AUJR-x4wMbcuap-JgnBLx1YJAokXv2RGngeAGJvt41kOAJtgXKHWSwDECsL1_cPYinL05A
+2025-05-18 18:16:35 - Отримано стан: d865b19078eeff8c72bfd4ca456576f6
+2025-05-18 18:16:35 - Початок processGoogleLogin - {"code":"4\/0AUJR-x4...","state":"d865b19078eeff8c72bfd4ca456576f6"}
+2025-05-18 18:16:35 - Стан перевірено успішно і очищено - {"session_state":"d865b19078eeff8c72bfd4ca456576f6"}
+2025-05-18 18:16:35 - Запит токену доступу
+2025-05-18 18:16:36 - Токен доступу отримано успішно
+2025-05-18 18:16:36 - Запит інформації про користувача
+2025-05-18 18:16:36 - Інформація про користувача отримана успішно
+2025-05-18 18:16:36 - Результат: {"success":true,"action":"register","user":{"id":"user_682a07e41a8ee0.40597578","username":"aya1a9a.v","password":"$2y$12$QIqY2wNtI6g7t4\/9fiRkdeGd1hzYlynTv.m2hz6XF3i6AVSdjjVHy","email":"aya1a9a.v@gmail.com","first_name":"Анастасія","last_name":"П'ятовол","google_id":"113352607516433193286","registration_date":"2025-05-18 18:16:36","is_google_user":true}}
+2025-05-18 18:17:05 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 18:17:14 - Отримано код: 4/0AUJR-x6o1V3zFTtpRw-QglD3_hQezZSvZQeKepYJq0RoUc2xNfJF9t4uj6KoBZqQBEmKeA
+2025-05-18 18:17:14 - Отримано стан: a7677eaf8ff22e720397f355cc4d509e
+2025-05-18 18:17:14 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"a7677eaf8ff22e720397f355cc4d509e"}
+2025-05-18 18:17:14 - Стан перевірено успішно і очищено - {"session_state":"a7677eaf8ff22e720397f355cc4d509e"}
+2025-05-18 18:17:14 - Запит токену доступу
+2025-05-18 18:17:14 - Токен доступу отримано успішно
+2025-05-18 18:17:14 - Запит інформації про користувача
+2025-05-18 18:17:14 - Інформація про користувача отримана успішно
+2025-05-18 18:17:14 - Результат: {"success":true,"action":"register","user":{"id":"user_682a080a92d531.65938180","username":"genius04.99","password":"$2y$12$P.QjCqgVJCEGUaqgkAbXN.dzy7ZVaojq.eReBhOZzcojvO.LIWPxm","email":"genius04.99@gmail.com","first_name":"Vlad","last_name":"Slyusarenko","google_id":"117860022737667673870","registration_date":"2025-05-18 18:17:14","is_google_user":true}}
+2025-05-18 18:17:23 - Отримано код: 4/0AUJR-x6sMQTkj-1uQDbfqSFZW3_rbDJ2TLqEfuCe45ZDfdJ0rEZdYzrmKwwTvfG0Um8Okg
+2025-05-18 18:17:23 - Отримано стан: 6cbea3a226df2f20bb69c83456ec9437
+2025-05-18 18:17:23 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"6cbea3a226df2f20bb69c83456ec9437"}
+2025-05-18 18:17:23 - Стан перевірено успішно і очищено - {"session_state":"6cbea3a226df2f20bb69c83456ec9437"}
+2025-05-18 18:17:23 - Запит токену доступу
+2025-05-18 18:17:23 - Токен доступу отримано успішно
+2025-05-18 18:17:23 - Запит інформації про користувача
+2025-05-18 18:17:23 - Інформація про користувача отримана успішно
+2025-05-18 18:17:24 - Результат: {"success":true,"action":"register","user":{"id":"user_682a0813c76c16.74100638","username":"cleanboroda","password":"$2y$12$idrnDVOxCobqbZ.1KKSt4uf2o43Yh\/5eETA3F85nTfke\/XkHjskCy","email":"cleanboroda@gmail.com","first_name":"Данил","last_name":"Бородавко","google_id":"114821357703756695575","registration_date":"2025-05-18 18:17:24","is_google_user":true}}
+2025-05-18 18:18:09 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 18:18:12 - Отримано код: 4/0AUJR-x71gE5UwJ4O6-UfdX5Xu29f4EMMv8u-HD6twHf_moKr8FjB39Y7RYu2zZy7J_H67A
+2025-05-18 18:18:12 - Отримано стан: 6c41e68f7893fa1cf41464f615168f4e
+2025-05-18 18:18:12 - Початок processGoogleLogin - {"code":"4\/0AUJR-x7...","state":"6c41e68f7893fa1cf41464f615168f4e"}
+2025-05-18 18:18:12 - Стан перевірено успішно і очищено - {"session_state":"6c41e68f7893fa1cf41464f615168f4e"}
+2025-05-18 18:18:12 - Запит токену доступу
+2025-05-18 18:18:12 - Токен доступу отримано успішно
+2025-05-18 18:18:12 - Запит інформації про користувача
+2025-05-18 18:18:12 - Інформація про користувача отримана успішно
+2025-05-18 18:18:12 - Результат: {"success":true,"action":"login","user":{"id":"user_682a080a92d531.65938180","username":"genius04.99","password":"$2y$12$P.QjCqgVJCEGUaqgkAbXN.dzy7ZVaojq.eReBhOZzcojvO.LIWPxm","email":"genius04.99@gmail.com","first_name":"Vlad","last_name":"Slyusarenko","google_id":"117860022737667673870","registration_date":"2025-05-18 18:17:14","is_google_user":true}}
+2025-05-18 18:19:54 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 18:20:32 - Отримано код: 4/0AUJR-x47bfvk9XXEPnJAfLj964TDv1gKIqUclWIuVtf6Qpr_Jz5b9M0mVptLbP9mYqcbAQ
+2025-05-18 18:20:32 - Отримано стан: 969d6a975a63ff4364ca637d83e8aff9
+2025-05-18 18:20:32 - Початок processGoogleLogin - {"code":"4\/0AUJR-x4...","state":"969d6a975a63ff4364ca637d83e8aff9"}
+2025-05-18 18:20:32 - Стан перевірено успішно і очищено - {"session_state":"969d6a975a63ff4364ca637d83e8aff9"}
+2025-05-18 18:20:32 - Запит токену доступу
+2025-05-18 18:20:32 - Токен доступу отримано успішно
+2025-05-18 18:20:32 - Запит інформації про користувача
+2025-05-18 18:20:33 - Інформація про користувача отримана успішно
+2025-05-18 18:20:33 - Результат: {"success":true,"action":"register","user":{"id":"user_682a08d1189e68.09071605","username":"kunah4sveta","password":"$2y$12$u16qDBYV.a0h5cIVO98GLuEmYIcpKMaCNb4Wok.ESxA\/7.S48pTuy","email":"kunah4sveta@gmail.com","first_name":"Світлана","last_name":"Кунах","google_id":"104411948753524420866","registration_date":"2025-05-18 18:20:33","is_google_user":true}}
+2025-05-18 18:24:40 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 18:25:01 - Отримано код: 4/0AUJR-x5c737RBLtNJrDXBVsDDaT4kI3UG9dnLF69p3EE1L2mOeBLcA90ZkY8lXQzLmfgZw
+2025-05-18 18:25:01 - Отримано стан: 528aeff4f5a14eb74f8f23884aef344e
+2025-05-18 18:25:01 - Початок processGoogleLogin - {"code":"4\/0AUJR-x5...","state":"528aeff4f5a14eb74f8f23884aef344e"}
+2025-05-18 18:25:01 - Стан перевірено успішно і очищено - {"session_state":"528aeff4f5a14eb74f8f23884aef344e"}
+2025-05-18 18:25:01 - Запит токену доступу
+2025-05-18 18:25:01 - Токен доступу отримано успішно
+2025-05-18 18:25:01 - Запит інформації про користувача
+2025-05-18 18:25:01 - Інформація про користувача отримана успішно
+2025-05-18 18:25:01 - Результат: {"success":true,"action":"register","user":{"id":"user_682a09dd5b7525.41968867","username":"orazapkina","password":"$2y$12$L6hKisfjEck1miGTT.UnEOHSAIc06TWXQ16T.q8\/nV0ddTau8hbT.","email":"orazapkina@gmail.com","first_name":"Олександра","last_name":"Рязяпкіна","google_id":"112741020697222410452","registration_date":"2025-05-18 18:25:01","is_google_user":true}}
+2025-05-18 18:49:33 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 18:49:36 - Отримано код: 4/0AUJR-x6EI0npKJbjosM1qS1-NveuPzKCIP2XpGWkwCIVVTmGR93lJvVpKBF8tagQ2f-MtA
+2025-05-18 18:49:36 - Отримано стан: ce865dd4f4f710d1111f1bfbcf0e17da
+2025-05-18 18:49:36 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"ce865dd4f4f710d1111f1bfbcf0e17da"}
+2025-05-18 18:49:36 - Стан перевірено успішно і очищено - {"session_state":"ce865dd4f4f710d1111f1bfbcf0e17da"}
+2025-05-18 18:49:36 - Запит токену доступу
+2025-05-18 18:49:36 - Токен доступу отримано успішно
+2025-05-18 18:49:36 - Запит інформації про користувача
+2025-05-18 18:49:36 - Інформація про користувача отримана успішно
+2025-05-18 18:49:36 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-18 18:51:26 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 18:51:29 - Отримано код: 4/0AUJR-x69-JZ6WuJztlF0ENeeD7VA8HY96ujbStnkTokxRC0kSdm6vH-NUciaA_TEi54gQQ
+2025-05-18 18:51:29 - Отримано стан: 93185c272cf7f6d3b821aab2b5d6a221
+2025-05-18 18:51:29 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"93185c272cf7f6d3b821aab2b5d6a221"}
+2025-05-18 18:51:29 - Стан перевірено успішно і очищено - {"session_state":"93185c272cf7f6d3b821aab2b5d6a221"}
+2025-05-18 18:51:29 - Запит токену доступу
+2025-05-18 18:51:29 - Токен доступу отримано успішно
+2025-05-18 18:51:29 - Запит інформації про користувача
+2025-05-18 18:51:29 - Інформація про користувача отримана успішно
+2025-05-18 18:51:29 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-18 19:08:55 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 19:09:15 - Отримано код: 4/0AUJR-x6T1W7DeeopnZHwS0mOWal0qR8T3a1rt9GuIiw6hlp2DLr70ubOVrbbNrbEh6rDqA
+2025-05-18 19:09:15 - Отримано стан: c73159507347bb5195e95e89fae96902
+2025-05-18 19:09:15 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"c73159507347bb5195e95e89fae96902"}
+2025-05-18 19:09:15 - Стан перевірено успішно і очищено - {"session_state":"c73159507347bb5195e95e89fae96902"}
+2025-05-18 19:09:15 - Запит токену доступу
+2025-05-18 19:09:16 - Токен доступу отримано успішно
+2025-05-18 19:09:16 - Запит інформації про користувача
+2025-05-18 19:09:16 - Інформація про користувача отримана успішно
+2025-05-18 19:09:16 - Результат: {"success":true,"action":"register","user":{"id":"user_682a143c198594.18856217","username":"korol2yulia234","password":"$2y$12$t3dvjhmICrWgS.VyMRgiYucaq2OKU9spceNQn0DfShYLekIj6H7VG","email":"korol2yulia234@gmail.com","first_name":"Yulia","last_name":"Korol","google_id":"106439160137045324607","registration_date":"2025-05-18 19:09:16","is_google_user":true}}
+2025-05-18 20:04:56 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 20:05:10 - Отримано код: 4/0AUJR-x4w44NJZSOFxvmZHlYj9AffUnjfa4ufWEcvbJVeG21XcG6EIQTSZa_NiCfFAEHSug
+2025-05-18 20:05:10 - Отримано стан: 6375557e05d724c1f13f709f800bea21
+2025-05-18 20:05:10 - Початок processGoogleLogin - {"code":"4\/0AUJR-x4...","state":"6375557e05d724c1f13f709f800bea21"}
+2025-05-18 20:05:10 - Стан перевірено успішно і очищено - {"session_state":"6375557e05d724c1f13f709f800bea21"}
+2025-05-18 20:05:10 - Запит токену доступу
+2025-05-18 20:05:10 - Токен доступу отримано успішно
+2025-05-18 20:05:10 - Запит інформації про користувача
+2025-05-18 20:05:10 - Інформація про користувача отримана успішно
+2025-05-18 20:05:10 - Результат: {"success":true,"action":"login","user":{"id":"user_682a09dd5b7525.41968867","username":"orazapkina","password":"$2y$12$L6hKisfjEck1miGTT.UnEOHSAIc06TWXQ16T.q8\/nV0ddTau8hbT.","email":"orazapkina@gmail.com","first_name":"Олександра","last_name":"Рязяпкіна","google_id":"112741020697222410452","registration_date":"2025-05-18 18:25:01","is_google_user":true}}
+2025-05-18 22:25:29 - Згенеровано URL авторизації - {"success":true}
+2025-05-18 22:25:32 - Отримано код: 4/0AUJR-x7O-oMKV-4zLVLEhQjUBabdFd5dvsi9tu6KGZ6ucKF2_8tgog_4GvjSY5lb0bJDZQ
+2025-05-18 22:25:32 - Отримано стан: 8300e2cba34a5a6979d457ff0edc5d4c
+2025-05-18 22:25:32 - Початок processGoogleLogin - {"code":"4\/0AUJR-x7...","state":"8300e2cba34a5a6979d457ff0edc5d4c"}
+2025-05-18 22:25:32 - Стан перевірено успішно і очищено - {"session_state":"8300e2cba34a5a6979d457ff0edc5d4c"}
+2025-05-18 22:25:32 - Запит токену доступу
+2025-05-18 22:25:32 - Токен доступу отримано успішно
+2025-05-18 22:25:32 - Запит інформації про користувача
+2025-05-18 22:25:32 - Інформація про користувача отримана успішно
+2025-05-18 22:25:32 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-19 07:12:39 - Згенеровано URL авторизації - {"success":true}
+2025-05-19 07:12:42 - Отримано код: 4/0AUJR-x7eCH05Ym9frOazuMKOl_a1bJbC70HGOEegQdK5ZVPH1kMTnaNIJhvsmi2CXfs9_A
+2025-05-19 07:12:42 - Отримано стан: 0ed337828c040736dfdab3b917614293
+2025-05-19 07:12:42 - Початок processGoogleLogin - {"code":"4\/0AUJR-x7...","state":"0ed337828c040736dfdab3b917614293"}
+2025-05-19 07:12:42 - Стан перевірено успішно і очищено - {"session_state":"0ed337828c040736dfdab3b917614293"}
+2025-05-19 07:12:42 - Запит токену доступу
+2025-05-19 07:12:42 - Токен доступу отримано успішно
+2025-05-19 07:12:42 - Запит інформації про користувача
+2025-05-19 07:12:42 - Інформація про користувача отримана успішно
+2025-05-19 07:12:42 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-19 09:47:17 - Згенеровано URL авторизації - {"success":true}
+2025-05-20 09:38:42 - Згенеровано URL авторизації - {"success":true}
+2025-05-20 09:38:45 - Отримано код: 4/0AUJR-x5E8O0c5swrIYVQ40xzWaVmLgcH0f6WXnwrMeJV9SMjDNAUHFiKBudrmcYyG9msjQ
+2025-05-20 09:38:45 - Отримано стан: ad6a0396b2c0bd33e745f84f44862e67
+2025-05-20 09:38:45 - Початок processGoogleLogin - {"code":"4\/0AUJR-x5...","state":"ad6a0396b2c0bd33e745f84f44862e67"}
+2025-05-20 09:38:45 - Стан перевірено успішно і очищено - {"session_state":"ad6a0396b2c0bd33e745f84f44862e67"}
+2025-05-20 09:38:45 - Запит токену доступу
+2025-05-20 09:38:45 - Токен доступу отримано успішно
+2025-05-20 09:38:45 - Запит інформації про користувача
+2025-05-20 09:38:45 - Інформація про користувача отримана успішно
+2025-05-20 09:38:45 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-20 21:17:45 - Згенеровано URL авторизації - {"success":true}
+2025-05-20 21:17:48 - Отримано код: 4/0AUJR-x6eqxC6iqEoSz9OFNJOJLX-OqoENDQJ65Gb5BDNbmCl-DiVKF_uBAPSaaMybjAXow
+2025-05-20 21:17:48 - Отримано стан: 1710451eebe2e9e907ec67bdb1d64e88
+2025-05-20 21:17:48 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"1710451eebe2e9e907ec67bdb1d64e88"}
+2025-05-20 21:17:48 - Стан перевірено успішно і очищено - {"session_state":"1710451eebe2e9e907ec67bdb1d64e88"}
+2025-05-20 21:17:48 - Запит токену доступу
+2025-05-20 21:17:48 - Токен доступу отримано успішно
+2025-05-20 21:17:48 - Запит інформації про користувача
+2025-05-20 21:17:48 - Інформація про користувача отримана успішно
+2025-05-20 21:17:48 - Результат: {"success":true,"action":"login","user":{"id":"user_68209b65289088.50437513","username":"la.hexadecimal","password":"$2y$12$zuUmQNVLAIYtBsoQ8SsyUeFp2rjtmjF5K6byqlbc3W5It7MzlR.j.","email":"la.hexadecimal@gmail.com","first_name":"Аліса","last_name":"-","google_id":"115810767803524561252","registration_date":"2025-05-11 14:43:17","is_google_user":true}}
+2025-05-20 21:18:30 - Згенеровано URL авторизації - {"success":true}
+2025-05-20 21:18:33 - Отримано код: 4/0AUJR-x7J6ShF8BcBpo_JyEXI4ZtBT-hplPyRU0Jy8Xf2o7Y1tGYqYph5OfJvDRS_tK0lHA
+2025-05-20 21:18:33 - Отримано стан: 77c7a7477e77aeee278785c352ad445f
+2025-05-20 21:18:33 - Початок processGoogleLogin - {"code":"4\/0AUJR-x7...","state":"77c7a7477e77aeee278785c352ad445f"}
+2025-05-20 21:18:33 - Стан перевірено успішно і очищено - {"session_state":"77c7a7477e77aeee278785c352ad445f"}
+2025-05-20 21:18:33 - Запит токену доступу
+2025-05-20 21:18:33 - Токен доступу отримано успішно
+2025-05-20 21:18:33 - Запит інформації про користувача
+2025-05-20 21:18:33 - Інформація про користувача отримана успішно
+2025-05-20 21:18:33 - Результат: {"success":true,"action":"login","user":{"id":"user_68209b65289088.50437513","username":"la.hexadecimal","password":"$2y$12$zuUmQNVLAIYtBsoQ8SsyUeFp2rjtmjF5K6byqlbc3W5It7MzlR.j.","email":"la.hexadecimal@gmail.com","first_name":"Аліса","last_name":"-","google_id":"115810767803524561252","registration_date":"2025-05-11 14:43:17","is_google_user":true,"custom_question":"","hide_results":true}}
+2025-05-20 21:29:54 - Згенеровано URL авторизації - {"success":true}
+2025-05-20 21:29:57 - Отримано код: 4/0AUJR-x4m8V5DIgMKlwJSOqWSm4-KYZsXepHEW6pgTESwKGdbGHywlz1dlPx0csJKXZ8jSA
+2025-05-20 21:29:57 - Отримано стан: a4dea08554967ed7b635959b291687fc
+2025-05-20 21:29:57 - Початок processGoogleLogin - {"code":"4\/0AUJR-x4...","state":"a4dea08554967ed7b635959b291687fc"}
+2025-05-20 21:29:57 - Стан перевірено успішно і очищено - {"session_state":"a4dea08554967ed7b635959b291687fc"}
+2025-05-20 21:29:57 - Запит токену доступу
+2025-05-20 21:29:57 - Токен доступу отримано успішно
+2025-05-20 21:29:57 - Запит інформації про користувача
+2025-05-20 21:29:57 - Інформація про користувача отримана успішно
+2025-05-20 21:29:57 - Результат: {"success":true,"action":"login","user":{"id":"user_68209b65289088.50437513","username":"la.hexadecimal","password":"$2y$12$zuUmQNVLAIYtBsoQ8SsyUeFp2rjtmjF5K6byqlbc3W5It7MzlR.j.","email":"la.hexadecimal@gmail.com","first_name":"Аліса","last_name":"-","google_id":"115810767803524561252","registration_date":"2025-05-11 14:43:17","is_google_user":true,"custom_question":"","hide_results":true}}
+2025-05-20 22:47:52 - Згенеровано URL авторизації - {"success":true}
+2025-05-20 22:47:56 - Отримано код: 4/0AUJR-x6ApjAdXDskjCYCWHQy_E68UzJlERO580NXp5UQ28skTWShWYc0Y4z8pkyfclXpoA
+2025-05-20 22:47:56 - Отримано стан: 55f18011aa636e9afd88e39bdd841ee0
+2025-05-20 22:47:56 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"55f18011aa636e9afd88e39bdd841ee0"}
+2025-05-20 22:47:56 - Стан перевірено успішно і очищено - {"session_state":"55f18011aa636e9afd88e39bdd841ee0"}
+2025-05-20 22:47:56 - Запит токену доступу
+2025-05-20 22:47:56 - Токен доступу отримано успішно
+2025-05-20 22:47:56 - Запит інформації про користувача
+2025-05-20 22:47:56 - Інформація про користувача отримана успішно
+2025-05-20 22:47:56 - Результат: {"success":true,"action":"login","user":{"id":"user_68209b65289088.50437513","username":"la.hexadecimal","password":"$2y$12$zuUmQNVLAIYtBsoQ8SsyUeFp2rjtmjF5K6byqlbc3W5It7MzlR.j.","email":"la.hexadecimal@gmail.com","first_name":"Аліса","last_name":"-","google_id":"115810767803524561252","registration_date":"2025-05-11 14:43:17","is_google_user":true,"custom_question":"","hide_results":true}}
+2025-05-22 19:04:09 - Згенеровано URL авторизації - {"success":true}
+2025-05-23 12:37:58 - Згенеровано URL авторизації - {"success":true}
+2025-05-23 12:38:02 - Отримано код: 4/0AUJR-x6VFfowqnI4eNb7VdnWGZG5P_oBGN2BFEHzc6yZn0_zHj-V31M3Qi1aUqyBFBxhEw
+2025-05-23 12:38:02 - Отримано стан: bea1cf70706bf164107a83e2ede22467
+2025-05-23 12:38:02 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"bea1cf70706bf164107a83e2ede22467"}
+2025-05-23 12:38:02 - Стан перевірено успішно і очищено - {"session_state":"bea1cf70706bf164107a83e2ede22467"}
+2025-05-23 12:38:02 - Запит токену доступу
+2025-05-23 12:38:02 - Токен доступу отримано успішно
+2025-05-23 12:38:03 - Запит інформації про користувача
+2025-05-23 12:38:03 - Інформація про користувача отримана успішно
+2025-05-23 12:38:03 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-23 15:27:49 - Згенеровано URL авторизації - {"success":true}
+2025-05-23 15:27:56 - Отримано код: 4/0AUJR-x7K5Xgj2AMyO_mQ1arKzWUhXmbS4-1b1WszoNd0d5bCZyR8Bp7t15H0ZJoB91-GqA
+2025-05-23 15:27:56 - Отримано стан: 4b37478bc6975d5bca57f95947262f6e
+2025-05-23 15:27:56 - Початок processGoogleLogin - {"code":"4\/0AUJR-x7...","state":"4b37478bc6975d5bca57f95947262f6e"}
+2025-05-23 15:27:56 - Стан перевірено успішно і очищено - {"session_state":"4b37478bc6975d5bca57f95947262f6e"}
+2025-05-23 15:27:56 - Запит токену доступу
+2025-05-23 15:27:56 - Токен доступу отримано успішно
+2025-05-23 15:27:56 - Запит інформації про користувача
+2025-05-23 15:27:57 - Інформація про користувача отримана успішно
+2025-05-23 15:27:57 - Результат: {"success":true,"action":"register","user":{"id":"user_683077dd1dbfa9.42663444","username":"fire247lol","password":"$2y$12$pWc5gJRJSSB1BGyZXmCEQeTyrGIFXFQQuJjsghH74Z3.T6Aci4Pxe","email":"fire247lol@gmail.com","first_name":"Oleksii","last_name":"Ostrovskyi","google_id":"103086871239486408740","registration_date":"2025-05-23 15:27:57","is_google_user":true}}
+2025-05-23 15:41:21 - Згенеровано URL авторизації - {"success":true}
+2025-05-23 15:41:24 - Отримано код: 4/0AUJR-x4g9Pe_BojrnJI25FHP2sgmdRbuzan_5uP_WO76hUNYxYdedY6YuyCHUeDB2MMFHA
+2025-05-23 15:41:24 - Отримано стан: a927fe67a21ba631e894598bb284199e
+2025-05-23 15:41:24 - Початок processGoogleLogin - {"code":"4\/0AUJR-x4...","state":"a927fe67a21ba631e894598bb284199e"}
+2025-05-23 15:41:24 - Стан перевірено успішно і очищено - {"session_state":"a927fe67a21ba631e894598bb284199e"}
+2025-05-23 15:41:24 - Запит токену доступу
+2025-05-23 15:41:24 - Токен доступу отримано успішно
+2025-05-23 15:41:24 - Запит інформації про користувача
+2025-05-23 15:41:24 - Інформація про користувача отримана успішно
+2025-05-23 15:41:24 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-23 15:49:26 - Згенеровано URL авторизації - {"success":true}
+2025-05-23 15:49:31 - Отримано код: 4/0AUJR-x7siGXbU1qBi65omTeojmO6KTe2r6L-Ltrh55Gcp04cui0Z6VFW7kd40q8Byrfvfg
+2025-05-23 15:49:31 - Отримано стан: 54b1a4f0e558fb726de6f749deffe2bd
+2025-05-23 15:49:31 - Початок processGoogleLogin - {"code":"4\/0AUJR-x7...","state":"54b1a4f0e558fb726de6f749deffe2bd"}
+2025-05-23 15:49:31 - Стан перевірено успішно і очищено - {"session_state":"54b1a4f0e558fb726de6f749deffe2bd"}
+2025-05-23 15:49:31 - Запит токену доступу
+2025-05-23 15:49:31 - Токен доступу отримано успішно
+2025-05-23 15:49:31 - Запит інформації про користувача
+2025-05-23 15:49:31 - Інформація про користувача отримана успішно
+2025-05-23 15:49:31 - Результат: {"success":true,"action":"register","user":{"id":"user_68307cebadb2d3.90074222","username":"yor4eg","password":"$2y$12$Wg9JkmNuBDU4ICEDXHelt.JF3rSv\/R5ZrbNg\/EwEny1hUPPPI2.Aq","email":"yor4eg@gmail.com","first_name":"Юрий","last_name":"Канаровский","google_id":"103353242277594520303","registration_date":"2025-05-23 15:49:31","is_google_user":true}}
+2025-05-23 15:54:39 - Згенеровано URL авторизації - {"success":true}
+2025-05-23 15:54:42 - Отримано код: 4/0AUJR-x7n7y3C5EIfpuXVLvlWkud7UxmOHobDVLuLZ1QsO1qOwim5zZN8eqI1WxTPk1idqA
+2025-05-23 15:54:42 - Отримано стан: 35a65aa853194fca7b66d6f8b39984ad
+2025-05-23 15:54:42 - Початок processGoogleLogin - {"code":"4\/0AUJR-x7...","state":"35a65aa853194fca7b66d6f8b39984ad"}
+2025-05-23 15:54:42 - Стан перевірено успішно і очищено - {"session_state":"35a65aa853194fca7b66d6f8b39984ad"}
+2025-05-23 15:54:42 - Запит токену доступу
+2025-05-23 15:54:42 - Токен доступу отримано успішно
+2025-05-23 15:54:42 - Запит інформації про користувача
+2025-05-23 15:54:43 - Інформація про користувача отримана успішно
+2025-05-23 15:54:43 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}
+2025-05-24 14:46:19 - Згенеровано URL авторизації - {"success":true}
+2025-05-24 14:46:21 - Отримано код: 4/0AUJR-x6bSQ9-_62P9CNnhHCQn0p_FgOwqexGaVSMsRS7MCjjNodew_qaLQVfvyiVGsY7uQ
+2025-05-24 14:46:21 - Отримано стан: 936ccf24dfa6a4d9eccb03da868d2714
+2025-05-24 14:46:21 - Початок processGoogleLogin - {"code":"4\/0AUJR-x6...","state":"936ccf24dfa6a4d9eccb03da868d2714"}
+2025-05-24 14:46:21 - Стан перевірено успішно і очищено - {"session_state":"936ccf24dfa6a4d9eccb03da868d2714"}
+2025-05-24 14:46:21 - Запит токену доступу
+2025-05-24 14:46:22 - Токен доступу отримано успішно
+2025-05-24 14:46:22 - Запит інформації про користувача
+2025-05-24 14:46:22 - Інформація про користувача отримана успішно
+2025-05-24 14:46:22 - Результат: {"success":true,"action":"login","user":{"id":"user_682760677e4af1.75286694","username":"trololo66699","password":"$2y$12$2Ks7RARCmH5gYTp\/OlVMtuErgtP5opzEbRjF9Aav.0qfY35oag1Xm","email":"trololo66699@gmail.com","first_name":"Владлена","last_name":"Бородавко","google_id":"114966613262144585049","registration_date":"2025-05-16 17:57:27","is_google_user":true}}

@@ -1,0 +1,30 @@
+{
+    "self": {
+        "respondentUserId": "user_681cedb3edcd54.26807281",
+        "respondentUsername": "Testing Catalogue",
+        "answers": {
+            "q_memory": 4,
+            "q_decision_speed": 4,
+            "q_decision_quality": 4,
+            "q_logic_iq": 4,
+            "q_attention": 4,
+            "q_learning_ability": 4,
+            "q_intuition": 4,
+            "q_creativity": 4,
+            "q_causality": 4,
+            "q_critical_thinking": 4,
+            "q_fantasy": 4,
+            "q_hobby": 4,
+            "q_interest_movies": 3,
+            "q_interest_games": 3,
+            "q_interest_books": 3,
+            "q_interest_anime": 3,
+            "q_interest_drawing": 3,
+            "q_interest_music": 3,
+            "q_interest_sports": 3,
+            "q_interest_science_tech": 3
+        },
+        "timestamp": "2025-05-11T21:20:41+02:00"
+    },
+    "others": []
+}

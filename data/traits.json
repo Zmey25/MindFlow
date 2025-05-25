@@ -1,0 +1,2574 @@
+{
+    "traits": [
+        {
+            "id": "confident_memory",
+            "name": "Гарна пам'ять",
+            "icon": "fas fa-brain",
+            "description": "Інші знають, що ви все пам'ятаєте",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_memory",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "victim",
+            "name": "Жертва",
+            "icon": "fa-solid fa-face-sad-tear",
+            "description": "Віктімізація - чудовий спосіб бути особливим",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_victim",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_victim",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "tormoz",
+            "name": "Тормоз",
+            "icon": "fa-solid fa-user-minus",
+            "description": "Вважає що він слоупок",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_decision_speed",
+                    "operator": "<=",
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "id": "atheism",
+            "name": "Атеіст",
+            "icon": "fa-solid fa-cross",
+            "description": "Щоб не говорили оточення, ця людина не має бога в серці",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_religiosity",
+                    "operator": "<=",
+                    "value": 1
+                }
+            ]
+        },
+        {
+            "id": "8_grade",
+            "name": "Синдром восьмикласника",
+            "icon": "fa-solid fa-bomb",
+            "description": "З'являється у людей з цікавим рівнем логічного мислення та високим рівнем \"не такий як усі\".",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": "<",
+                    "value": 4,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_nonconforming",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "destroyer",
+            "name": "Руйнівник цінностей",
+            "icon": "fa-solid fa-circle-xmark",
+            "description": "Той, з ким неприємно знаходитись наодинці. Не підтримує, проте критикує.",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_persecutor",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_conflict_proneness",
+                    "operator": ">",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_empathy",
+                    "operator": "<",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "hermit",
+            "name": "Рак Пустельник",
+            "icon": "fa-solid fa-eye-slash",
+            "description": "Той хто уникає",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_apathy",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_responsibility",
+                    "operator": "<",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "delulu",
+            "name": "Делулу",
+            "icon": "fa-solid fa-hippo",
+            "description": "Живе в уявному світі",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_causality",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_assertiveness",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_inclusivity",
+                    "operator": "<",
+                    "value": 4,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_work_engagement",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "fin_literacy",
+            "name": "Аврора мій улюблений магазин",
+            "icon": "fa-solid fa-money-bill-1-wave",
+            "description": "Мати підтверджену фінансову НЕграмотність",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "fin_literacy",
+                    "operator": "<=",
+                    "value": 4
+                },
+                {
+                    "type": "others",
+                    "questionId": "fin_literacy",
+                    "operator": "<",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "civa",
+            "name": "Зіграймо у Шахи?",
+            "icon": "fa-regular fa-chess-bishop",
+            "description": "Там де швидкість не потрібна, беремо якістю.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_decision_speed",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_decision_quality",
+                    "operator": ">=",
+                    "value": 5
+                }
+            ]
+        },
+        {
+            "id": "rakushka",
+            "name": "Ракушка",
+            "icon": "fa-solid fa-shrimp",
+            "description": "Так звуть людину, яка не розбирається в політиці",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_politics",
+                    "operator": "<=",
+                    "value": 2,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": "<",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "low_dovira",
+            "name": "Цікаво, чому?",
+            "icon": "fa-solid fa-face-meh-blank",
+            "description": "Скоріш за все, через вашу сором'язливість, люди вам мало довіряють.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_modesty",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_trust",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "hidden_genius",
+            "name": "Прихований геній",
+            "icon": "fas fa-user-secret",
+            "description": "Тихо змінює світ, поки інші навіть не помітили.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_logic_iq",
+                    "operator": "<=",
+                    "value": 4
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "self_loving_smart",
+            "name": "Самозакоханий розумник",
+            "icon": "fas fa-grin-stars",
+            "description": "Розумний у власних очах і суперечливий для інших.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "emotional_wall",
+            "name": "Емоційна стіна",
+            "icon": "fas fa-shield-alt",
+            "description": "Людина добре тримає емоції під контролем, але настільки, щ інші вважають її байдужою.",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_empathy",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_emotional_control",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_emotional_control",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "shadow_leader",
+            "name": "Тіньовий лідер",
+            "icon": "fas fa-user-ninja",
+            "description": "Керує мовчки, веде невидимо.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_leading",
+                    "operator": "<=",
+                    "value": 4
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_team_influence",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "helpless_rescuer",
+            "name": "Безпомічний рятівник",
+            "icon": "fas fa-life-ring",
+            "description": "Хоче допомогти, але не завжди може.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_rescuer",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_responsibility",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "shy_diamond",
+            "name": "Сором'язливий діамант",
+            "icon": "fas fa-gem",
+            "description": "Ховає свій талант за стінами замкненості.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_reservedness",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_creativity",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "eternal_dreamer",
+            "name": "Вічно юний мрійник",
+            "icon": "fas fa-cloud",
+            "description": "Мрійник, чия душа не знає віку.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_fantasy",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_age_appearance",
+                    "operator": "<",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "philosopher_perfectionist",
+            "name": "Філософ-перфекціоніст",
+            "icon": "fas fa-balance-scale",
+            "description": "Думає довго, діє бездоганно.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_decision_speed",
+                    "operator": "<=",
+                    "value": 4
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_perfectionism",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "fire_emotions",
+            "name": "Вогонь емоцій",
+            "icon": "fas fa-fire",
+            "description": "Живе серцем, горить миттєво.",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_emotional_control",
+                    "operator": "<",
+                    "value": 4,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_conflict_proneness",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "outcome_seer",
+            "name": "Провидець наслідків",
+            "icon": "fas fa-eye",
+            "description": "Бачить наслідки ще до того, як все почалось.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_causality",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_causality",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "ship_without_captain",
+            "name": "Корабель без капітана",
+            "icon": "fas fa-ship",
+            "description": "Пливе куди вітер дме.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_decisiveness",
+                    "operator": "<=",
+                    "value": 4
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_inactivity_preference",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "captain_apathy",
+            "name": "Капітан Апатія",
+            "icon": "fas fa-anchor",
+            "description": "Керує, але йому байдуже куди.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_apathy",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_apathy",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_team_influence",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "change_agent",
+            "name": "Агент змін",
+            "icon": "fas fa-lightbulb",
+            "description": "Той, хто приносить світу нове.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_conservatism",
+                    "operator": "<=",
+                    "value": 2
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_learning_ability",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "philosopher_guru",
+            "name": "Гуру філософії",
+            "icon": "fas fa-feather-alt",
+            "description": "Думає глибоко і мріє широко, за його версією.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_fantasy",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_critical_thinking",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "weak_team_player",
+            "name": "Вовк-одинак",
+            "icon": "fas fa-user-slash",
+            "description": "Вовк-одинак серед команди.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_teamwork",
+                    "operator": "<=",
+                    "value": 4
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_teamwork",
+                    "operator": "<",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "fire_and_water",
+            "name": "Вогонь та вода",
+            "icon": "fas fa-water",
+            "description": "Спочатку палає, потім плаче.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_conflict_proneness",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_empathy",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "knowledge_hunter",
+            "name": "Мисливець за знаннями",
+            "icon": "fas fa-search",
+            "description": "Полює за знаннями всюди.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_learning_ability",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_critical_thinking",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "expressive_inspirer",
+            "name": "Експресивний натхненник",
+            "icon": "fas fa-bolt",
+            "description": "Вибух енергії та натхнення для інших.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_intro_extro",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_creativity",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "esoteric_crusher",
+            "name": "Руйнівник міфів",
+            "icon": "fa-solid fa-hat-wizard",
+            "description": "Не дуже любить колонку гороскопів в газетах",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_esoteric",
+                    "operator": "<=",
+                    "value": 2
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 5
+                }
+            ]
+        },
+        {
+            "id": "imposter_syndrome",
+            "name": "Синдром Самозванця",
+            "icon": "fas fa-user-secret",
+            "description": "Таємно вважає себе некомпетентним шахраєм, хоча всі навколо бачать професіонала і дивуються його скромності.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_team_influence",
+                    "operator": "<=",
+                    "value": 4
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_team_influence",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "passive_aggressor",
+            "name": "Майстер Пасивної Агресії",
+            "icon": "far fa-smile-wink",
+            "description": "Ніколи не піде на відкритий конфлікт, але його сарказм і завуальовані образи можуть довести до сказу. Посміхається, а в руці – шпилька.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_conflict_proneness",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_sarcastic",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_assertiveness",
+                    "operator": "<=",
+                    "value": 4
+                }
+            ]
+        },
+        {
+            "id": "idea_generator_no_start",
+            "name": "Генератор Ідей (без кнопки \"Пуск\")",
+            "icon": "fas fa-rocket",
+            "description": "Фонтанує геніальними (на його думку) ідеями, але коли доходить до реалізації – \"ой, це вже якось іншим разом\".",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_creativity",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_responsibility",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_decisiveness",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "sheldon_minimal",
+            "name": "Шелдон Купер на мінімалках",
+            "icon": "fas fa-atom",
+            "description": "Мозок працює на повну котушку, логіка – його бог. А от зрозуміти, чому колега плаче через серіал – це вже вища математика.",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_empathy",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "perpetual_motion_scattered",
+            "name": "Вічний Двигун (з розсіяною увагою)",
+            "icon": "fas fa-wind",
+            "description": "Енергії вистачить на трьох, хапається за десять справ одночасно... і жодну не доводить до кінця, бо вже з'явилася одинадцята, цікавіша!",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_intro_extro",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_attention",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_endurance",
+                    "operator": ">=",
+                    "value": 5
+                }
+            ]
+        },
+        {
+            "id": "reliable_grumbler",
+            "name": "Буркотун, на якого можна покластися",
+            "icon": "fas fa-user-check",
+            "description": "Світ – тлін, люди – дратують, але якщо він щось пообіцяв – зробить. Мовчки, бурмочучи під ніс, але зробить.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_optimism",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_responsibility",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_trust",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "know_it_all_expert",
+            "name": "Експерт з Усього на Світі",
+            "icon": "fas fa-graduation-cap",
+            "description": "Має думку про все – від адронного колайдера до рецепту борщу сусідки. І не соромиться її висловити, навіть якщо не питали.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_critical_thinking",
+                    "operator": ">",
+                    "value": 5
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_team_influence",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_inclusivity",
+                    "operator": "<=",
+                    "value": 3
+                }
+            ]
+        },
+        {
+            "id": "sensitive_creative_soul",
+            "name": "Ранима Творча Душа",
+            "icon": "fas fa-palette",
+            "description": "Генерує неймовірні ідеї або створює щось прекрасне, але будь-яке необережне слово чи косий погляд можуть вибити його з колії на тиждень.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_fantasy",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_offensiveness",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_emotional_control",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "iron_leader_heartless",
+            "name": "Залізний Лідер",
+            "icon": "fas fa-gavel",
+            "description": "Веде команду до мети, незважаючи на втому, сльози і прохання підлеглих. Ефективний, але краще не потрапляти йому під гарячу руку.",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_leading",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_empathy",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_responsibility",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "workaholic_max_level",
+            "name": "Трудоголік 80-го рівня",
+            "icon": "fas fa-briefcase",
+            "description": "Робота – сенс життя. Сон – для слабаків. Відпустка – вигадка маркетологів. Єдине задоволення – виконане завдання.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_endurance",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_responsibility",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_hobby",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_happiness",
+                    "operator": "<=",
+                    "value": 4
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_perfectionism",
+                    "operator": ">=",
+                    "value": 5
+                }
+            ]
+        },
+        {
+            "id": "guardian_of_old_ways",
+            "name": "Сторож Старих Порядків",
+            "icon": "fas fa-landmark",
+            "description": "\"Завжди так робили!\" – його улюблена фраза. Нововведення сприймає як особисту образу. Консервативний до мозку кісток.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_conservatism",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_assertiveness",
+                    "operator": ">",
+                    "value": 5
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_learning_ability",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "silent_observer",
+            "name": "Тихий Спостерігач",
+            "icon": "fas fa-binoculars",
+            "description": "Мало говорить, але багато бачить, чує і запам'ятовує. Його мовчазний аналіз ситуації часто точніший за гучні промови інших.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_intro_extro",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_attention",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_memory",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_critical_thinking",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "drama_magnet",
+            "name": "Магніт для Драми",
+            "icon": "fas fa-ghost",
+            "description": "Де він – там завжди вистава шекспірівського масштабу. Конфлікти, інтриги, сльози, звинувачення – його життя ніколи не буває нудним (для оточуючих).",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_conflict_proneness",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_victim",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_emotional_control",
+                    "operator": "<",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "cynical_realist",
+            "name": "Цинічний Реаліст",
+            "icon": "far fa-meh",
+            "description": "Рожеві окуляри? Ні, дякую. Бачить світ таким, яким він є (на його думку) – недосконалим і трохи абсурдним. І не забуде поділитися цим спостереженням.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_optimism",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_critical_thinking",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_sarcastic",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "zen_master_indifferent",
+            "name": "Дзен-майстер (або просто пофігіст)",
+            "icon": "fas fa-om",
+            "description": "Зберігає олімпійський спокій у будь-якій ситуації. Чи то велика мудрість, чи то йому просто на все байдуже – загадка.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_emotional_control",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_conflict_proneness",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_apathy",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "self_proclaimed_comedian",
+            "name": "\"Гуморист\" З Натяжкою",
+            "icon": "fas fa-microphone-alt",
+            "description": "Впевнений, що його жарти – це витвір мистецтва, і всі навколо мають падати від сміху. Оточуючі ж частіше обмінюються здивованими поглядами, натягуючи посмішку.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_sense_of_humor",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_sense_of_humor",
+                    "operator": "<",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "captain_jack_sparrow",
+            "name": "Капітан Джек Горобець",
+            "icon": "fas fa-skull-crossbones",
+            "description": "Покладається на шалену удачу, інтуїцію та вміння імпровізувати на межі катастрофи. \"Тямиш?\"",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_intuition",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_risk_taking",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_decision_quality",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "miranda_priestly_office",
+            "name": "Міранда Прістлі в офісі",
+            "icon": "fas fa-user-tie",
+            "description": "Вимагає досконалості в усьому, її погляд пропалює наскрізь, а \"дякую\" звучить як докір. Ефективність зашкалює, так само як і рівень кортизолу в підлеглих.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_perfectionism",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_leading",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_empathy",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_feedbacking",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "socrates_knows_nothing",
+            "name": "Сократ",
+            "icon": "fas fa-book-open",
+            "description": "Чим більше знає та вміє, тим гостріше усвідомлює безмежність непізнаного. Компетентний експерт, який постійно сумнівається і прагне дізнатись більше, на відміну від самовпевнених всезнайок.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_critical_thinking",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_modesty",
+                    "operator": ">",
+                    "value": 5
+                }
+            ]
+        },
+        {
+            "id": "agent_of_chaos_joker",
+            "name": "Джокер",
+            "icon": "fas fa-dice-d20",
+            "description": "Мотивація? Прибуток? Логіка? Ні, просто любить дивитись, як система руйнується, а люди панікують. Його дії непередбачувані, а цілі – лише йому відомий перформанс. \"Чому такий серйозний?\"",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_conflict_proneness",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_causality",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_risk_taking",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_empathy",
+                    "operator": "<=",
+                    "value": 2,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "forrest_gump",
+            "name": "Форрест Гамп",
+            "icon": "fas fa-running",
+            "description": "Можливо, не геній логіки, але його доброта, щирий оптимізм і дивовижна здатність опинятися в потрібний час у потрібному місці ведуть його крізь життя, збираючи друзів і успіх. \"Життя як коробка цукерок...\"",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_optimism",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_trust",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_happiness",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "ostrich",
+            "name": "Страус в піску",
+            "icon": "fa-solid fa-ghost",
+            "description": "Як той страус, засунув голову в пісок і нічого не бачить",
+            "conditions": [
+                {
+                    "type": "others",
+                    "questionId": "q_work_engagement",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_apathy",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_empathy",
+                    "operator": "<=",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "big_brain_time",
+            "name": "Розумник",
+            "icon": "fa-solid fa-hand-point-up",
+            "description": "Мозок - найважливіша частина людського організму. Так вважає сам мозок.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_decision_quality",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "ninja_diplomat",
+            "name": "Ніндзя-дипломат",
+            "icon": "fas fa-user-secret",
+            "description": "Майстерно вирішує конфлікти, знаходить компроміси і згладжує гострі кути, залишаючись майже непоміченим.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_conflict_proneness",
+                    "operator": "<=",
+                    "value": 2
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_empathy",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_team_influence",
+                    "operator": ">=",
+                    "value": 4,
+                    "aggregation": "any"
+                }
+            ]
+        },
+        {
+            "id": "walking_wikipedia",
+            "name": "Ходяча Вікіпедія",
+            "icon": "fas fa-book-open",
+            "description": "Знає багато цікавих фактів і завжди готовий поділитися, причому зазвичай його інформація точна.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_learning_ability",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_memory",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_critical_thinking",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "procrastinator_genius",
+            "name": "Прокрастинатор-Геній",
+            "icon": "fas fa-hourglass-half",
+            "description": "Відкладає все до останнього моменту, але потім видає блискучий результат, змушуючи всіх дивуватися. \"Діаманти народжуються під тиском!\"",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_inactivity_preference",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_decision_quality",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_punctuality",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "devils_advocate",
+            "name": "Адвокат Диявола",
+            "icon": "fas fa-gavel",
+            "description": "Завжди знайде контраргумент, щоб перевірити ідею на міцність, але робить це з метою покращення, а не заради суперечки.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_critical_thinking",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_feedbacking",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_inclusivity",
+                    "operator": "<=",
+                    "value": 3
+                }
+            ]
+        },
+        {
+            "id": "chaos_coordinator",
+            "name": "Хаос-Координатор",
+            "icon": "fas fa-sitemap",
+            "description": "Процвітає в хаосі, знаходить нестандартні рішення в умовах повної невизначеності. Де інші бачать безлад, він бачить структуру, яку сам і створює.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_uncertainty_tolerance",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_adaptability",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_problem_solving",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_leading",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "any"
+                }
+            ]
+        },
+        {
+            "id": "dreamer_strategist",
+            "name": "Мрійник-Стратег",
+            "icon": "fas fa-lightbulb",
+            "description": "Генерує амбітні візії майбутнього і, на відміну від просто мрійників, продумує кроки для їх досягнення (хоча б у теорії).",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_fantasy",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_causality",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_creativity",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "team_spirit_guardian",
+            "name": "Оберігач Командного Духу",
+            "icon": "fas fa-users",
+            "description": "Завжди стежить за атмосферою в колективі, намагається підтримати, розрядити обстановку, є неофіційним HR-ом.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_empathy",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_teamwork",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "all"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_conflict_proneness",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "underrated_architect",
+            "name": "Недооцінений архітектор рішень",
+            "icon": "fas fa-puzzle-piece",
+            "description": "Його ідеї та пропозиції часто лягають в основу успішних проектів, але слава дістається іншим.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_decision_quality",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_team_influence",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_modesty",
+                    "operator": ">=",
+                    "value": 5
+                }
+            ]
+        },
+        {
+            "id": "this_is_fine",
+            "name": "This is fine",
+            "icon": "fas fa-fire",
+            "description": "Навіть у найскладнішій ситуації знайде промінь світла і підбадьорить інших. Його девіз: \"Все буде добре!\"...",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_optimism",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_stress_resistance",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_happiness",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "gray_cardinal_efficiency",
+            "name": "Сірий Кардинал Ефективності",
+            "icon": "fas fa-user-ninja",
+            "description": "Не любить бути на видноті, але його поради та тиха робота значно підвищують продуктивність команди.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_intro_extro",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_leading",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_team_influence",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "all"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_problem_solving",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "idea_inspirer_not_doer",
+            "name": "Ідейний Натхненник (але не виконавець)",
+            "icon": "fas fa-bullhorn",
+            "description": "Його промови та ідеї запалюють серця, але коли доходить до реалізації, він уже генерує нову велику ідею.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_creativity",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_team_influence",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_responsibility",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "perfectionist_analyst",
+            "name": "Перфекціоніст-Аналітик",
+            "icon": "fas fa-search-plus",
+            "description": "Розбирає кожне завдання на атоми, прагнучи ідеального розуміння та виконання. Іноді це уповільнює процес, але результат вражає деталізацією.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_perfectionism",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_critical_thinking",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_decision_speed",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "intuitive_seer",
+            "name": "Інтуїтивний Провидець",
+            "icon": "fas fa-jedi",
+            "description": "Часто \"відчуває\", як розвиватимуться події, або яке рішення буде правильним, навіть якщо не може логічно це пояснити.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_intuition",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_decision_quality",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": "<=",
+                    "value": 3,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "emotional_anchor",
+            "name": "Емоційний якір",
+            "icon": "fas fa-anchor",
+            "description": "В стресових ситуаціях залишається спокійним і врівноваженим, допомагаючи іншим не втрачати голову.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_emotional_control",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_stress_resistance",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "all"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_trust",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "mentor_by_calling",
+            "name": "Ментор за покликанням",
+            "icon": "fas fa-chalkboard-teacher",
+            "description": "Любить ділитися знаннями та досвідом, терпляче пояснює і надихає інших на розвиток.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_feedbacking",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_rescuer",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_empathy",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_team_influence",
+                    "operator": ">",
+                    "value": 4,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "everyday_thespian",
+            "name": "Театрал повсякденності",
+            "icon": "fas fa-theater-masks",
+            "description": "Будь-яку подію перетворює на виставу, з перебільшеними емоціями та драматичними паузами. Не завжди серйозно, але завжди видовищно.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_emotional_control",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_sense_of_humor",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_fantasy",
+                    "operator": ">=",
+                    "value": 5
+                }
+            ]
+        },
+        {
+            "id": "quiet_backstage_genius",
+            "name": "Тихий Геній за кулісами",
+            "icon": "far fa-lightbulb",
+            "description": "Створює неймовірні речі або вирішує складні завдання, але абсолютно не прагне слави чи визнання.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_self_esteem",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_modesty",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "all"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_problem_solving",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "all"
+                }
+            ]
+        },
+        {
+            "id": "spark_needs_fanning",
+            "name": "Іскра натхнення",
+            "icon": "fas fa-seedling",
+            "description": "Генерує чудові ідеї, але йому потрібна підтримка та допомога команди, щоб довести їх до реалізації.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_creativity",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_decisiveness",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_teamwork",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_responsibility",
+                    "operator": "<=",
+                    "value": 4
+                }
+            ]
+        },
+        {
+            "id": "altruist_no_fanfare",
+            "name": "Альтруїст без фанфар",
+            "icon": "fas fa-hand-holding-heart",
+            "description": "Завжди готовий допомогти, нічого не вимагаючи натомість, і робить це щиро, без потреби у визнанні.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_rescuer",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_modesty",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_empathy",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "all"
+                }
+            ]
+        },
+        {
+            "id": "project_marathoner",
+            "name": "Марафонець проектів",
+            "icon": "fas fa-running",
+            "description": "Не найшвидший на старті, але його витривалість і наполегливість дозволяють долати довгі дистанції та завершувати найскладніші проекти.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_decision_speed",
+                    "operator": "<=",
+                    "value": 3
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_endurance",
+                    "operator": ">=",
+                    "value": 7
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_responsibility",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "all"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_punctuality",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "voice_of_conscience",
+            "name": "Голос Совісті",
+            "icon": "fas fa-balance-scale",
+            "description": "Завжди відстоює те, що вважає правильним, навіть якщо це йде врозріз із загальною думкою чи може створити незручності.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_assertiveness",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_inclusivity",
+                    "operator": "<=",
+                    "value": 2
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_trust",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_conflict_proneness",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "any"
+                }
+            ]
+        },
+        {
+            "id": "illusionist",
+            "name": "Ілюзіоніст",
+            "icon": "fa-solid fa-wand-sparkles",
+            "description": "Хтось думає, що ця людина справжній чарівник, але ця людина гадає, що магії не існує.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_esoteric",
+                    "operator": "<=",
+                    "value": 2
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_esoteric",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "any"
+                }
+            ]
+        },
+        {
+            "id": "picasso_minimal",
+            "name": "Пікассо на мінімалках",
+            "icon": "fas fa-paint-brush",
+            "description": "Його полотна ще не висять у Луврі, але душа художника вже там. Малює з натхненням, навіть якщо фарби тільки в мріях.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_interest_drawing",
+                    "operator": "==",
+                    "value": 5
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_creativity",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_fantasy",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "cyber_legend_room",
+            "name": "Кібер-Легенда власнoї кімнати",
+            "icon": "fas fa-headset",
+            "description": "У віртуальних світах – він бог, гроза мобів і майстер хедшотів. Головне, щоб мама не покликала їсти в розпал битви.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_interest_games",
+                    "operator": "==",
+                    "value": 5
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_attention",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_decision_speed",
+                    "operator": ">=",
+                    "value": 5
+                }
+            ]
+        },
+        {
+            "id": "keeper_thousand_stories",
+            "name": "Хранитель тисячі історій",
+            "icon": "fas fa-book-open-reader",
+            "description": "Його найкращі друзі – це персонажі книг, а найцікавіші подорожі відбуваються між сторінками. \"Ще один розділ, і спати!\"",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_interest_books",
+                    "operator": "==",
+                    "value": 5
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_fantasy",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_intro_extro",
+                    "operator": "<=",
+                    "value": 3
+                }
+            ]
+        },
+        {
+            "id": "adept_kawaii_arts",
+            "name": "Адепт кавайних мистецтв",
+            "icon": "fas fa-ghost",
+            "description": "Знає напам'ять більше японських слів, ніж англійських, а його емоції можна описати тільки через стікери з улюбленого аніме. \"Ня!\"",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_interest_anime",
+                    "operator": "==",
+                    "value": 5
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_fantasy",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_nonconforming",
+                    "operator": ">=",
+                    "value": 4
+                }
+            ]
+        },
+        {
+            "id": "conductor_own_headphones",
+            "name": "Диригент власних навушників",
+            "icon": "fas fa-headphones",
+            "description": "Світ без музики для нього – чорно-білий. Кожен трек – це саундтрек до його епічного життя (навіть якщо епос – це похід в магазин).",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_interest_music",
+                    "operator": "==",
+                    "value": 5
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_interest_music",
+                    "operator": ">=",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "olympic_commentator_couch",
+            "name": "Олімпійський коментатор (з дивана)",
+            "icon": "fas fa-couch",
+            "description": "Його аналітиці спортивних подій позаздрили б найкращі експерти. Єдиний недолік – диван не дає медалей.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_interest_sports",
+                    "operator": "==",
+                    "value": 5
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_inactivity_preference",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "alchemist_household",
+            "name": "Алхімік побутової техніки",
+            "icon": "fas fa-tools",
+            "description": "Перетворює старий тостер на машину часу (в теорії). Його девіз: \"Якщо воно не зламане, розбери і подивись, чому\".",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_interest_science_tech",
+                    "operator": "==",
+                    "value": 5
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_problem_solving",
+                    "operator": ">=",
+                    "value": 4
+                }
+            ]
+        },
+        {
+            "id": "iron_willow",
+            "name": "Залізна Верба",
+            "icon": "fas fa-procedures",
+            "description": "Власник цього трейту щодня готується до найгіршого зі своїм здоров'ям, але хоча б одна людина впевнена, що він переживе всіх і стане легендою довголіття.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_wellness",
+                    "operator": "<=",
+                    "value": 2
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_wellness",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "any"
+                }
+            ]
+        },
+        {
+            "id": "hidden_sage",
+            "name": "Прихований мудрець",
+            "icon": "fas fa-user-graduate",
+            "description": "Вважає себе не надто кмітливим, але хоча б хтось із оточення бачить у ньому таємного генія, чия логіка здатна розв'язати світові проблеми.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_logic_iq",
+                    "operator": "<=",
+                    "value": 2
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_logic_iq",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "any"
+                }
+            ]
+        },
+        {
+            "id": "accidental_muse",
+            "name": "Випадкова Муза",
+            "icon": "far fa-lightbulb",
+            "description": "Сам не вірить у свої творчі здібності, вважаючи їх випадковістю, але хоча б одна людина бачить у ньому джерело натхнення і вже пише про нього поеми.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_creativity",
+                    "operator": "<=",
+                    "value": 2
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_creativity",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "any"
+                }
+            ]
+        },
+        {
+            "id": "open_book_closed_safe",
+            "name": "Закрита книга (у відкритому сейфі)",
+            "icon": "fas fa-user-lock",
+            "description": "Впевнений, що викликає абсолютну довіру і є взірцем надійності, але принаймні одна людина вважає, що довірити йому таємницю – це як кричати її на площі.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_trust",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_trust",
+                    "operator": "<=",
+                    "value": 2,
+                    "aggregation": "any"
+                }
+            ]
+        },
+        {
+            "id": "unwilling_captain",
+            "name": "Капітан мимоволі",
+            "icon": "fas fa-anchor",
+            "description": "Категорично не бачить себе лідером і воліє бути тихим виконавцем, але хоча б одна людина бачить у ньому природженого капітана, здатного вести корабель крізь будь-який шторм.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_leading",
+                    "operator": "<=",
+                    "value": 2
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_leading",
+                    "operator": ">=",
+                    "value": 6,
+                    "aggregation": "any"
+                }
+            ]
+        },
+        {
+            "id": "inner_navigator",
+            "name": "Внутрішній навігатор",
+            "icon": "fas fa-compass",
+            "description": "Ви довіряєте своїй інтуїції, і вона рідко підводить, допомагаючи приймати вдалі рішення.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_intuition",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_decision_quality",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "self_control_master",
+            "name": "Майстер самоконтролю",
+            "icon": "fas fa-balance-scale",
+            "description": "Ви — скеля спокою серед бурі, що вміє керувати своїми емоціями та стресом.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_emotional_control",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_stress_resistance",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "open_to_experience",
+            "name": "Відкритий досвіду",
+            "icon": "fas fa-feather-alt",
+            "description": "Зміни вас не лякають, адже ви легко адаптуєтесь до нового та завжди готові до експериментів.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_conservatism",
+                    "operator": "<=",
+                    "value": 2
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_adaptability",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "light_of_own_ideas",
+            "name": "Світло власних ідей",
+            "icon": "fas fa-lightbulb",
+            "description": "Ваш розум фонтанує оригінальними ідеями, і ви не боїтеся йти проти течії.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_creativity",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_nonconforming",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "self_sufficiently_happy",
+            "name": "Самодостатній Щасливчик",
+            "icon": "fas fa-smile",
+            "description": "Ви знаєте, як бути щасливим, не порівнюючи себе з іншими. Ваше щастя – ваша внутрішня справа.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_happiness",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_social_comparison",
+                    "operator": "<=",
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "id": "unbeatable_procrastinator",
+            "name": "Неперевершений прокрастинатор",
+            "icon": "fas fa-hourglass-half",
+            "description": "Ви доводите, що якість не залежить від швидкості. Робите довго, але робите добре... колись.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_inactivity_preference",
+                    "operator": ">=",
+                    "value": 5
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_decision_quality",
+                    "operator": ">=",
+                    "value": 5
+                }
+            ]
+        },
+        {
+            "id": "king_queen_of_humor",
+            "name": "Король\/Королева гумору",
+            "icon": "fas fa-grin-squint-tears",
+            "description": "Ваші жарти – це справжнє мистецтво, яке розвеселить будь-кого (за вашою версією).",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_sense_of_humor",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_intro_extro",
+                    "operator": ">=",
+                    "value": 5
+                }
+            ]
+        },
+        {
+            "id": "responsible_optimist",
+            "name": "Відповідальний оптиміст",
+            "icon": "fas fa-sun",
+            "description": "Ви вірите в краще майбутнє і готові брати на себе відповідальність, щоб воно настало.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_optimism",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_responsibility",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "untiring_explorer",
+            "name": "Невтомний дослідник",
+            "icon": "fas fa-globe-americas",
+            "description": "Вам легко дається навчання, і ви готові долати будь-які труднощі на шляху до нових знань.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_learning_ability",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_endurance",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "assertive_feedbacker",
+            "name": "Асертивний фідбекер",
+            "icon": "fas fa-comment-alt",
+            "description": "Ви знаєте, як відстояти своє, і не боїтеся давати чесний, але конструктивний зворотний зв'язок.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_assertiveness",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "others",
+                    "questionId": "q_feedbacking",
+                    "operator": ">",
+                    "value": 5,
+                    "aggregation": "average"
+                }
+            ]
+        },
+        {
+            "id": "decision_conductor",
+            "name": "Провідник рішень",
+            "icon": "fas fa-check-circle",
+            "description": "Ви не тільки швидко приймаєте рішення, але й ефективно вирішуєте проблеми, що виникають.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_decisiveness",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_problem_solving",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        },
+        {
+            "id": "confident_loner",
+            "name": "Впевнений самітник",
+            "icon": "fas fa-user-tie",
+            "description": "Ви відчуваєте себе комфортно наодинці з собою і впевнені у власній цінності, незалежно від соціальних взаємодій.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_self_esteem",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_intro_extro",
+                    "operator": "<=",
+                    "value": 3
+                }
+            ]
+        },
+        {
+            "id": "media_mogul_imagination",
+            "name": "Уяво-магнат",
+            "icon": "fas fa-film",
+            "description": "Ваш внутрішній світ – це безмежна кіностудія, де кожен день – новий бестселер.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_fantasy",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_interest_movies",
+                    "operator": ">=",
+                    "value": 4
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_interest_books",
+                    "operator": ">=",
+                    "value": 4
+                }
+            ]
+        },
+        {
+            "id": "unbreakable_optimist",
+            "name": "Незламний оптиміст",
+            "icon": "fas fa-grin-beam",
+            "description": "Ви завжди бачите світло в кінці тунелю і не обтяжуєте себе зайвими переживаннями про минуле.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_optimism",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_guilt",
+                    "operator": "<=",
+                    "value": 2
+                }
+            ]
+        },
+        {
+            "id": "decision_generator_crystal_ball",
+            "name": "Генератор рішень (Зі скляною кулею)",
+            "icon": "fas fa-eye",
+            "description": "Ви вмієте бачити причинно-наслідкові зв'язки, а інтуїція підказує, що буде далі. Майбутнє для вас – не загадка.",
+            "conditions": [
+                {
+                    "type": "self",
+                    "questionId": "q_causality",
+                    "operator": ">=",
+                    "value": 6
+                },
+                {
+                    "type": "self",
+                    "questionId": "q_intuition",
+                    "operator": ">=",
+                    "value": 6
+                }
+            ]
+        }
+    ]
+}

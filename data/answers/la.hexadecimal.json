@@ -1,0 +1,225 @@
+{
+    "self": {
+        "respondentUserId": "user_68209b65289088.50437513",
+        "respondentUsername": "la.hexadecimal",
+        "answers": {
+            "q_memory": 4,
+            "q_decision_speed": 4,
+            "q_decision_quality": 4,
+            "q_logic_iq": 6,
+            "q_attention": 5,
+            "q_learning_ability": 6,
+            "q_intuition": 4,
+            "q_creativity": 5,
+            "q_causality": 5,
+            "q_critical_thinking": 2,
+            "q_fantasy": 6,
+            "q_hobby": 4,
+            "q_interest_movies": 3,
+            "q_interest_games": 3,
+            "q_interest_books": 3,
+            "q_interest_anime": 3,
+            "q_interest_drawing": 3,
+            "q_interest_music": 4,
+            "q_interest_sports": 3,
+            "q_interest_science_tech": 4,
+            "q_intro_extro": 6,
+            "q_empathy": 6,
+            "q_conflict_proneness": 4,
+            "q_trust": 4,
+            "q_inclusivity": 6,
+            "q_teamwork": 5,
+            "q_leading": 6,
+            "q_feedbacking": 4,
+            "q_assertiveness": 4,
+            "q_perfectionism": 6,
+            "q_team_influence": 6,
+            "q_responsibility": 4,
+            "q_problem_solving": 4,
+            "q_work_engagement": 4,
+            "q_punctuality": 4,
+            "q_age_appearance": 6,
+            "q_wellness": 4,
+            "q_politics": 4,
+            "q_happiness": 4,
+            "fin_literacy": 4,
+            "q_esoteric": 4,
+            "q_religiosity": 4,
+            "q_endurance": 4,
+            "q_sense_of_humor": 4
+        },
+        "timestamp": "2025-05-20T22:48:35+02:00"
+    },
+    "others": [
+        {
+            "respondentUserId": "user_67e98ba8df12a0.39404586",
+            "respondentUsername": "Zmey",
+            "answers": {
+                "q_memory": 6,
+                "q_decision_speed": 2,
+                "q_decision_quality": 5,
+                "q_logic_iq": 2,
+                "q_attention": 3,
+                "q_learning_ability": 2,
+                "q_intuition": 4,
+                "q_creativity": 4,
+                "q_causality": 5,
+                "q_critical_thinking": 4,
+                "q_fantasy": 5,
+                "q_intro_extro": 4,
+                "q_empathy": 4,
+                "q_conflict_proneness": 4,
+                "q_trust": 4,
+                "q_inclusivity": 4,
+                "q_teamwork": 4,
+                "q_leading": 4,
+                "q_feedbacking": 4,
+                "q_assertiveness": 4,
+                "q_perfectionism": 4,
+                "q_team_influence": 4,
+                "q_responsibility": 1,
+                "q_problem_solving": 4,
+                "q_work_engagement": 4,
+                "q_punctuality": 4,
+                "q_age_appearance": 4,
+                "q_wellness": 4,
+                "q_politics": 2,
+                "q_happiness": 4,
+                "fin_literacy": 4,
+                "q_esoteric": 4,
+                "q_religiosity": 4,
+                "q_endurance": 4,
+                "q_sense_of_humor": 4,
+                "q_emotional_control": 4,
+                "q_guilt": 4,
+                "q_optimism": 4,
+                "q_stress_resistance": 4,
+                "q_adaptability": 4,
+                "q_self_esteem": 4,
+                "q_self_reflection": 4,
+                "q_uncertainty_tolerance": 4,
+                "q_victim": 4,
+                "q_rescuer": 4,
+                "q_persecutor": 4,
+                "q_nonconforming": 4,
+                "q_modesty": 4,
+                "q_apathy": 7,
+                "q_sarcastic": 4,
+                "q_offensiveness": 4,
+                "q_decisiveness": 4,
+                "q_reservedness": 4,
+                "q_conservatism": 4,
+                "q_risk_taking": 4,
+                "q_hobby": 3,
+                "q_interest_movies": 3,
+                "q_interest_games": 3,
+                "q_interest_books": 3,
+                "q_interest_anime": 3,
+                "q_interest_drawing": 5,
+                "q_interest_music": 5,
+                "q_interest_sports": 5,
+                "q_interest_science_tech": 5,
+                "open_q_strength": "",
+                "open_q_weakness": "",
+                "open_q_interaction": "",
+                "open_q_impression": "",
+                "open_q_additional": "xfgh"
+            },
+            "timestamp": "2025-05-20T22:24:32+02:00"
+        },
+        {
+            "respondentUserId": "user_67e98ba8df12a0.39404586",
+            "respondentUsername": "Zmey",
+            "answers": {
+                "q_memory": 6,
+                "open_q_impression": "",
+                "open_q_additional": "xfgh"
+            },
+            "timestamp": "2025-05-20T22:08:30+02:00"
+        }
+    ],
+    "achievements": [
+        {
+            "id": "confident_memory",
+            "name": "Гарна пам'ять",
+            "icon": "fas fa-brain",
+            "description": "Інші знають, що ви все пам'ятаєте"
+        },
+        {
+            "id": "hermit",
+            "name": "Рак Пустельник",
+            "icon": "fa-solid fa-eye-slash",
+            "description": "Той хто уникає"
+        },
+        {
+            "id": "rakushka",
+            "name": "Ракушка",
+            "icon": "fa-solid fa-shrimp",
+            "description": "Так звуть людину, яка не розбирається в політиці"
+        },
+        {
+            "id": "self_loving_smart",
+            "name": "Самозакоханий розумник",
+            "icon": "fas fa-grin-stars",
+            "description": "Розумний у власних очах і суперечливий для інших."
+        },
+        {
+            "id": "philosopher_perfectionist",
+            "name": "Філософ-перфекціоніст",
+            "icon": "fas fa-balance-scale",
+            "description": "Думає довго, діє бездоганно."
+        }
+    ],
+    "badges_summary": [
+        {
+            "badgeId": "badge_intellect",
+            "score": 52
+        },
+        {
+            "badgeId": "badge_colleague_potential",
+            "score": 51
+        },
+        {
+            "badgeId": "badge_supernatural_belief",
+            "score": 51
+        },
+        {
+            "badgeId": "badge_emotional_intelligence",
+            "score": 53
+        },
+        {
+            "badgeId": "badge_leadership_qualities",
+            "score": 47
+        },
+        {
+            "badgeId": "badge_life_of_party",
+            "score": 56
+        },
+        {
+            "badgeId": "badge_innovator_mindset",
+            "score": 53
+        },
+        {
+            "badgeId": "badge_pragmatist",
+            "score": 44
+        },
+        {
+            "badgeId": "badge_resilience_optimism",
+            "score": 41
+        },
+        {
+            "badgeId": "badge_adventurer_spirit",
+            "score": 48
+        }
+    ],
+    "expertAnalysis": {
+        "summary": "Аналіз профілю користувача 'la.hexadecimal' виявляє цікавий контраст між самосприйняттям та оцінками інших. Користувач схильний оцінювати свої когнітивні здібності як середні (близько 4), тоді як інші бачать більш виражені піки та спади. Зокрема, оточуючі відзначають сильну пам'ять та високу якість рішень, але при цьому вважають користувача повільнішим у прийнятті рішень, менш логічним та дещо слабшим у здатності до швидкого навчання порівняно з його самооцінкою. Це свідчить про те, що користувач може бути більш ретельним і сфокусованим на якості, що займає більше часу, і це сприймається іншими як повільність або відсутність \"швидкої\" логіки. Інтереси оцінюються користувачем як помірні, але інші бачать більший потенціал або захопленість у певних сферах, таких як малювання, музика, спорт та наука/техніка.\n\nЗагальні плюси, які відзначають інші: хороша пам'ять, висока якість прийнятих рішень, сильні аналітичні здібності та естетичне сприйняття. Загальні мінуси, за оцінкою інших: повільність у прийнятті рішень, сприйняття логічного мислення та швидкості навчання як менш розвинених. Це не обов'язково \"мінуси\" в абсолютному сенсі, а скоріше особливості стилю мислення та роботи, які можуть сприйматися як слабкі сторони в умовах, що вимагають швидкості.\n\nЦей профіль нагадує характер ретельного дослідника чи аналітика, який цінує глибину та якість над швидкістю. Можна провести аналогію з такими особистостями, як *Шерлок Холмс* у його менш ексцентричні моменти – хтось, хто має виняткову пам'ять та здатність до аналізу (висока якість рішень, причинно-наслідковий аналіз), але процес мислення якого може здаватися неквапливим або незрозумілим для сторонніх (сприйнята повільність, \"нижча\" логіка, хоча результат якісний). Це тип людини, яка може не бути найшвидшою в мозковому штурмі, але чиї остаточні висновки або рішення є обґрунтованими та якісними.",
+        "recommendations": [
+            "Дослідіть \"розрив\" у сприйнятті між вашою самооцінкою (особливо щодо швидкості рішень, логіки та навчання) та оцінками інших. Подумайте, як ви проявляєте ці риси у взаємодії з оточуючими. Можливо, ваша ретельність сприймається як повільність? Розуміння цієї різниці допоможе вам краще спілкуватися та співпрацювати, пояснюючи свій процес або адаптуючись до ситуацій, що вимагають швидкості.",
+            "Використовуйте свої сильні сторони, відзначені іншими – відмінну пам'ять, високу якість рішень та аналітичні здібності. Шукайте завдання чи ролі, де ці якості є ключовими. Ваша здатність до глибокого аналізу може бути надзвичайно цінною, навіть якщо це вимагає часу.",
+            "Розгляньте можливість приділити більше уваги інтересам, які інші оцінили вище, ніж ви самі (малювання, музика, спорт, наука/техніка). Можливо, саме в цих сферах ви проявляєте себе найбільш яскраво та захоплено для оточуючих, і це може стати джерелом натхнення та самореалізації."
+        ],
+        "analyst": "Gemini AI Psychoanalyst",
+        "timestamp": "2025-05-20T22:10:54+02:00"
+    }
+}

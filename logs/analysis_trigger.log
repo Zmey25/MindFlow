@@ -1,0 +1,21 @@
+[2025-05-20 22:43:17] User 'l_guerro': Total 'others' responses = 4. Analysis frequency = 5
+[2025-05-20 22:43:17] User 'l_guerro': Condition NOT MET for triggering analysis (numResponses: 4, frequency: 5)
+[2025-05-20 22:45:55] User 'l_guerro': Total 'others' responses = 5. Analysis frequency = 5
+[2025-05-20 22:45:55] User 'l_guerro': Condition MET for triggering analysis.
+[2025-05-20 22:45:55] User 'l_guerro': Using internal call secret from .env.
+[2025-05-20 22:45:55] User 'l_guerro': Determined analysis script relative path: /get_analysis.php
+[2025-05-20 22:45:55] User 'l_guerro': Protocol: https://, Host: mindflow.ovh
+[2025-05-20 22:45:55] User 'l_guerro': Full analysis URL for fsockopen: https://mindflow.ovh/get_analysis.php?username=l_guerro&internal_call_secret=hellokitty
+[2025-05-20 22:45:55] User 'l_guerro': Attempting fsockopen to Host: ssl://mindflow.ovh, Port: 443
+[2025-05-20 22:45:55] User 'l_guerro': fsockopen SUCCESSFUL. Preparing to send GET request.
+[2025-05-20 22:45:55] User 'l_guerro': HTTP Request to send:
+GET /get_analysis.php?username=l_guerro&internal_call_secret=hellokitty HTTP/1.1
+Host: mindflow.ovh
+Connection: Close
+
+
+[2025-05-20 22:45:55] User 'l_guerro': fwrite SUCCESSFUL. Bytes written: 123. Closing connection.
+[2025-05-23 15:38:52] User 'trololo66699': Total 'others' responses = 4. Analysis frequency = 5
+[2025-05-23 15:38:52] User 'trololo66699': Condition NOT MET for triggering analysis (numResponses: 4, frequency: 5)
+[2025-05-23 16:04:32] User 'kunah4sveta': Total 'others' responses = 1. Analysis frequency = 5
+[2025-05-23 16:04:32] User 'kunah4sveta': Condition NOT MET for triggering analysis (numResponses: 1, frequency: 5)

@@ -1,0 +1,658 @@
+/* assets/css/style.css */
+
+/* --- Глобальні стилі та скидання --- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box; /* Краще управління розмірами */
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; /* Сучасні системні шрифти */
+    margin: 0;
+    background-color: #f8f9fa; /* Світлий фон */
+    color: #212529; /* Основний колір тексту */
+    line-height: 1.6; /* Краща читабельність */
+    display: flex; /* Дозволяє футеру прилипнути до низу */
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, legend {
+    color: #343a40; /* Трохи темніший для заголовків */
+    margin-top: 0;
+    line-height: 1.3;
+}
+
+a {
+    color: #5c67f2; /* Основний колір посилань */
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+/* --- Хедер --- */
+.header {
+    background-color: #ffffff; /* Білий фон */
+    color: #212529; /* Темний текст */
+    padding: 1rem 1.5rem; /* Використовуємо rem для масштабування */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Легка тінь */
+    border-bottom: 1px solid #dee2e6; /* Тонка лінія знизу */
+}
+
+.header .logo a {
+    color: #343a40;
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: 600; /* Трохи жирніший */
+}
+
+.header nav span {
+    margin-right: 1rem;
+    color: #6c757d; /* Сірий для тексту вітання */
+}
+
+.header nav a {
+     color: #5c67f2; /* Основний колір */
+     text-decoration: none;
+     margin-left: 1rem;
+     font-weight: 500;
+     transition: opacity 0.2s ease-in-out;
+}
+.header nav a:hover {
+    opacity: 0.8;
+    text-decoration: none; /* Забираємо підкреслення при наведенні, акцент на зміні кольору/прозорості */
+}
+
+/* --- Контейнер для основного контенту --- */
+.content {
+    padding: 0.5rem; /* Падінги */
+    max-width: 800px; /* Обмеження ширини для кращої читабельності */
+    width: 100%; /* Займати всю доступну ширину до max-width */
+    margin: 0.5rem auto;
+    background-color: #ffffff; /* Білий фон для контенту */
+    border-radius: 8px; /* Легке заокруглення */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Трохи виразніша тінь */
+    flex-grow: 1; /* Щоб контент займав місце до футера */
+}
+
+/* --- Контейнер для аутентифікації --- */
+.auth-container {
+    max-width: 420px; /* Трохи ширше */
+    padding: 2rem; /* Більше падінгів */
+    margin: 3rem auto; /* Відступи */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.auth-container h1 {
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem; /* Збільшений відступ */
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem; /* Відступ під лейблом */
+    color: #495057; /* Трохи світліший колір */
+    font-weight: 500; /* Менш жирний */
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="email"] {
+    width: 100%;
+    padding: 0.75rem 1rem; /* Більші падінги */
+    border: 1px solid #ced4da; /* Світліша рамка */
+    border-radius: 4px; /* Менше заокруглення */
+    font-size: 1rem; /* Стандартний розмір шрифту */
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.form-group input:focus {
+    border-color: #a3aaff; /* Зміна кольору рамки при фокусі */
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(92, 103, 242, 0.25); /* Тінь при фокусі */
+}
+
+/* --- Кнопки --- */
+.btn {
+    display: inline-block; /* Щоб можна було ставити поруч */
+    font-weight: 500;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: 0.75rem 1.25rem; /* Падінги */
+    font-size: 1rem;
+    border-radius: 0.25rem; /* Невелике заокруглення */
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    line-height: 1.5; /* Для кращого вигляду тексту в кнопці */
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #5c67f2;
+    border-color: #5c67f2;
+}
+.btn-primary:hover {
+    color: #fff;
+    background-color: #4a54cc;
+    border-color: #444ecb;
+}
+.btn-success{
+    color: #fff;
+    background-color: #5c67f2;
+    border-color: #5c67f2;
+}
+.btn-success:hover {
+    color: #fff;
+    background-color: #4a54cc;
+    border-color: #444ecb;
+}
+
+/* Стиль для другорядної кнопки (Скасувати) */
+.btn-secondary {
+    color: #212529; /* Темний текст */
+    background-color: #e9ecef; /* Світло-сірий фон */
+    border-color: #ced4da; /* Сіра рамка */
+}
+.btn-secondary:hover {
+    color: #212529;
+    background-color: #d6dadf;
+    border-color: #adb5bd;
+}
+
+/* Розташування кнопок у формі */
+.questionnaire-form .btn-primary,
+.questionnaire-form .btn-secondary {
+    margin-top: 0.75rem; /* Відступ зверху */
+    margin-right: 0.5rem; /* Відступ між кнопками, якщо вони поруч */
+    min-width: 120px; /* Мінімальна ширина для акуратності */
+}
+/* Для форм логіну/реєстрації кнопка на всю ширину */
+.auth-container .btn {
+    width: 100%;
+    margin-top: 0.5rem; /* Менший відступ тут */
+}
+
+/* --- Повідомлення (Success/Error/Info) --- */
+.message {
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+    text-align: left; /* Або center, якщо бажаєте */
+}
+.message.success {
+    color: #0f5132;
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+}
+.message.error {
+    color: #842029;
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+}
+.message.info {
+    color: #055160;
+    background-color: #cff4fc;
+    border-color: #b6effb;
+}
+.message.warning {
+    color: #664d03;
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+}
+.message.info a {
+ color: #04414d; /* Трохи темніше посилання в інфо-блоці */
+ font-weight: bold;
+}
+
+/* --- Стилі для сторінок опитувань --- */
+.questionnaire-form {
+    margin-top: 2rem; /* Відступ від заголовка/опису */
+}
+.category-fieldset {
+    border: 1px solid #dee2e6; /* Легка рамка */
+    border-radius: 6px; /* Заокруглення */
+    padding: 1.5rem; /* Внутрішні відступи */
+    margin-bottom: 2rem; /* Відступ між категоріями */
+    background-color: #fff; /* Білий фон */
+}
+.category-fieldset legend {
+    font-weight: 600; /* Жирніший */
+    font-size: 1.25rem;
+    padding: 0 0.75rem; /* Горизонтальні відступи для легенди */
+    margin-bottom: 1rem; /* Відступ під легендою */
+    color: #495057; /* Колір легенди */
+}
+.question-block {
+    margin-bottom: 2rem; /* Відступ між питаннями */
+    padding-bottom: 1rem; /* Невеликий відступ знизу */
+    border-bottom: 1px solid #e9ecef; /* Дуже легкий роздільник */
+}
+.question-block:last-child {
+    border-bottom: none; /* Забрати лінію у останнього питання */
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.question-text {
+    display: block;
+    margin-bottom: 1rem; /* Відступ під текстом питання */
+    font-weight: 500; /* Нормальна насиченість */
+    color: #343a40; /* Колір тексту питання */
+    font-size: 1.05rem; /* Трохи більший шрифт */
+}
+.range-slider {
+    display: flex;
+    flex-wrap: wrap; /* Дозволити перенос на малих екранах */
+    align-items: center;
+    gap: 1rem; /* Проміжок між елементами */
+}
+
+.range-slider input[type="range"] {
+    flex-grow: 1; /* Повзунок займає доступний простір */
+    cursor: pointer;
+    height: 6px; /* Тонший повзунок */
+    border-radius: 3px;
+    background: #dee2e6; /* Сірий фон доріжки */
+    appearance: none;
+    -webkit-appearance: none;
+    min-width: 150px; /* Мінімальна ширина повзунка */
+}
+/* Стилізація повзунка (thumb) */
+.range-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #616aff;; /* Основний колір */
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -7px; /* Вирівнювання по вертикалі відносно доріжки */
+  transition: background-color 0.15s ease;
+}
+.range-slider input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #616aff;;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.range-slider input[type="range"]:focus {
+    outline: none; /* Забрати стандартний контур */
+}
+/* Додавання контуру до thumb при фокусі */
+.range-slider input[type="range"]:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px rgba(92, 103, 242, 0.3);
+}
+.range-slider input[type="range"]:focus::-moz-range-thumb {
+     box-shadow: 0 0 0 4px rgba(92, 103, 242, 0.3);
+}
+
+
+.range-label {
+    font-size: 0.875rem; /* Трохи менший шрифт */
+    color: #6c757d; /* Сірий колір */
+    flex-basis: 100px; /* Базова ширина для міток */
+    flex-shrink: 0; /* Не стискати мітки */
+    text-align: center;
+}
+.range-label.min { text-align: right; }
+.range-label.max { text-align: left; }
+
+.range-value {
+    font-weight: 600; /* Жирний */
+    font-size: 1.1rem;
+    color: #5c67f2; /* Основний колір */
+    min-width: 30px; /* Мінімальна ширина для значення */
+    text-align: center;
+    background-color: transparent; /* Прозорий фон */
+    padding: 0; /* Без падінгів */
+    border-radius: 0;
+    flex-shrink: 0; /* Не стискати */
+}
+
+/* --- Стилі для сторінки результатів (якщо є) --- */
+.results-container {
+    margin-top: 2rem;
+}
+.result-category {
+    margin-bottom: 2rem;
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    border: 1px solid #dee2e6;
+}
+.result-category h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #eee;
+    color: #5c67f2;
+    font-size: 1.4rem;
+}
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+.results-table th,
+.results-table td {
+    border: 1px solid #e9ecef; /* Легша рамка */
+    padding: 0.75rem 1rem; /* Комфортні падінги */
+    text-align: left;
+    vertical-align: middle; /* Вирівнювання по центру вертикалі */
+}
+.results-table th {
+    background-color: #f8f9fa; /* Світлий фон для заголовків */
+    font-weight: 600; /* Жирніший текст */
+    white-space: nowrap; /* Не переносити текст заголовків */
+}
+.results-table td.question-col {
+    width: 40%;
+    line-height: 1.5;
+}
+.results-table td.score-col {
+    text-align: center;
+    font-weight: 600; /* Жирні оцінки */
+    width: 15%; /* Орієнтовна ширина */
+}
+.results-table td.no-data {
+    color: #999;
+    font-style: italic;
+    font-weight: normal;
+    text-align: center;
+}
+.results-table td.difference {
+ font-size: 1.1em;
+ font-weight: 600;
+ text-align: center;
+}
+.results-table td.difference.positive { color: #198754; } /* Bootstrap green */
+.results-table td.difference.negative { color: #dc3545; } /* Bootstrap red */
+
+/* --- Інші стилі (invite link, share buttons) --- */
+.invite-link-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.invite-link-input {
+    flex-grow: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #e9ecef; /* Сірий фон */
+    font-size: 0.95rem;
+    color: #495057;
+    cursor: text; /* Змінено курсор */
+}
+.invite-link-container .btn {
+    padding: 0.5rem 0.75rem; /* Менші падінги для кнопки копіювання */
+    font-size: 0.9rem;
+}
+
+.text-muted {
+    color: #6c757d !important; /* Важливо, щоб перебити інші стилі */
+    font-style: italic;
+}
+
+.share-buttons {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+.share-buttons h4 {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #495057;
+}
+.share-btn {
+    display: inline-flex; /* Для вирівнювання іконки та тексту */
+    align-items: center;
+    padding: 0.5rem 1rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: opacity 0.2s ease;
+    border: none;
+}
+.share-btn:hover {
+    opacity: 0.85;
+    color: #fff;
+}
+.share-btn i {
+    font-size: 1.1em; /* Зробити іконку трохи більшою */
+}
+.share-btn.facebook { background-color: #1877f2; }
+.share-btn.telegram { background-color: #0088cc; }
+.share-btn.twitter { background-color: #1da1f2; }
+.share-btn.viber { background-color: #665CAC; }
+.share-btn.whatsapp { background-color: #25d366; }
+
+/* --- Адаптивність --- */
+@media (max-width: 768px) {
+    .content {
+        margin: 1rem auto; /* Менші відступи на мобільних */
+        padding: 1rem; /* Менші падінги */
+    }
+    .header {
+        padding: 0.75rem 1rem;
+    }
+    .header .logo a { font-size: 1.2rem; }
+    .header nav span { display: none; } /* Сховати вітання на малих екранах */
+
+    .range-slider {
+        gap: 0.75rem; /* Трохи менший проміжок */
+    }
+    .range-label {
+        flex-basis: 80px; /* Зменшити базову ширину міток */
+        font-size: 0.8rem; /* Ще трохи менший шрифт */
+    }
+    .range-label.min { text-align: center; } /* Центрувати мітки на моб */
+    .range-label.max { text-align: center; }
+    .range-slider input[type="range"] {
+        min-width: 120px; /* Менша мінімальна ширина */
+    }
+
+    .results-table th,
+    .results-table td {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+    }
+     /* Можна розглянути варіант таблиці, що скролиться горизонтально,
+        або переформатування таблиці в блоки на дуже малих екранах */
+}
+
+@media (max-width: 776px) {
+    .auth-container {
+        margin: 1rem auto;
+        padding: 1.5rem;
+    }
+    .questionnaire-form .btn-primary,
+    .questionnaire-form .btn-secondary {
+        width: 100%; /* Кнопки на всю ширину */
+        margin-right: 0;
+        margin-bottom: 0.75rem; /* Відступ між кнопками знизу */
+    }
+    .questionnaire-form .btn-secondary {
+        margin-top: 0; /* Забрати верхній відступ у другої кнопки */
+    }
+     .range-slider {
+         flex-direction: column; /* Скласти повзунок вертикально */
+         align-items: stretch; /* Розтягнути елементи */
+     }
+     .range-label { text-align: center !important; flex-basis: auto; } /* Центрувати мітки */
+     .range-value { margin-top: 0.25rem; } /* Невеликий відступ для значення */
+}
+
+/* --- Стилі для кнопок "бажань" (Хочу менше/більше) --- */
+.btn-wish {
+    display: inline-flex; /* Для вирівнювання іконки та тексту */
+    align-items: center; /* Вирівнювання по вертикалі */
+    justify-content: center; /* Центрування контенту (якщо текст короткий) */
+    background: none;
+    border: 1px solid #ced4da; /* Додамо ледь помітну рамку */
+    border-radius: 4px; /* Заокруглення */
+    padding: 5px 8px; /* Внутрішні відступи (вертикаль / горизонталь) */
+    margin: 0;
+    cursor: pointer;
+    font-size: 0.9em; /* Основний розмір тексту/іконки кнопки */
+    color: #6c757d; /* Сірий колір за замовчуванням */
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    line-height: 1.2; /* Для кращого вигляду тексту */
+    align-self: center;
+    flex-shrink: 0;
+    min-width: 75px; /* Мінімальна ширина кнопки */
+    text-align: center; /* Центрування тексту */
+}
+
+.btn-wish i {
+    font-size: 1.2em; /* Зробимо іконку трохи більшою за текст */
+    margin-right: 5px; /* Відступ між іконкою та текстом */
+}
+
+.btn-wish .wish-text {
+    display: inline; /* Текст в рядку */
+    font-weight: 500; /* Невелике напівжирне накреслення */
+}
+
+.btn-wish:hover {
+    color: #495057; /* Темніший сірий при наведенні */
+    background-color: #e9ecef; /* Легкий фон при наведенні */
+}
+
+/* Активний стан кнопок - ЗБІЛЬШУЄМО СПЕЦИФІЧНІСТЬ */
+.range-slider .btn-wish.active { /* Додаємо .range-slider для специфічності */
+   border-color: currentColor; /* Колір рамки = колір тексту */
+   background-color: transparent; /* Забираємо фон, якщо він був */
+}
+
+.range-slider .btn-wish.active.btn-wish-less {
+    color: #dc3545; /* Червоний для "Хочу менше" */
+}
+
+.range-slider .btn-wish.active.btn-wish-more {
+    color: #198754; /* Зелений для "Хочу більше" */
+}
+
+/* Корекції для range-slider */
+.range-slider {
+    gap: 0.5rem; /* Зменшимо проміжок */
+    flex-wrap: nowrap;
+    align-items: center; /* Вирівнюємо все по центру вертикально */
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .range-label {
+        flex-basis: auto; /* Дозволити міткам займати потрібну ширину */
+        min-width: 50px; /* Мінімальна ширина для міток */
+    }
+    .btn-wish {
+        font-size: 0.85em; /* Трохи менший шрифт на планшетах */
+        min-width: 70px;
+        padding: 4px 6px;
+    }
+    .range-slider {
+       gap: 0.4rem;
+    }
+}
+
+@media (max-width: 776px) {
+     .range-slider {
+         flex-wrap: wrap; /* Дозволяємо перенос */
+         justify-content: space-between; /* Розподілити простір */
+         gap: 0.75rem; /* Відновимо більший gap для вертикального вигляду */
+     }
+     /* Порядок елементів для вертикального/переносного вигляду */
+     .range-slider > * { /* Всі прямі нащадки */
+        flex-basis: 45%; /* Приблизно по два елементи в рядок */
+        text-align: center;
+     }
+     .range-slider input[type="range"] {
+         order: 3; /* Повзунок посередині знизу */
+         flex-basis: 100%; /* На всю ширину */
+         margin-top: 0.5rem;
+         margin-bottom: 0.5rem;
+         width: 80%;
+     }
+     .btn-wish-less { order: 1; }
+     .range-label.min { order: 2; text-align: right !important; } /* мітка min біля кнопки less */
+     .range-label.max { order: 4; text-align: left !important; } /* мітка max біля кнопки more */
+     .btn-wish-more { order: 5; }
+     .range-value {
+        order: 6;
+        flex-basis: 100%; /* Значення знизу на всю ширину */
+        margin-top: 0.25rem;
+        text-align: center;
+     }
+     .btn-wish {
+        font-size: 0.9em; /* Повернемо розмір на моб */
+        min-width: 100px; /* Збільшимо ширину */
+        padding: 6px 10px;
+     }
+     .range-label {
+        min-width: auto; /* Знімаємо мін ширину міток */
+        font-size: 0.8rem; /* Дрібніший шрифт міток */
+        white-space: normal; /* Дозволяємо перенос слів у мітках */
+     }
+}
+
+/* Додатково для міток, щоб текст не вилазив */
+.range-label {
+   overflow-wrap: break-word; /* Перенос довгих слів */
+   word-break: break-word; /* Ще один варіант переносу */
+   hyphens: auto; /* Автоматичні переноси (де підтримується) */
+}
+
+/* Стиль для приховування кнопок бажань */
+body.wish-buttons-hidden .btn-wish {
+    display: none !important; /* Ховаємо кнопки, !important для надійності */
+}
+
+/* Стилі для групи кнопок в модальному вікні */
+.modal-button-group {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Проміжок між кнопками */
+    flex-wrap: wrap; /* Дозволити перенос на малих екранах */
+}
+
+/* Можна додати медіа-запит для кнопок модалки, якщо потрібно */
+@media (max-width: 480px) {
+    .modal-button-group .btn {
+        flex-basis: 100%; /* Кожна кнопка на всю ширину */
+        margin-bottom: 10px; /* Відступ між кнопками знизу */
+    }
+     .modal-button-group .btn:last-child {
+        margin-bottom: 0;
+     }
+}
+
+/* Невелике покращення для range-slider, коли кнопки сховані */
+body.wish-buttons-hidden .range-slider {
+    /* Можна додати трохи більший відступ, якщо кнопки сховано, наприклад */
+    /* gap: 1rem; */
+    /* Або можна видалити зайві відступи, якщо кнопки займали місце */
+}

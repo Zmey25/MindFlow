@@ -1,0 +1,136 @@
+{
+    "self": null,
+    "others": [
+        {
+            "respondentUserId": "user_67e98ba8df12a0.39404586",
+            "respondentUsername": "Zmey",
+            "answers": {
+                "q_memory": 6,
+                "q_decision_speed": 5,
+                "q_decision_quality": 3,
+                "q_logic_iq": 5,
+                "q_attention": 6,
+                "q_learning_ability": 5,
+                "q_intuition": 4,
+                "q_creativity": 2,
+                "q_causality": 4,
+                "q_critical_thinking": 2,
+                "q_fantasy": 5,
+                "q_intro_extro": 3,
+                "q_empathy": 5,
+                "q_conflict_proneness": 3,
+                "q_trust": 2,
+                "q_inclusivity": 2,
+                "q_teamwork": 2,
+                "q_leading": 3,
+                "q_feedbacking": 1,
+                "q_assertiveness": 2,
+                "q_perfectionism": 5,
+                "q_team_influence": 2,
+                "q_responsibility": 5,
+                "q_problem_solving": 5,
+                "q_work_engagement": 2,
+                "q_punctuality": 7,
+                "q_age_appearance": 4,
+                "q_wellness": 4,
+                "q_politics": 2,
+                "q_happiness": 5,
+                "fin_literacy": 3,
+                "q_esoteric": 3,
+                "q_religiosity": 6,
+                "q_endurance": 5,
+                "q_sense_of_humor": 3,
+                "q_emotional_control": 3,
+                "q_guilt": 2,
+                "q_optimism": 5,
+                "q_stress_resistance": 5,
+                "q_adaptability": 4,
+                "q_self_esteem": 5,
+                "q_self_reflection": 3,
+                "q_uncertainty_tolerance": 5,
+                "q_victim": 5,
+                "q_rescuer": 3,
+                "q_persecutor": 4,
+                "q_nonconforming": 2,
+                "q_modesty": 5,
+                "q_apathy": 5,
+                "q_sarcastic": 4,
+                "q_offensiveness": 3,
+                "q_decisiveness": 3,
+                "q_reservedness": 5,
+                "q_conservatism": 6,
+                "q_risk_taking": 4,
+                "q_pleasure_seeking": 5,
+                "q_commercialism": 5,
+                "q_inactivity_preference": 6,
+                "q_pride": 6,
+                "q_social_comparison": 3,
+                "q_hobby": 2,
+                "q_interest_movies": 2,
+                "q_interest_games": 1,
+                "q_interest_books": 1,
+                "q_interest_anime": 2,
+                "q_interest_drawing": 1,
+                "q_interest_music": 2,
+                "q_interest_sports": 5,
+                "q_interest_science_tech": 1,
+                "open_q_strength": "",
+                "open_q_weakness": "",
+                "open_q_interaction": "",
+                "open_q_impression": "",
+                "open_q_additional": ""
+            },
+            "timestamp": "2025-05-15T11:13:24+02:00"
+        }
+    ],
+    "achievements": [
+        {
+            "id": "confident_memory",
+            "name": "Гарна пам'ять",
+            "icon": "fas fa-brain",
+            "description": "Інші знають, що ви все пам'ятаєте"
+        }
+    ],
+    "badges_summary": [
+        {
+            "badgeId": "badge_intellect",
+            "score": 59
+        },
+        {
+            "badgeId": "badge_colleague_potential",
+            "score": 51
+        },
+        {
+            "badgeId": "badge_supernatural_belief",
+            "score": 56
+        },
+        {
+            "badgeId": "badge_emotional_intelligence",
+            "score": 56
+        },
+        {
+            "badgeId": "badge_leadership_qualities",
+            "score": 41
+        },
+        {
+            "badgeId": "badge_life_of_party",
+            "score": 48
+        },
+        {
+            "badgeId": "badge_innovator_mindset",
+            "score": 40
+        },
+        {
+            "badgeId": "badge_pragmatist",
+            "score": 48
+        },
+        {
+            "badgeId": "badge_resilience_optimism",
+            "score": 51
+        },
+        {
+            "badgeId": "badge_adventurer_spirit",
+            "score": 31
+        }
+    ]
+}

@@ -1,0 +1,383 @@
+/* --- Глобальні стилі та скидання (як у попередньому варіанті) --- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    margin: 0;
+    background-color: #f8f9fa; /* Світлий фон */
+    color: #212529;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- Основний контейнер (якщо використовується на цих сторінках) --- */
+.container {
+    max-width: 1140px; /* Трохи ширше для адмін-частини */
+    width: 100%;
+    margin: 2rem auto;
+    background: #ffffff;
+    padding: 1.5rem 2rem; /* Більші падінги */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid #dee2e6; /* Легка рамка */
+    flex-grow: 1;
+}
+
+/* Якщо стилі застосовуються без .container, додамо падінг до body */
+/* body { padding: 1.5rem; } */ /* Розкоментуйте, якщо .container не використовується */
+
+
+/* --- Типографіка --- */
+h1, h2, h3, h4 {
+    color: #343a40;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+    font-weight: 600; /* Трохи жирніші */
+}
+h1 { margin-top: 0; }
+hr { border: 0; border-top: 1px solid #dee2e6; margin: 2rem 0; } /* Легший роздільник */
+a { color: #5c67f2; text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { background-color: #e9ecef; padding: 0.2em 0.4em; border-radius: 3px; font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 0.875em; }
+small { font-size: 0.875em; color: #6c757d; }
+
+/* --- Навігація (Admin Nav) --- */
+.admin-nav {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #dee2e6; /* Тонша лінія */
+    display: flex; /* Для гнучкості */
+    flex-wrap: wrap; /* Перенос на малих екранах */
+    gap: 0.5rem; /* Відстань між кнопками */
+}
+/* Стилі для кнопок навігації винесені в загальний блок кнопок нижче */
+.admin-nav a {
+    /* Застосовуються стилі .btn або .btn-secondary */
+    text-decoration: none;
+}
+.admin-nav a.active {
+    /* Застосовуються стилі .btn-primary */
+    font-weight: 600;
+}
+
+/* --- Повідомлення --- */
+.message {
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem; /* Стандартний радіус */
+}
+.message.success { color: #0f5132; background-color: #d1e7dd; border-color: #badbcc; }
+.message.error { color: #842029; background-color: #f8d7da; border-color: #f5c2c7; }
+.message.info { color: #055160; background-color: #cff4fc; border-color: #b6effb; }
+.message a { color: inherit; font-weight: 600; } /* Трохи жирніший */
+.message code { background-color: rgba(0,0,0,0.08); }
+
+/* --- Кнопки та дії (Оновлений блок) --- */
+.btn,
+button, /* Стилізуємо і <button> теги */
+.actions a,
+.cancel-btn,
+.admin-nav a { /* Додано .admin-nav a для консистентності */
+    display: inline-block;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #212529; /* Базовий колір тексту */
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.5rem 1rem; /* Менші падінги для адмін-кнопок */
+    font-size: 0.9rem; /* Трохи менший шрифт */
+    border-radius: 0.25rem; /* Стандартний радіус */
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    margin: 2px; /* Невеликий відступ за замовчуванням */
+}
+/* Основна кнопка */
+.btn-primary,
+button[type="submit"],
+.admin-nav a.active { /* Активна навігація як основна кнопка */
+    color: #fff;
+    background-color: #5c67f2;
+    border-color: #5c67f2;
+}
+.btn-primary:hover, button[type="submit"]:hover, .admin-nav a.active:hover {
+    color: #fff;
+    background-color: #4a54cc;
+    border-color: #444ecb;
+}
+/* Другорядна/звичайна кнопка (для навігації, cancel) */
+.btn-secondary,
+.cancel-btn,
+.admin-nav a:not(.active) { /* Неактивна навігація */
+    color: #212529;
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}
+.btn-secondary:hover, .cancel-btn:hover, .admin-nav a:not(.active):hover {
+    color: #212529;
+    background-color: #d6dadf;
+    border-color: #adb5bd;
+}
+/* Інші варіанти кнопок */
+.edit-btn, .btn-warning { background-color: #ffc107; border-color: #ffc107; color: #000; }
+.edit-btn:hover, .btn-warning:hover { background-color: #ffca2c; border-color: #ffc720; color: #000; }
+.delete-btn, .btn-danger { background-color: #dc3545; border-color: #dc3545; color: #fff; }
+.delete-btn:hover, .btn-danger:hover { background-color: #bb2d3b; border-color: #b02a37; color: #fff; }
+.add-btn, .btn-success { background-color: #198754; border-color: #198754; color: #fff; }
+.add-btn:hover, .btn-success:hover { background-color: #157347; border-color: #146c43; color: #fff; }
+.btn-info { background-color: #0dcaf0; border-color: #0dcaf0; color: #000; }
+.btn-info:hover { background-color: #31d2f2; border-color: #25cff2; color: #000; }
+/* Неактивна кнопка */
+.btn.disabled, .btn:disabled,
+button:disabled {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #e9ecef;
+    border-color: #ced4da;
+    opacity: 0.65;
+}
+
+/* Контейнери для кнопок дій */
+.actions, .actions-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem; /* Невеликий проміжок між кнопками */
+    flex-wrap: wrap; /* Перенос кнопок */
+}
+.actions form, .actions-cell form {
+    display: inline-block; /* Залишаємо для форм видалення */
+    margin: 0;
+    padding: 0;
+}
+
+/* --- Форми --- */
+form { margin-top: 1.5rem; }
+.section-form,
+.edit-form-section {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid #dee2e6; /* Стандартна рамка */
+    border-radius: 6px; /* Трохи більше заокруглення для секцій */
+    background-color: #f8f9fa; /* Світлий фон для секцій */
+    margin-bottom: 1.5rem;
+}
+.edit-form-section {
+    border-color: #a3aaff; /* Виділення рамки синім */
+    background-color: #f1f3ff; /* Дуже світлий синій фон */
+}
+form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500; /* Менш жирний */
+    color: #495057;
+}
+/* Стилізація полів вводу */
+form input[type="text"],
+form input[type="number"],
+form input[type="password"],
+form input[type="search"],
+form input[type="email"], /* Додано інші типи */
+form input[type="url"],
+form textarea,
+form select { /* Додано select */
+    display: block; /* Кожне поле на новому рядку */
+    width: 100%;
+    padding: 0.6rem 0.9rem; /* Падінги */
+    font-size: 0.95rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da; /* Світла рамка */
+    appearance: none;
+    border-radius: 0.25rem; /* Стандартний радіус */
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    margin-bottom: 1rem; /* Відступ знизу */
+}
+form input:focus,
+form textarea:focus,
+form select:focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: #a3aaff; /* Зміна кольору рамки при фокусі */
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(92, 103, 242, 0.2); /* Тінь при фокусі */
+}
+form textarea { min-height: 80px; } /* Висота textarea */
+
+form fieldset {
+    border: 1px solid #dee2e6;
+    padding: 1rem 1.25rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+}
+form legend {
+    font-weight: 600;
+    padding: 0 0.5rem;
+    margin-bottom: 0.75rem; /* Відступ під легендою */
+    font-size: 1.1em;
+}
+/* Інлайн форми (для міток шкал) */
+.form-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin-bottom: 1rem; }
+.form-inline label,
+.form-inline .label-text {
+    margin-bottom: 0; /* Забираємо відступ */
+    font-weight: normal;
+    color: #495057;
+}
+.form-inline input[type="number"],
+.form-inline input[type="text"] {
+    width: auto; /* Автоматична ширина */
+    display: inline-block;
+    margin-bottom: 0; /* Забираємо відступ */
+    flex-grow: 1; /* Дозволяємо рости, якщо потрібно */
+}
+.form-inline input[type="number"] { max-width: 80px; } /* Обмеження для чисел */
+.form-inline input[type="text"] { max-width: 200px; } /* Обмеження для тексту міток */
+
+.form-note { font-size: 0.875em; color: #6c757d; margin-top: -0.75rem; margin-bottom: 1rem; display: block; }
+.form-group { margin-bottom: 1.25rem; }
+
+/* --- Таблиці --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+    background-color: #fff; /* Білий фон для таблиці */
+    border: 1px solid #dee2e6; /* Рамка навколо таблиці */
+    border-radius: 4px; /* Легке заокруглення */
+    overflow: hidden; /* Щоб рамка працювала з заокругленням */
+}
+th, td {
+    border: none; /* Забираємо внутрішні рамки */
+    border-bottom: 1px solid #dee2e6; /* Горизонтальні лінії */
+    padding: 0.2rem 0.1rem;
+    text-align: center;
+    vertical-align: middle;
+}
+th {
+    background-color: #f8f9fa; /* Світлий фон для заголовків */
+    font-weight: 600;
+    color: #495057;
+}
+tbody tr { transition: background-color 0.15s ease; } /* Плавний ховер */
+/* tbody tr:nth-child(odd) { background-color: #fdfdff; } */ /* Дуже легке чергування (опціонально) */
+tbody tr:hover { background-color: #f1f3f5; } /* Світло-сірий ховер */
+tbody tr:last-child td { border-bottom: none; } /* Забрати лінію у останнього рядка */
+td.actions-cell {
+    white-space: nowrap; /* Не переносити кнопки */
+    text-align: right; /* Кнопки справа */
+    width: 1%; /* Займати мінімум місця */
+}
+td.actions-cell .actions { justify-content: flex-end; } /* Вирівняти кнопки вправо */
+
+/* --- Пагінація --- */
+.pagination {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center; /* Центрування */
+    padding-left: 0;
+    list-style: none;
+}
+.pagination a, .pagination span {
+    padding: 0.5rem 0.9rem; /* Падінги як у кнопок */
+    margin-left: -1px; /* Сххлопнути рамки */
+    line-height: 1.5;
+    color: #5c67f2; /* Основний колір посилань */
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #dee2e6; /* Світла рамка */
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+.pagination a:first-child, .pagination span:first-child { margin-left: 0; border-top-left-radius: 0.25rem; border-bottom-left-radius: 0.25rem; }
+.pagination a:last-child, .pagination span:last-child { border-top-right-radius: 0.25rem; border-bottom-right-radius: 0.25rem; }
+.pagination a:hover {
+    z-index: 2;
+    color: #4a54cc;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+.pagination span.current-page {
+    z-index: 3;
+    color: #fff;
+    background-color: #5c67f2;
+    border-color: #5c67f2;
+}
+.pagination span.disabled {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+/* --- Специфічні для питань/категорій --- */
+.category-list .category-item,
+.question-list .question-item {
+    padding: 1rem 1.25rem;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    margin-bottom: 0.75rem; /* Менший відступ */
+    background-color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Вирівнювання по центру */
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.category-list .category-item:hover,
+.question-list .question-item:hover {
+    border-color: #ced4da;
+    background-color: #f8f9fa;
+}
+
+.category-list .category-item.selected,
+.question-list .question-item.selected {
+    background-color: #f1f3ff; /* Світло-синій фон для вибраних */
+    border-color: #a3aaff; /* Синя рамка */
+}
+.category-list .category-name { font-weight: 600; flex-grow: 1; margin-right: 1rem; }
+.category-list .category-name a { color: #212529; text-decoration: none; }
+.category-list .category-name a:hover { color: #5c67f2; }
+
+.question-list .question-item { align-items: flex-start; } /* Текст зверху */
+.question-list .question-text-block { flex-grow: 1; margin-right: 1rem; }
+.question-list .question-text-block a { color: #212529; text-decoration: none; display: block; font-weight: 600; margin-bottom: 0.25rem; }
+.question-list .question-text-block a:hover { color: #5c67f2; }
+.question-list .question-details { font-size: 0.875em; color: #495057; line-height: 1.5; margin-top: 0.1rem; }
+.question-list .question-short { color: #6c757d; }
+.question-list .actions { flex-shrink: 0; text-align: right; align-self: center; /* Вирівняти кнопки по центру */ }
+
+#selected-category-section,
+#selected-question-section {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid #a3aaff; /* Синя рамка */
+    border-radius: 6px;
+    background-color: #f8f9fa; /* Фон як у секцій */
+}
+
+/* --- Адаптивність (простий приклад) --- */
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem auto;
+        padding: 1rem 1.25rem;
+    }
+    th, td { padding: 0.2rem 0.1rem; font-size: 0.9em;  }
+    .actions, .actions-cell { flex-direction: column; align-items: flex-end; gap: 0.25rem; } /* Кнопки одна під одною */
+    .actions button, .actions a, .actions-cell button, .actions-cell a { width: 100%; text-align: center; } /* Кнопки на всю ширину */
+
+    /* Можливо, треба буде сховати деякі колонки таблиці */
+     table th:nth-child(1), table td:nth-child(1) { display: none; }
+}

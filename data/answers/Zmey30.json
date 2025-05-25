@@ -1,0 +1,64 @@
+{
+    "self": {
+        "respondentUserId": "user_67e9982a8d66b7.79626616",
+        "respondentUsername": "Zmey30",
+        "answers": {
+            "q_memory": 4,
+            "q_problem_solving": 4,
+            "q_decision_quality": 4,
+            "q_logic_iq": 4,
+            "q_attention": 4,
+            "q_learning_ability": 4,
+            "q_intuition": 4,
+            "q_creativity": 4,
+            "q_teamwork": 4,
+            "q_intro_extro": 4,
+            "q_empathy": 4,
+            "q_conflict_proneness": 4,
+            "q_trust": 4,
+            "q_leading": 4,
+            "q_critic_other": 4,
+            "q_age_appearance": 4,
+            "q_wellness": 4,
+            "q_politics": 4,
+            "q_hobby": 4,
+            "q_victim": 4,
+            "q_rescuer": 4,
+            "q_persecutor": 4,
+            "q_nonconforming": 4
+        },
+        "timestamp": "2025-04-16T01:15:18+02:00"
+    },
+    "others": [
+        {
+            "respondentUserId": "user_67e98ba8df12a0.39404586",
+            "respondentUsername": "Zmey",
+            "answers": {
+                "q_memory": 6,
+                "q_problem_solving": 5,
+                "q_decision_quality": 6,
+                "q_logic_iq": 2,
+                "q_attention": 2,
+                "q_learning_ability": 4,
+                "q_intuition": 4,
+                "q_creativity": 3,
+                "q_teamwork": 7,
+                "q_intro_extro": 6,
+                "q_empathy": 5,
+                "q_conflict_proneness": 4,
+                "q_trust": 4,
+                "q_leading": 6,
+                "q_critic_other": 2,
+                "q_age_appearance": 2,
+                "q_wellness": 4,
+                "q_politics": 6,
+                "q_hobby": 5,
+                "q_victim": 4,
+                "q_rescuer": 4,
+                "q_persecutor": 6,
+                "q_nonconforming": 6
+            },
+            "timestamp": "2025-04-16T01:14:59+02:00"
+        }
+    ]
+}

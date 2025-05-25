@@ -1,0 +1,24 @@
+{
+    "self": {
+        "respondentUserId": "user_681cedb3edcd54.26807288",
+        "respondentUsername": "guest",
+        "answers": {
+            "q_memory": 4,
+            "q_decision_speed": 4,
+            "q_decision_quality": 4,
+            "q_logic_iq": 4,
+            "q_attention": 4,
+            "q_learning_ability": 4,
+            "q_intuition": 4,
+            "q_creativity": 4,
+            "q_causality": 4,
+            "q_critical_thinking": 4,
+            "q_fantasy": 4,
+            "q_dreaming": 4,
+            "q_hobby": 4,
+            "q_sense_of_humor": 4
+        },
+        "timestamp": "2025-05-08T20:29:28+02:00"
+    },
+    "others": []
+}

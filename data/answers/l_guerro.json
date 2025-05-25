@@ -1,0 +1,217 @@
+{
+    "self": {
+        "respondentUserId": "user_681cedb3edcd54.26807288",
+        "respondentUsername": "l.guerro",
+        "answers": {
+            "q_memory": 4,
+            "q_decision_speed": 4,
+            "q_decision_quality": 4,
+            "q_logic_iq": 4,
+            "q_attention": 4,
+            "q_learning_ability": 4,
+            "q_intuition": 4,
+            "q_creativity": 4,
+            "q_causality": 4,
+            "q_critical_thinking": 4,
+            "q_fantasy": 4,
+            "q_hobby": 4,
+            "q_interest_movies": 3,
+            "q_interest_games": 3,
+            "q_interest_books": 3,
+            "q_interest_anime": 3,
+            "q_interest_drawing": 3,
+            "q_interest_music": 3,
+            "q_interest_sports": 3,
+            "q_interest_science_tech": 3
+        },
+        "timestamp": "2025-05-11T21:14:54+02:00"
+    },
+    "others": [
+        {
+            "respondentUserId": "user_67e98ba8df12a0.39404585",
+            "respondentUsername": "Zme2",
+            "answers": {
+                "q_memory": 7,
+                "q_decision_speed": 4,
+                "q_decision_quality": 4,
+                "q_logic_iq": 4,
+                "q_attention": 4,
+                "q_learning_ability": 4,
+                "q_intuition": 4,
+                "q_creativity": 4,
+                "q_causality": 4,
+                "q_critical_thinking": 4,
+                "q_fantasy": 4,
+                "q_hobby": 3,
+                "q_interest_movies": 3,
+                "q_interest_games": 3,
+                "q_interest_books": 3,
+                "q_interest_anime": 3,
+                "q_interest_drawing": 5,
+                "q_interest_music": 5,
+                "q_interest_sports": 5,
+                "q_interest_science_tech": 5,
+                "open_q_strength": "",
+                "open_q_weakness": "",
+                "open_q_interaction": "",
+                "open_q_impression": "",
+                "open_q_additional": ""
+            },
+            "timestamp": "2025-05-20T22:43:17+02:00"
+        },
+        {
+            "respondentUserId": "user_67e98ba8df12a0.39404585",
+            "respondentUsername": "Zmey1",
+            "answers": {
+                "q_memory": 4,
+                "q_decision_speed": 4,
+                "q_decision_quality": 4,
+                "q_logic_iq": 4,
+                "q_attention": 4,
+                "q_learning_ability": 4,
+                "q_intuition": 4,
+                "q_creativity": 4,
+                "q_causality": 4,
+                "q_critical_thinking": 4,
+                "q_fantasy": 4,
+                "open_q_strength": "",
+                "open_q_weakness": "",
+                "open_q_interaction": "",
+                "open_q_impression": "",
+                "open_q_additional": ""
+            },
+            "timestamp": "2025-05-11T21:16:54+02:00"
+        },
+        {
+            "respondentUserId": "user_67e98ba8df12a0.39404585",
+            "respondentUsername": "Zmey1",
+            "answers": {
+                "q_memory": 4,
+                "q_decision_speed": 4,
+                "q_decision_quality": 4,
+                "q_logic_iq": 4,
+                "q_attention": 4,
+                "q_learning_ability": 4,
+                "q_intuition": 4,
+                "q_creativity": 4,
+                "q_causality": 4,
+                "q_critical_thinking": 4,
+                "q_fantasy": 4,
+                "open_q_strength": "",
+                "open_q_weakness": "",
+                "open_q_interaction": "",
+                "open_q_impression": "",
+                "open_q_additional": ""
+            },
+            "timestamp": "2025-05-11T21:16:54+02:00"
+        },
+        {
+            "respondentUserId": "user_67e98ba8df12a0.39404585",
+            "respondentUsername": "Zmey1",
+            "answers": {
+                "q_memory": 4,
+                "q_decision_speed": 4,
+                "q_decision_quality": 4,
+                "q_logic_iq": 4,
+                "q_attention": 4,
+                "q_learning_ability": 4,
+                "q_intuition": 4,
+                "q_creativity": 4,
+                "q_causality": 4,
+                "q_critical_thinking": 4,
+                "q_fantasy": 4,
+                "open_q_strength": "",
+                "open_q_weakness": "",
+                "open_q_interaction": "",
+                "open_q_impression": "",
+                "open_q_additional": ""
+            },
+            "timestamp": "2025-05-11T21:16:54+02:00"
+        },
+        {
+            "respondentUserId": "user_67e98ba8df12a0.39404586",
+            "respondentUsername": "Zmey",
+            "answers": {
+                "q_memory": 7,
+                "q_decision_speed": 4,
+                "q_decision_quality": 4,
+                "q_logic_iq": 4,
+                "q_attention": 4,
+                "q_learning_ability": 4,
+                "q_intuition": 4,
+                "q_creativity": 4,
+                "q_causality": 4,
+                "q_critical_thinking": 4,
+                "q_fantasy": 4,
+                "q_hobby": 3,
+                "q_interest_movies": 3,
+                "q_interest_games": 3,
+                "q_interest_books": 3,
+                "q_interest_anime": 3,
+                "q_interest_drawing": 3,
+                "q_interest_music": 3,
+                "q_interest_sports": 3,
+                "q_interest_science_tech": 3,
+                "open_q_strength": "",
+                "open_q_weakness": "",
+                "open_q_interaction": "",
+                "open_q_impression": "",
+                "open_q_additional": ""
+            },
+            "timestamp": "2025-05-20T22:45:55+02:00"
+        }
+    ],
+    "achievements": [],
+    "badges_summary": [
+        {
+            "badgeId": "badge_intellect",
+            "score": 52
+        },
+        {
+            "badgeId": "badge_colleague_potential",
+            "score": 1
+        },
+        {
+            "badgeId": "badge_supernatural_belief",
+            "score": 51
+        },
+        {
+            "badgeId": "badge_emotional_intelligence",
+            "score": 1
+        },
+        {
+            "badgeId": "badge_leadership_qualities",
+            "score": 51
+        },
+        {
+            "badgeId": "badge_life_of_party",
+            "score": 1
+        },
+        {
+            "badgeId": "badge_innovator_mindset",
+            "score": 51
+        },
+        {
+            "badgeId": "badge_pragmatist",
+            "score": 51
+        },
+        {
+            "badgeId": "badge_resilience_optimism",
+            "score": 51
+        },
+        {
+            "badgeId": "badge_adventurer_spirit",
+            "score": 42
+        }
+    ],
+    "expertAnalysis": {
+        "summary": "Аналіз профілю користувача 'l_guerro' показує досить збалансований та стабільний профіль, особливо у сфері когнітивних здібностей. У більшості інтелектуальних рис, таких як швидкість та якість рішень, логічне мислення, увага, здатність до навчання, інтуїція, креативність, причинно-наслідковий та критичний аналіз, а також уява, самооцінка користувача (4 бали) повністю збігається із середньою оцінкою від інших. Це свідчить про хороше самоусвідомлення та узгодженість внутрішнього сприйняття із зовнішнім. Це профіль людини, яку, ймовірно, сприймають як надійну та послідовну, без виражених піків чи провалів у цих областях.\n\nЗагальні плюси: Висока узгодженість самооцінки та оцінки інших у ключових когнітивних сферах, що свідчить про реалістичне самосприйняття. Відсутність значних негативних оцінок. Інші користувачі бачать користувача краще в пам'яті та деяких інтересах, ніж він сам.\nЗагальні мінуси: Немає яскраво виражених «сильних сторін» з оцінками 6 або 7. Є певна розбіжність у сприйнятті хобі та деяких інтересів, де самооцінка користувача нижча, ніж оцінка інших.\n\nАналогія з відомими людьми (або персонажами): Цей профіль нагадує характер Семвайза Гемджі з «Володаря Перснів». Семвайз – персонаж, який не має видатних інтелектуальних здібностей чи яскравих талантів у традиційному розумінні, але він надзвичайно надійний, послідовний, вірний і сприймається оточуючими як міцний «стовп» підтримки. Як і користувач 'l_guerro', Семвайз не виділяється екстремально високими показниками в окремих сферах, але його загальна збалансованість, надійність та стабільність роблять його надзвичайно цінним. Розбіжності у сприйнятті інтересів можуть вказувати на багатство внутрішнього світу, який не завжди повністю проявляється зовні, подібно до Семвайза, чия глибина розкривається поступово.\n\nАналіз розбіжностей: Найбільша розбіжність спостерігається у рисі «Пам'ять», де самооцінка становить 4, тоді як інші оцінюють її в середньому на 5.2. Це може свідчити про те, що користувач занадто критично ставиться до своєї пам'яті або не помічає, наскільки добре вона працює у певних ситуаціях, які помічають інші. Також є розбіжності у «Наявності хобі» (самооцінка 4, інші 3) та низці інтересів («Малювання», «Музика», «Спорт», «Наука/Техніка»), де самооцінка 3, а інші оцінюють як 4. Це може означати, що користувач має вищий стандарт для того, що він вважає значним хобі чи інтересом, або ж його залучення в ці сфери відбувається у спосіб, який є більш помітним для сторонніх спостерігачів, ніж для нього самого. Наприклад, він може слухати музику, яку інші помічають, але не вважати себе «любителем музики» у повному розумінні.\n\nРиси з високими оцінками (6 або 7): У наданих даних відсутні риси з оцінками 6 або 7 як від користувача, так і від інших.\n\nЛогічні протиріччя: Значних логічних протиріч у даних не виявлено. Послідовні середні оцінки у когнітивних сферах та дещо нижчі (але все ще середні) оцінки інтересів не суперечать одне одному. Відсутність даних про соціальні чи емоційні риси не дозволяє провести більш широкий аналіз на предмет протиріч.\n\nЗагалом, профіль демонструє людину з гарним саморозумінням у ключових навичках та потенціалом для більш глибокого дослідження своїх інтересів та усвідомлення своїх сильних сторін, які можуть бути більш помітними для інших, ніж для неї самої.",
+        "recommendations": [
+            "Дослідіть різницю у сприйнятті вашої пам'яті. Зверніть увагу на моменти, коли ваша пам'ять вас виручає, і спробуйте усвідомити, як саме ви запам'ятовуєте інформацію. Можливо, ви сильніші, ніж думаєте! Це допоможе вам повніше використовувати цей ресурс.",
+            "Проаналізуйте, чому інші бачать вас більш зацікавленим у певних хобі та інтересах (малювання, музика, спорт, наука/техніка), ніж ви самі себе оцінюєте. Чи є у вас приховані таланти або інтереси, які варто розвивати? Ви можете відкрити для себе нові захоплення, які принесуть вам радість та розвиток.",
+            "Оскільки багато ваших навичок оцінюються як стабільно середні, спробуйте вибрати одну-дві сфери (когнітивні чи інтереси), які вас найбільше інтригують, і свідомо приділіть їм більше уваги. Це може бути шлях до виявлення прихованого потенціалу або перетворення стабільної навички на сильну сторону. Не бійтеся експериментувати!"
+        ],
+        "analyst": "Gemini AI Psychoanalyst",
+        "timestamp": "2025-05-20T22:46:15+02:00"
+    }
+}

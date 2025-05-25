@@ -1,0 +1,195 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* Щоб уникнути прокрутки на маленьких екранах */
+}
+
+#game-container {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 90%;
+    max-width: 400px; /* Максимальна ширина для телефонів */
+    overflow-y: auto; /* Дозволити прокрутку, якщо контент не влазить */
+    max-height: 95vh;
+}
+
+.screen {
+    display: none; /* Всі екрани приховані за замовчуванням */
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Відстань між елементами */
+}
+
+.screen.active {
+    display: flex; /* Активний екран видимий */
+}
+
+h1 {
+    font-size: 2.2em;
+    margin-bottom: 10px;
+    color: #ffdd57; /* Яскраво-жовтий */
+}
+
+h2 {
+    font-size: 1.6em;
+    color: #ffcc00;
+    margin-top: 0;
+}
+
+h3 {
+    font-size: 1.8em;
+    color: #a0ffaa; /* Світло-зелений для ролі */
+    margin: 5px 0 15px 0;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.rules {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+}
+.rules h2 {
+    font-size: 1.2em;
+    text-align: center;
+    color: #f0f0f0;
+}
+.rules p {
+    margin: 5px 0;
+    line-height: 1.4;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #eee;
+}
+
+input[type="number"],
+select {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background-color: #333;
+    color: #fff;
+    font-size: 1em;
+}
+
+button {
+    background: #ff6b6b; /* Яскраво-червоний */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px; /* Більш заокруглені кнопки */
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 10px;
+    min-width: 200px; /* Мінімальна ширина для кнопок */
+}
+
+button:hover {
+    background-color: #ff4757; /* Темніший червоний при наведенні */
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0px);
+}
+
+#start-game-btn {
+    background: #4CAF50; /* Зелений */
+}
+#start-game-btn:hover {
+    background: #45a049;
+}
+
+#role-seen-btn, #end-game-early-btn {
+    background: #f0ad4e; /* Помаранчевий */
+}
+#role-seen-btn:hover, #end-game-early-btn:hover {
+    background: #ec971f;
+}
+
+#play-again-btn {
+    background: #5bc0de; /* Блакитний */
+}
+#play-again-btn:hover {
+    background: #31b0d5;
+}
+
+#timer-display {
+    font-size: 3em;
+    font-weight: bold;
+    color: #ffeb3b; /* Жовтий для таймера */
+    margin: 20px 0;
+    padding: 10px 20px;
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
+
+.error-text {
+    color: #ff4d4d;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#roles-reveal-list {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+#roles-reveal-list li {
+    background-color: rgba(255,255,255,0.1);
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    font-size: 1.1em;
+}
+
+#roles-reveal-list li strong {
+    color: #ffdd57;
+}
+
+#look-away-text {
+    font-style: italic;
+    color: #ccc;
+}
+
+#role-display-area p {
+    margin-bottom: 0;
+}
+
+/* Адаптивність */
+@media (max-height: 600px) {
+    h1 { font-size: 1.8em; }
+    .rules { font-size: 0.8em; }
+    button { padding: 10px 20px; font-size: 1em; }
+    #timer-display { font-size: 2.5em; }
+}

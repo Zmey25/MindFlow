@@ -1,0 +1,138 @@
+[
+    {
+        "badgeId": "badge_intellect",
+        "badgeName": "Інтелектуальна міць",
+        "badgeDescription": "Показує загальний рівень інтелектуальних здібностей, включаючи пам'ять, логіку, швидкість та якість прийняття рішень, здатність до навчання та критичного мислення. Вищий бал означає вищі інтелектуальні здібності.",
+        "questions": [
+            {"questionId": "q_memory"},
+            {"questionId": "q_decision_speed"},
+            {"questionId": "q_decision_quality"},
+            {"questionId": "q_logic_iq"},
+            {"questionId": "q_attention"},
+            {"questionId": "q_learning_ability"},
+            {"questionId": "q_causality"},
+            {"questionId": "q_critical_thinking"}
+        ]
+    },
+    {
+        "badgeId": "badge_colleague_potential",
+        "badgeName": "Ідеальний Колега",
+        "badgeDescription": "Оцінює, наскільки людина є хорошим та зручним командним гравцем. Враховує навички командної роботи, відповідальність, пунктуальність, довіру та здатність вирішувати проблеми. Вищий бал свідчить про кращого колегу.",
+        "questions": [
+            {"questionId": "q_teamwork"},
+            {"questionId": "q_trust"},
+            {"questionId": "q_responsibility"},
+            {"questionId": "q_punctuality"},
+            {"questionId": "q_work_engagement"},
+            {"questionId": "q_problem_solving"},
+            {"questionId": "q_empathy"}
+        ]
+    },
+    {
+        "badgeId": "badge_supernatural_belief",
+        "badgeName": "Віра в Надприроднє",
+        "badgeDescription": "Показує схильність людини вірити в езотерику, долю, релігію та покладатися на інтуїцію більше, ніж на логіку та критичний аналіз. Вищий бал означає більшу ймовірність віри в надприродні явища.",
+        "questions": [
+            {"questionId": "q_esoteric"},
+            {"questionId": "q_religiosity"},
+            {"questionId": "q_intuition"},
+            {"questionId": "q_critical_thinking", "isReversed": true},
+            {"questionId": "q_causality", "isReversed": true},
+            {"questionId": "q_logic_iq", "isReversed": true}
+        ]
+    },
+    {
+        "badgeId": "badge_emotional_intelligence",
+        "badgeName": "Емоційний Інтелект",
+        "badgeDescription": "Оцінює здатність людини розуміти власні та чужі емоції, керувати ними, співпереживати та будувати здорові стосунки. Вищий бал свідчить про краще розвинений емоційний інтелект.",
+        "questions": [
+            {"questionId": "q_empathy"},
+            {"questionId": "q_emotional_control"},
+            {"questionId": "q_happiness"},
+            {"questionId": "q_victim", "isReversed": true},
+            {"questionId": "q_conflict_proneness", "isReversed": true},
+            {"questionId": "q_offensiveness", "isReversed": true}
+        ]
+    },
+    {
+        "badgeId": "badge_leadership_qualities",
+        "badgeName": "Лідерські Якості",
+        "badgeDescription": "Визначає потенціал людини бути лідером, її здатність вести за собою, приймати відповідальні рішення, впливати на команду та наполягати на своєму. Вищий бал означає сильніші лідерські якості.",
+        "questions": [
+            {"questionId": "q_leading"},
+            {"questionId": "q_assertiveness"},
+            {"questionId": "q_team_influence"},
+            {"questionId": "q_responsibility"},
+            {"questionId": "q_decision_speed"},
+            {"questionId": "q_critical_thinking"},
+            {"questionId": "q_optimism"}
+        ]
+    },
+    {
+        "badgeId": "badge_life_of_party",
+        "badgeName": "Душа Компанії",
+        "badgeDescription": "Показує, наскільки людина є комунікабельною, відкритою, оптимістичною та має гарне почуття гумору, що робить її приємною у спілкуванні та центром уваги. Вищий бал – яскравіша 'душа компанії'.",
+        "questions": [
+            {"questionId": "q_intro_extro"},
+            {"questionId": "q_empathy"},
+            {"questionId": "q_sense_of_humor"},
+            {"questionId": "q_optimism"},
+            {"questionId": "q_reservedness", "isReversed": true},
+            {"questionId": "q_sarcastic"}
+        ]
+    },
+    {
+        "badgeId": "badge_innovator_mindset",
+        "badgeName": "Новаторське Мислення",
+        "badgeDescription": "Оцінює креативність, здатність генерувати нові ідеї, відкритість до нового, багату уяву та прагнення бути не таким, як усі. Вищий бал свідчить про сильніший новаторський потенціал.",
+        "questions": [
+            {"questionId": "q_creativity"},
+            {"questionId": "q_fantasy"},
+            {"questionId": "q_learning_ability"},
+            {"questionId": "q_nonconforming"},
+            {"questionId": "q_intuition"},
+            {"questionId": "q_critical_thinking"}
+        ]
+    },
+    {
+        "badgeId": "badge_pragmatist",
+        "badgeName": "Прагматик",
+        "badgeDescription": "Характеризує людину, яка зосереджена на практичних результатах, фінансовій грамотності, вирішенні проблем та відповідальному ставленні до справ, менше покладаючись на мрії чи емоції. Вищий бал – сильніший прагматизм.",
+        "questions": [
+            {"questionId": "fin_literacy"},
+            {"questionId": "q_problem_solving"},
+            {"questionId": "q_decision_quality"},
+            {"questionId": "q_responsibility"},
+            {"questionId": "q_fantasy", "isReversed": true},
+            {"questionId": "q_pleasure_seeking", "isReversed": true},
+            {"questionId": "q_esoteric", "isReversed": true}
+        ]
+    },
+    {
+        "badgeId": "badge_resilience_optimism",
+        "badgeName": "Життєстійкий Оптиміст",
+        "badgeDescription": "Показує здатність людини зберігати позитивний погляд на життя, витримувати труднощі, контролювати емоції та залишатися щасливою, не впадаючи в апатію. Вищий бал – вища життєстійкість та оптимізм.",
+        "questions": [
+            {"questionId": "q_optimism"},
+            {"questionId": "q_happiness"},
+            {"questionId": "q_endurance"},
+            {"questionId": "q_emotional_control"},
+            {"questionId": "q_critical_thinking"},
+            {"questionId": "q_apathy", "isReversed": true},
+            {"questionId": "q_offensiveness", "isReversed": true}
+        ]
+    },
+    {
+        "badgeId": "badge_adventurer_spirit",
+        "badgeName": "Дух Авантюриста",
+        "badgeDescription": "Оцінює схильність людини до ризику, пошуку нових вражень, активності та відмови від консервативних підходів. Вищий бал означає сильнішу жагу до пригод.",
+        "questions": [
+            {"questionId": "q_risk_taking"},
+            {"questionId": "q_nonconforming"},
+            {"questionId": "q_conservatism", "isReversed": true},
+            {"questionId": "q_inactivity_preference", "isReversed": true},
+            {"questionId": "q_pleasure_seeking"},
+            {"questionId": "q_hobby"}
+        ]
+    }
+]

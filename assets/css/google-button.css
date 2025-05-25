@@ -1,0 +1,73 @@
+/**
+ * Стилі для кнопки Google OAuth
+ */
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+    color: #777;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ddd;
+}
+
+.separator span {
+    padding: 0 10px;
+}
+
+.google-btn-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.google-btn {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1px;
+    text-decoration: none;
+    color: #444;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.3s;
+    width: 100%;
+    max-width: 240px;
+}
+
+.google-btn:hover {
+    background-color: #f7f7f7;
+}
+
+.google-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-text {
+    display: inline-block;
+    text-align: center;
+    width: calc(100% - 40px);
+    font-size: 14px;
+    font-family: 'Roboto', Arial, sans-serif;
+    letter-spacing: 0.21px;
+}

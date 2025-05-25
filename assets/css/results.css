@@ -1,0 +1,394 @@
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+
+.results-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.result-category-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    padding: 20px 25px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.result-category-card h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #eee;
+    padding-bottom: 10px;
+    color: #333;
+    font-size: 1.4em;
+    text-align: center;
+    font-weight: 600;
+}
+
+.chart-container {
+    position: relative;
+    height: 350px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.message.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.table-details {
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.table-details summary {
+    font-weight: bold;
+    color: #5c67f2;
+    padding: 5px 0;
+    display: inline-block;
+}
+.table-details summary:hover { text-decoration: underline; }
+.table-details summary::before {
+    content: '▶ ';
+    display: inline-block;
+    transition: transform 0.2s ease-in-out;
+    font-size: 0.8em;
+    margin-right: 5px;
+}
+details[open] > summary::before { transform: rotate(90deg); }
+
+.table-container { margin-top: 10px; overflow-x: auto; }
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+    min-width: 500px;
+}
+.results-table th,
+.results-table td {
+    border-bottom: 1px solid #eee;
+    padding: 10px 8px;
+    text-align: left;
+    vertical-align: middle;
+    font-size: 0.9em;
+}
+.results-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+.results-table tbody tr:last-child td { border-bottom: none; }
+.results-table tbody tr:hover { background-color: #faffee; }
+
+.results-table .question-col {
+    line-height: 1.4;
+    white-space: normal;
+    word-wrap: break-word;
+}
+.results-table .score-col {
+    text-align: center;
+    font-weight: bold;
+    white-space: nowrap;
+    min-width: 50px;
+}
+
+.results-table td.no-data { color: #aaa; font-style: italic; font-weight: normal; }
+.results-table td.difference { font-size: 1em; }
+.results-table td.difference.positive { color: #28a745; }
+.results-table td.difference.negative { color: #dc3545; }
+
+.message.info {
+    background-color: #e2f3ff;
+    color: #0c5460;
+    border: 1px solid #b8daff;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+.message.info a { color: #0c5460; font-weight: bold; }
+.message.info strong { color: #004085; }
+
+ .achievements-block, .expert-analysis-block {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    padding: 20px 25px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+    }
+    .achievements-block h2, .expert-analysis-block h2 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 1.3em;
+        color: #495057;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 8px;
+    }
+    .achievements-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap; /* Дозволяє переносити ачівки */
+        gap: 40px; /* Відстань між ачівками */
+        justify-content: center;
+    }
+    .achievement-item {
+        display: flex;
+        flex-direction: column; /* Іконка зверху, текст знизу */
+        align-items: center;
+        text-align: center;
+        width: 120px; /* Фіксована ширина для однакового вигляду */
+        cursor: default; /* Змінити, якщо буде клікабельно */
+        min-width: 15%;
+    }
+    .achievement-item i { /* Стиль для іконки Font Awesome */
+        font-size: 2.5em; /* Розмір іконки */
+        color: #ffc107; /* Колір (приклад - золотий) */
+        margin-bottom: 8px;
+        transition: transform 0.2s ease-in-out;
+    }
+    .achievement-item:hover i {
+        transform: scale(1.1); /* Ефект при наведенні */
+    }
+    .achievement-item span {
+        font-size: 0.85em;
+        color: #6c757d;
+        line-height: 1.3;
+    }
+
+    .expert-analysis-content p {
+        margin-bottom: 1em;
+        line-height: 1.6;
+        color: #343a40;
+    }
+    .expert-analysis-content ul {
+        padding-left: 20px;
+        margin-bottom: 1em;
+    }
+    .expert-analysis-content li {
+         margin-bottom: 0.5em;
+         line-height: 1.6;
+    }
+    .expert-analysis-content strong {
+        color: #0056b3; /* Акцент на ключових словах */
+    }
+    .expert-analyst {
+        text-align: right;
+        font-style: italic;
+        color: #6c757d;
+        margin-top: 15px;
+        font-size: 0.9em;
+    }
+    .message { padding: 15px; margin-bottom: 20px; border-radius: 5px; text-align: center; border: 1px solid transparent; }
+    .message.success { background-color: #d4edda; color: #155724; border-color: #c3e6cb; }
+    .message.error { background-color: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+    .message.info { background-color: #d1ecf1; color: #0c5460; border-color: #bee5eb; }
+    .message.warning { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
+    .message a { color: inherit; font-weight: bold; text-decoration: underline; }
+    .message a:hover { color: inherit; }
+    .btn.btn-primary { background-color: #5C67F2; color: white; padding: 10px 18px; border: none; border-radius: 5px; cursor: pointer; font-size: 0.95em; text-decoration: none; display: inline-block; transition: background-color 0.3s ease; }
+    .btn.btn-primary:hover { background-color: #4a54c4; text-decoration: none; color: white; }
+
+
+/* --- Styles for Badges Block --- */
+
+.badges-block {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+
+.badges-list {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px 20px; /* Збільшив вертикальний gap для більших іконок */
+}
+
+.badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 110px; /* Трохи збільшив ширину для більшої іконки */
+    padding: 10px;
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out;
+    position: relative; /* Для позиціонування тултіпа */
+}
+
+.badge-item:hover {
+    transform: translateY(-5px);
+}
+
+.badge-icon-wrapper {
+    position: relative;
+    /* font-size для іконки Font Awesome тепер встановлюється для .fa-medal */
+    width: 100px;   /* Збільшив контейнер */
+    height: 100px;  /* Збільшив контейнер */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-bottom: 10px; /* Збільшив відступ */
+    /* Колір самої іконки (fa-medal) тепер буде встановлюватися окремо */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.badge-icon-wrapper .fa-medal {
+    font-size: 100px; /* Збільшений розмір самої іконки медалі */
+    color: white; /* Колір іконки за замовчуванням (може бути перекрито для світлих фонів) */
+    /* line-height та vertical-align можуть допомогти, якщо іконка не центрується ідеально */
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.badge-score {
+    position: absolute;
+    font-size: 20px; /* Розмір цифри, можна підібрати */
+    font-weight: bold;
+    color: #4A4A4A; /* Сірий колір для цифри */
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.6), /* Основна чорна тінь */
+                 0px 0px 1px rgba(0, 0, 0, 0.8); /* Тонша, насиченіша тінь для чіткості */
+     /* z-index: 1; Щоб цифра була поверх іконки, якщо щось піде не так */
+}
+
+.badge-name {
+    font-size: 0.9em; /* Трохи збільшив для кращої читабельності */
+    color: #454545;   /* Темніший сірий для назви */
+    font-weight: 500;
+    margin-top: 5px;
+    word-break: keep-all;
+    line-height: 1.2; /* Для кращого відображення дворядкових назв */
+}
+
+/* Кольори для бейджів (фони та колір іконок) */
+
+/* 90-100: gold - Високий бал, яскрава іконка */
+.badge-gold { background-color: #ffe680; }
+.badge-gold .fa-medal { color: #00bcd4; } /* Яскравий бірюзовий */
+
+/* 80-89: silver - Високий бал, яскрава іконка */
+.badge-silver { background-color: #e0e0e0; }
+.badge-silver .fa-medal { color: #9c27b0; } /* Яскравий фіолетовий */
+
+/* 70-79: purple - Високий бал, яскрава іконка */
+.badge-purple { background-color: #e6ccff; }
+.badge-purple .fa-medal { color: #673ab7; } /* Глибокий фіолетовий */
+
+/* 60-69: green - Високий бал, яскрава іконка */
+.badge-green { background-color: #b3ffb3; }
+.badge-green .fa-medal { color: #3f51b5; } /* Глибокий синій/індиго */
+
+/* --- Середні бали (залишаються як було) --- */
+
+/* 50-59: yellow - Середній+, специфічний колір іконки */
+.badge-yellow { background-color: #ffffb3; }
+.badge-yellow .fa-medal { color: #797938; }
+
+/* 40-49: teal - Середній, специфічний колір іконки */
+.badge-teal { background-color: #b3e0d6; }
+.badge-teal .fa-medal { color: #33665a; }
+
+/* 30-39: orange - Нижче середнього, специфічний колір іконки (перше попередження) */
+.badge-orange { background-color: #ffd699; }
+.badge-orange .fa-medal { color: #fa8900; }
+
+/* --- Низькі бали (без специфічного кольору іконки з цих правил) --- */
+
+/* 20-29: brown - Погано */
+.badge-brown { background-color: #c5a58b; }
+/* Іконка успадковує колір від бейджа або контейнера */
+
+/* 10-19: gray - Дуже погано */
+.badge-gray { background-color: #888888; }
+/* Іконка успадковує колір */
+
+/* 0-9: red - Найгірший */
+.badge-red { background-color: #ff6666; }
+/* Іконка успадковує колір */
+
+/* Tooltip styles */
+.tooltip-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 230px; /* Трохи ширше для комфорту */
+    background-color: #2c2c2c; /* Темно-сірий для тултіпа */
+    color: #f0f0f0; /* Світлий текст */
+    text-align: left;
+    border-radius: 6px;
+    padding: 12px 15px; /* Збільшив падінги */
+    position: absolute;
+    z-index: 20;
+    bottom: 120%; /* Трохи вище, щоб не накладалось на більшу іконку */
+    left: 50%;
+    margin-left: -115px; /* Половина нової ширини */
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s; /* Плавне зникнення */
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    font-size: 0.9em;
+    line-height: 1.45;
+}
+
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -6px; /* Збільшив трохи стрілку */
+    border-width: 6px;
+    border-style: solid;
+    border-color: #2c2c2c transparent transparent transparent;
+    z-index: 20;
+}
+
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s; /* Миттєва поява при наведенні */
+}
+
+.tooltip-text strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1.05em;
+    color: #ffffff; /* Білий для заголовка */
+}
+.tooltip-text hr {
+    border: 0;
+    height: 1px;
+    background-color: #4a4a4a; /* Світліша лінія розділювач */
+    margin: 8px 0;
+}

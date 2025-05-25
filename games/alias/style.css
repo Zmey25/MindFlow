@@ -1,0 +1,249 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(135deg, #FFD700, #FFA500); /* Яскравий жовто-оранжевий градієнт */
+    color: #333;
+    margin: 0;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Щоб при довгому контенті починалось зверху */
+    min-height: 100vh;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* Прибрати синю підсвітку при кліку на мобільних */
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.95); /* Майже білий з прозорістю */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 480px; /* Обмеження для кращого вигляду на великих екранах, але орієнтація на мобільні */
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.screen {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h1, h2, h3 {
+    color: #FF6347; /* Томатний */
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+h1::after {
+    content: " 🎲";
+}
+
+
+.rules {
+    background-color: #FFFACD; /* Лимонний шифон */
+    border-left: 5px solid #FFC107; /* Бурштиновий */
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    text-align: left;
+    border-radius: 8px;
+}
+.rules h2 {
+    margin-top: 0;
+    color: #FFA000; /* Темніший бурштин */
+}
+.rules p {
+    margin: 5px 0;
+    font-size: 0.9em;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+.form-group input[type="checkbox"] + label {
+    font-weight: normal;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: calc(100% - 22px); /* Враховуємо padding */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+input[type="checkbox"] {
+    margin-right: 5px;
+    transform: scale(1.2);
+}
+
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px; /* Більш округлі кнопки */
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 10px 5px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-primary {
+    background-color: #4CAF50; /* Зелений */
+    color: white;
+}
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.btn-secondary {
+    background-color: #007BFF; /* Синій */
+    color: white;
+}
+.btn-secondary:hover {
+    background-color: #0069d9;
+}
+
+.btn-success {
+    background-color: #28a745; /* Яскраво-зелений */
+    color: white;
+    width: 45%;
+}
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-warning {
+    background-color: #ffc107; /* Жовтий (бурштиновий) */
+    color: #333;
+    width: 45%;
+}
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+#game-screen .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+#timer {
+    background-color: #FF6347; /* Томатний */
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+}
+#current-round-score {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 10px;
+}
+
+
+#word-display-container {
+    background-color: #E0F7FA; /* Світло-блакитний */
+    padding: 30px 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    min-height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #00BCD4; /* Бірюзовий */
+}
+
+#word-to-explain {
+    font-size: 2.5em; /* Збільшено для кращої читабельності */
+    font-weight: bold;
+    color: #00796B; /* Темно-бірюзовий */
+    word-break: break-word;
+}
+
+.game-controls {
+    display: flex;
+    justify-content: space-around;
+}
+
+#round-end-screen ul {
+    list-style: none;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    background: #f9f9f9;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+#round-end-screen li {
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+#round-end-screen li:last-child {
+    border-bottom: none;
+}
+#guessed-words-list li { color: green; }
+#skipped-words-list li { color: orange; }
+
+
+#scores-display, #final-scores-display {
+    margin-top: 20px;
+}
+.team-score-item {
+    background-color: #f0f8ff; /* AliceBlue */
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    font-size: 1.2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.team-score-item .team-name {
+    font-weight: bold;
+    color: #337ab7; /* Синій */
+}
+.team-score-item .score-value {
+    background-color: #FFC107; /* Бурштин */
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+}
+
+#winner-announcement {
+    color: #FF4500; /* Orangered */
+    font-size: 2em;
+}
+#winner-announcement span {
+    display: block;
+    font-size: 1.3em;
+    color: #d9534f; /* Темно-червоний */
+}
