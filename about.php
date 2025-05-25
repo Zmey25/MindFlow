@@ -28,6 +28,6 @@ button { padding: 0.5rem 1rem; }
     <input type="radio" name="rating" value="1" id="r1"><label for="r1" class="fa fa-star"></label>
   </div>
   <textarea name="feedback" placeholder="Що б ви хотіли додати, прибрати, змінити? Якісь нові питання, категорії, функції? ..."></textarea>
-  <button type="submit">Відправити</button>
+  <button type="submit">Надіслати</button>
 </form>
 <?php include 'includes/footer.php'; ?>
