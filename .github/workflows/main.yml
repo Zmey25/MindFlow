@@ -1,0 +1,28 @@
+name: Deploy to OVH Shared Hosting
+
+on:
+  push:
+    branches:
+      - main # або master, залежить від вашого основного бранча
+
+jobs:
+  web-deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Get latest code
+      uses: actions/checkout@v4
+
+    - name: Sync files via FTP
+      uses: SamKirkland/FTP-Deploy@v4.3.0 # Можна використовувати іншу дію, наприклад, SamKirkland/FTP-Deploy@v4.3.0
+      with:
+        server: ${{ secrets.FTP_HOST }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        port: ${{ secrets.FTP_PORT }} # Зазвичай 21 для FTP, 22 для SFTP. Перевірте у OVH.
+        protocol: ftp # або sftp, якщо OVH підтримує SFTP і ви використовуєте порт 22
+        local-dir: ./ # Директорія, яку потрібно завантажити (корінь вашого репозиторію)
+        server-dir: ./www/ # Директорія на OVH, куди потрібно завантажувати (зазвичай www або public_html)
+        state-name: .ftp-deploy-sync-state.json # Допомагає синхронізувати тільки зміни
+        dry-run: false # Встановіть true для тестування без фактичного завантаження
