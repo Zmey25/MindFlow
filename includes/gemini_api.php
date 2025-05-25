@@ -27,7 +27,7 @@ if (!function_exists('custom_log')) {
  * @param string $model Модель Gemini для використання (за замовчуванням 'gemini-pro').
  * @return string|null Згенерований текстовий вміст від Gemini, або null у разі помилки.
  */
-function callGeminiApi(array $messages, string $model = 'gemini-pro'): ?string {
+function callGeminiApi(array $messages, string $model = 'gemini-2.5-flash-preview-05-20'): ?string {
     $apiKey = getenv('GEMINI_API_KEY');
     if (!$apiKey) {
         custom_log('GEMINI_API_KEY не встановлено в файлі .env. Неможливо викликати Gemini API.', 'gemini_error');
