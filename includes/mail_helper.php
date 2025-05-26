@@ -1,7 +1,6 @@
 <?php
-require_once ROOT_DIR . '/includes/functions.php';
 // mail_helper.php
-
+require_once __DIR__ . '/functions.php';
 /**
  * Відправляє електронний лист від імені MindFlow.ovh з фіксованим HTML-підписом.
  *
