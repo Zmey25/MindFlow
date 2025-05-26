@@ -101,7 +101,7 @@ if (isset($update['message'])) {
             sendTelegramMessage($chatId, "Обробляю ваш запит, зачекайте...", $telegramToken);
 
             // --- Логіка взаємодії з LLM ---
-            $geminiRoute = determineRelevantData($userQuestion);
+            $geminiRoute = determineRelevantData($text);
 
             if (isset($geminiRoute['error'])) {
                 $responseText = "Вибачте, виникла помилка під час обробки вашого запиту: " . $geminiRoute['error'];
@@ -143,11 +143,18 @@ if (isset($update['message'])) {
                         $contextDataJson = json_encode(['warning_text' => $contextData], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
                         break;
                     case 'user_answers':
+                        $targetUsername = $geminiRoute['target_username'] ?? null; // переконайтеся, що це є
                         if ($targetUsername) {
-                            $contextData = loadUserData($targetUsername); // Ця функція використовує readJsonFile всередині
-                            $contextDataJson = json_encode($contextData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                            $contextData = loadUserData($targetUsername);
+                            if ($contextData === null) { // Припустимо, loadUserData повертає null, якщо користувача не знайдено
+                                $responseText = "Користувача '{$targetUsername}' не знайдено.";
+                                $followUpQuery = null; // Скидаємо запит, щоб не йти далі
+                            } else {
+                                $contextDataJson = json_encode($contextData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                            }
                         } else {
                             $responseText = "Не вдалося визначити ім'я користувача для запиту про відповіді. Будь ласка, уточніть ім'я користувача.";
+                            $followUpQuery = null; // Скидаємо запит, щоб не йти далі
                         }
                         break;
                     case 'none':
@@ -158,17 +165,25 @@ if (isset($update['message'])) {
                 }
 
                 // Викликаємо другий LLM з контекстом
-                if (!empty($followUpQuery)) {
-                    $finalAnswer = getGeminiAnswer($followUpQuery, $contextDataJson);
-                    if ($finalAnswer) {
-                        $responseText = $finalAnswer;
+                // ТІЛЬКИ ЯКЩО $responseText ще не встановлено (тобто, не було помилки при підготовці контексту)
+                if (empty($responseText)) {
+                    if (!empty($followUpQuery)) {
+                        $finalAnswer = getGeminiAnswer($followUpQuery, $contextDataJson);
+                        if ($finalAnswer) {
+                            $responseText = $finalAnswer;
+                        } else {
+                            $responseText = "Вибачте, не вдалося отримати відповідь від ШІ. Можливо, питання занадто складне або не має достатнього контексту.";
+                        }
                     } else {
-                        $responseText = "Вибачте, не вдалося отримати відповідь від ШІ. Можливо, питання занадто складне або не має достатнього контексту.";
+                        // Якщо $followUpQuery порожній І $responseText також порожній,
+                        // це означає, що determineRelevantData вирішив, що подальший запит не потрібен
+                        // (наприклад, для file_type 'none' або якщо перший LLM вже дав відповідь,
+                        // хоча поточна структура цього не передбачає - followUpQuery має містити фінальний запит)
+                        // або просто не вдалося сформувати уточнений запит без явної помилки.
+                        $responseText = "Не вдалося сформувати запит до ШІ на основі вашого повідомлення або для нього не знайдено достатньо даних.";
                     }
-                } else {
-                    $responseText = "Запит не був уточнений для отримання кінцевої відповіді.";
                 }
-            }
+                // Тепер $responseText містить або відповідь ШІ, або помилку підготовки контексту, або помилку ШІ, або повідомлення про неможливість сформувати запит.
         
         // Стандартна відповідь для не-командних текстових повідомлень
         // $responseText = "Ви сказали: \"" . htmlspecialchars($text) . "\"\nЯ поки що не розумію складніші запити, але вчуся! Спробуйте команду /ask [ваше питання].";
