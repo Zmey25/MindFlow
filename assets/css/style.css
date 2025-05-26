@@ -656,3 +656,6 @@ body.wish-buttons-hidden .range-slider {
     /* gap: 1rem; */
     /* Або можна видалити зайві відступи, якщо кнопки займали місце */
 }
+nav {
+    max-width: 70%;
+}
