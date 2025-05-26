@@ -265,9 +265,10 @@ if ($canViewResults && !$errorMessage && !empty($allQuestionsStructure)) {
 <?php // --- Повідомлення про НЕМОЖЛИВІСТЬ перегляду --- ?>
 <?php if (!$canViewResults): ?>
     <?php if ($reasonCannotView === 'user_not_found'): ?>
-        <div class="message error"><img src="assets/images/cat_with_results.png" alt="Кицька"><?php echo $errorMessage; ?></div>
+        <div class="message error"><?php echo $errorMessage; ?></div>
     <?php elseif ($reasonCannotView === 'no_self_assessment'): ?>
         <div class="message info">
+            <img src="assets/images/cat_with_a_book.png" alt="Кицька">
             Ви ще не пройшли самооцінку. Ваші результати будуть доступні після її завершення та отримання достатньої кількості відгуків від інших.
             <?php echo $randomAchievementTeaser; // Виводимо підготовлений текст з ачівкою ?>
             <br><br>
@@ -275,6 +276,7 @@ if ($canViewResults && !$errorMessage && !empty($allQuestionsStructure)) {
         </div>
     <?php elseif ($reasonCannotView === 'not_enough_other_assessments_self'): ?>
         <div class="message info">
+            <img src="assets/images/cat_with_results.png" alt="Кицька">
             Ви успішно пройшли самооцінку!
             <br><br>
             Для відображення повних результатів та аналізу ваших особливостей, необхідно отримати щонайменше <strong><?php echo MIN_OTHER_ASSESSMENTS_CONSIDERED_ENOUGH; ?></strong>
