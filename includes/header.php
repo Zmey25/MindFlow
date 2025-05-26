@@ -39,10 +39,9 @@ if (!in_array($currentPageName, $noAdsPages)):
 <body>
 
 <header class="header">
-    <div class="logo">
-        <a style="vertical-align: middle;" href="<?php echo $isLoggedIn ? 'dashboard.php' : 'index.php'; ?>">MindFlow</a>
-        <img href="<?php echo $isLoggedIn ? 'dashboard.php' : 'index.php'; ? src="/../assets/images/cat.png" width="40" style="vertical-align: middle;" alt="Кицька">
-    </div>
+<div class="logo">
+    <a style="vertical-align: middle;" href="<?php echo $isLoggedIn ? 'dashboard.php' : 'index.php'; ?>">MindFlow<img src="/../assets/images/cat.png" style="vertical-align: middle;" width="40" alt="Кицька"></a>
+</div>
     <nav>
         <?php if ($isLoggedIn): ?>
             <span>Вітаємо, <?php echo htmlspecialchars($username); ?>!</span>
