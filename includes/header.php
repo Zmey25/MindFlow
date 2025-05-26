@@ -41,7 +41,7 @@ if (!in_array($currentPageName, $noAdsPages)):
 <header class="header">
     <div class="logo">
         <a href="<?php echo $isLoggedIn ? 'dashboard.php' : 'index.php'; ?>">MindFlow</a>
-        <img src="/../assets/images/cat.png" width="250" alt="Кицька">
+        <img src="/../assets/images/cat.png" width="30" alt="Кицька">
     </div>
     <nav>
         <?php if ($isLoggedIn): ?>
