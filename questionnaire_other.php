@@ -6,6 +6,7 @@ require_once __DIR__ . '/includes/trait_calculator.php';
 require_once __DIR__ . '/includes/badge_calculator.php';
 require_once __DIR__ . '/includes/env-loader.php'; // Для .env
 require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/mail_helper.php';
 loadEnv(__DIR__ . '/../.env');                    // Завантажуємо змінні середовища
 
 requireLogin();
@@ -308,7 +309,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         custom_log("User '{$targetUsername}': Could not load target user data or 'others' array is missing/not an array for analysis count.", 'analysis_trigger');
                     }
                     // --- Кінець запуску Gemini аналізу ---
+                    
+                    // --- START OF NEW CODE BLOCK: Email Notification Logic ---
+                    // Перевіряємо, чи у цільового користувача є email і чи це перша відповідь від даного респондента
+                    if ($targetUser && !empty($targetUser['email']) && !$hasExistingDbAnswers) {
+                        $recipientEmail = $targetUser['email'];
+                        // Використовуємо ім'я, якщо є, інакше username для персоналізації листа
+                        $targetUserFirstName = !empty($targetUser['first_name']) ? htmlspecialchars($targetUser['first_name']) : htmlspecialchars($targetUser['username']);
+                        
+                        $emailSubject = "Хтось пройшов тест про вас на MindFlow!";
+                        
+                        // Формуємо повне URL до сторінки результатів для цільового користувача
+                        // Використовуємо існуючі змінні для протоколу, хоста та базового шляху скрипта
+                        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+                        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+                        
+                        $scriptPath = $_SERVER['PHP_SELF']; 
+                        $baseScriptPath = dirname($scriptPath); 
+                        if ($baseScriptPath === '/' || $baseScriptPath === '\\') { // Обробка випадку кореневого каталогу
+                            $baseScriptPath = ''; 
+                        }
+                        
+                        $resultsLink = $protocol . $host . $baseScriptPath . "/results.php?user=" . urlencode($targetUsername);
 
+                        $emailBody = "Вітаємо, {$targetUserFirstName}!<br><br>" .
+                                     "Хтось щойно пройшов тест про вас на MindFlow. Це означає, що ваші риси та можливі досягнення могли бути оновлені! " .
+                                     "Приходьте та ознайомтеся з новими результатами за посиланням:<br><br>" .
+                                     "<a href=\"{$resultsLink}\">{$resultsLink}</a><br><br>";
+                        
+                        // Відправляємо лист
+                        if (sendMindFlowEmail($recipientEmail, $emailSubject, $emailBody)) {
+                            custom_log("Notification email sent to '{$recipientEmail}' for new other-user survey by '{$respondentUsername}'.", 'mail');
+                        } else {
+                            error_log("Failed to send notification email to '{$recipientEmail}' for new other-user survey by '{$respondentUsername}'.");
+                            custom_log("Failed to send notification email to '{$recipientEmail}' for new other-user survey by '{$respondentUsername}'.", 'mail_error');
+                        }
+                    }
+                    // --- END OF NEW CODE BLOCK: Email Notification Logic ---
+                    
                     $_SESSION['flash_message'] = 'Ваші відповіді про ' . $targetUserDisplayName . ' успішно збережено!';
                     $_SESSION['flash_message_type'] = 'success';
                     unset($_SESSION[$sessionAnswersKey]);
