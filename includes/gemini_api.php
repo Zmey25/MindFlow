@@ -201,11 +201,9 @@ if ($geminiResponseText === null) {
     return ['error' => 'Помилка визначення релевантних даних.'];
 }
 
-// --- НОВЕ: Очищуємо відповідь від Markdown-блоків ---
-// Це регулярний вираз, який шукає початок (```json або просто ```) і кінець (```) блоку коду,
-// а потім витягує вміст всередині. Модифікатор 's' дозволяє '.' відповідати новим рядкам.
+// Очищуємо відповідь від Markdown-блоків
 $geminiResponseText = preg_replace('/^```(?:json)?\s*(.*?)\s*```$/s', '$1', $geminiResponseText);
-$geminiResponseText = trim($geminiResponseText); // Видаляємо зайві пробіли/нові рядки
+$geminiResponseText = trim($geminiResponseText);
 
 $geminiResponse = json_decode($geminiResponseText, true);
 
@@ -256,12 +254,12 @@ return $geminiResponse;
     @param string $refinedQuery Запит, уточнений першим LLM.
     @param string $contextDataJson JSON-рядок вмісту релевантного файлу.
     @return string|null Остаточна відповідь від Gemini, або null у разі помилки.
-    */
+    /
     function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string {
     $systemInstruction = "Ти є інтелектуальним асистентом, який відповідає на запитання, використовуючи надану інформацію.
     Надані дані є у форматі JSON. Твоя відповідь повинна бути чіткою, лаконічною та ґрунтуватися виключно на наданому контексті.
     Якщо інформації для відповіді немає, вкажи це прямо. Не вигадуй інформацію.
-    Форматуй відповіді для Telegram, використовуючи HTML, наприклад, для жирного тексту або списків.
+    Форматуй відповіді для Telegram, використовуючи лише дозволені HTML-теги: <b>, <i>, <u>, <s>, <code>, <pre>, <a> (для посилань), <blockquote>. Для списків використовуй марковані списки за допомогою тире '-' або зірочки '' та перенесення рядка.
 
 Ось дані:
 
@@ -279,7 +277,7 @@ if ($geminiResponseText === null) {
     return 'Виникла помилка під час отримання відповіді від ШІ.';
 }
 
-// --- НОВЕ: Очищуємо відповідь від Markdown-блоків для другого LLM також ---
+// Очищуємо відповідь від Markdown-блоків для другого LLM також
 $geminiResponseText = preg_replace('/^```(?:json)?\s*(.*?)\s*```$/s', '$1', $geminiResponseText);
 $geminiResponseText = trim($geminiResponseText);
 
@@ -296,3 +294,4 @@ $filePath = ROOT_DIR . '/data/answers/' . $username . '.json';
 return readJsonFile($filePath);
 }
 }
+
