@@ -306,7 +306,7 @@ if ($canViewResults && !$errorMessage && !empty($allQuestionsStructure)) {
     <?php else: ?>
          <div class="message error">Не вдалося відобразити результати з невідомої причини.</div>
     <?php endif; ?>
-
+<img src="assets/images/cat.png" alt="Кицька">
 <?php // --- Відображення РЕЗУЛЬТАТІВ (якщо $canViewResults === true) --- ?>
 <?php else: ?>
 
