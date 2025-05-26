@@ -41,14 +41,14 @@ function loadInstructionFromFile(string $instructionFileName): string|false {
  * Здійснює HTTP-запит до Google Gemini API.
  * (Залишається без змін)
  */
-function callGeminiApi(array $messages, string $model = 'gemini-1.5-flash-preview-0514'): ?string {
+function callGeminiApi(array $messages, string $model = 'gemini-2.5-flash-preview-05-20'): ?string {
     $apiKey = getenv('GEMINI_API_KEY');
     if (!$apiKey) {
         custom_log('GEMINI_API_KEY не встановлено в файлі .env. Неможливо викликати Gemini API.', 'gemini_error');
         return null;
     }
 
-    $apiUrl = "https://generativelanguage.googleapis.com/v1/models/{$model}:generateContent?key={$apiKey}";
+    $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$apiKey}";
 
     $payload = [
         'contents' => $messages,
@@ -129,7 +129,7 @@ function determineRelevantData(string $userQuery): array {
         ['role' => 'user', 'parts' => [['text' => $systemInstruction . "\n\nЗапит користувача: " . $userQuery]]]
     ];
 
-    $geminiResponseText = callGeminiApi($messages, 'gemini-1.5-flash-preview-0514');
+    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash-preview-05-20');
 
     if ($geminiResponseText === null) {
         return ['error' => 'Помилка визначення релевантних даних (LLM1).'];
@@ -254,7 +254,7 @@ function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string
         ['role' => 'user', 'parts' => [['text' => $systemInstruction]]]
     ];
 
-    $geminiResponseText = callGeminiApi($messages, 'gemini-1.5-flash-preview-0514'); 
+    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash-preview-05-20'); 
 
     if ($geminiResponseText === null) {
         return 'Вибачте, сталася помилка під час генерації відповіді від ШІ (LLM2).';
