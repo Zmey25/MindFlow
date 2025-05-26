@@ -254,7 +254,7 @@ return $geminiResponse;
     @param string $refinedQuery Запит, уточнений першим LLM.
     @param string $contextDataJson JSON-рядок вмісту релевантного файлу.
     @return string|null Остаточна відповідь від Gemini, або null у разі помилки.
-    /
+    **/
     function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string {
     $systemInstruction = "Ти є інтелектуальним асистентом, який відповідає на запитання, використовуючи надану інформацію.
     Надані дані є у форматі JSON. Твоя відповідь повинна бути чіткою, лаконічною та ґрунтуватися виключно на наданому контексті.
