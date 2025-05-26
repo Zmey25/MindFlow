@@ -40,8 +40,8 @@ if (!in_array($currentPageName, $noAdsPages)):
 
 <header class="header">
     <div class="logo">
-        <a href="<?php echo $isLoggedIn ? 'dashboard.php' : 'index.php'; ?>">MindFlow</a>
-        <img src="/../assets/images/cat.png" width="30" alt="Кицька">
+        <a style="vertical-align: middle;" href="<?php echo $isLoggedIn ? 'dashboard.php' : 'index.php'; ?>">MindFlow</a>
+        <img href="<?php echo $isLoggedIn ? 'dashboard.php' : 'index.php'; ? src="/../assets/images/cat.png" width="40" style="vertical-align: middle;" alt="Кицька">
     </div>
     <nav>
         <?php if ($isLoggedIn): ?>
