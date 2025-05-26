@@ -96,11 +96,7 @@ if (isset($update['message'])) {
     } elseif (strpos($text, '/test_log') === 0) {
         custom_log("Користувач {$chatId} використав команду /test_log.", 'telegram_test');
         $responseText = "Перевіряю лог. Якщо все працює, ви побачите запис в `logs/telegram_test.log`.";
-    } elseif (strpos($text, '/ask') === 0) {
-        $userQuestion = trim(substr($text, strlen('/ask')));
-        if (empty($userQuestion)) {
-            $responseText = "Будь ласка, сформулюйте своє питання після команди /ask. Наприклад: /ask Які питання є в категорії Інтелект?";
-        } else {
+    } elseif (!empty($text)) {
             // Надсилаємо негайний відгук користувачу, оскільки LLM-виклики можуть зайняти час
             sendTelegramMessage($chatId, "Обробляю ваш запит, зачекайте...", $telegramToken);
 
@@ -174,9 +170,8 @@ if (isset($update['message'])) {
                 }
             }
         }
-    } elseif (!empty($text)) {
         // Стандартна відповідь для не-командних текстових повідомлень
-        $responseText = "Ви сказали: \"" . htmlspecialchars($text) . "\"\nЯ поки що не розумію складніші запити, але вчуся! Спробуйте команду /ask [ваше питання].";
+        // $responseText = "Ви сказали: \"" . htmlspecialchars($text) . "\"\nЯ поки що не розумію складніші запити, але вчуся! Спробуйте команду /ask [ваше питання].";
     } else {
         // Відповідь для нетекстових повідомлень (наприклад, стікерів, фото)
         $responseText = "Я отримав ваше повідомлення, але воно не містить тексту. Будь ласка, надсилайте текстові повідомлення.";
