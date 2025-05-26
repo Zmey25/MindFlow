@@ -265,7 +265,7 @@ if ($canViewResults && !$errorMessage && !empty($allQuestionsStructure)) {
 <?php // --- Повідомлення про НЕМОЖЛИВІСТЬ перегляду --- ?>
 <?php if (!$canViewResults): ?>
     <?php if ($reasonCannotView === 'user_not_found'): ?>
-        <div class="message error"><?php echo $errorMessage; ?></div>
+        <div class="message error"><img src="assets/images/cat_with_results.png" alt="Кицька"><?php echo $errorMessage; ?></div>
     <?php elseif ($reasonCannotView === 'no_self_assessment'): ?>
         <div class="message info">
             Ви ще не пройшли самооцінку. Ваші результати будуть доступні після її завершення та отримання достатньої кількості відгуків від інших.
@@ -306,7 +306,7 @@ if ($canViewResults && !$errorMessage && !empty($allQuestionsStructure)) {
     <?php else: ?>
          <div class="message error">Не вдалося відобразити результати з невідомої причини.</div>
     <?php endif; ?>
-<img src="assets/images/cat.png" alt="Кицька">
+    
 <?php // --- Відображення РЕЗУЛЬТАТІВ (якщо $canViewResults === true) --- ?>
 <?php else: ?>
 
