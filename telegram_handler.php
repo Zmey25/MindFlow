@@ -9,24 +9,32 @@ error_reporting(E_ALL);
 
 // Визначаємо шлях до кореня проекту.
 define('ROOT_DIR', __DIR__);
+// Визначаємо шляхи до директорій з даними та відповідями
+define('DATA_DIR', ROOT_DIR . '/data');
+define('ANSWERS_DIR_PATH', DATA_DIR . '/answers');
+define('USERS_FILE_PATH', DATA_DIR . '/users.json');
+define('QUESTIONS_FILE_PATH', DATA_DIR . '/questions.json'); // Додано
+define('TRAITS_FILE_PATH', DATA_DIR . '/traits.json');       // Додано
+define('BADGES_FILE_PATH', DATA_DIR . '/badges.json');       // Додано
+
 
 // Завантажуємо змінні оточення з файлу .env.
-require_once ROOT_DIR . '/includes/env-loader.php';
 // Припускаємо, що .env лежить на рівень вище ROOT_DIR (наприклад, поза public_html)
 // Якщо .env лежить в ROOT_DIR, змініть на ROOT_DIR . '/.env'
-loadEnv(ROOT_DIR . '/../.env');
-
+require_once ROOT_DIR . '/includes/env-loader.php';
+loadEnv(ROOT_DIR . '/../.env'); // Використовуємо ROOT_DIR, визначений вище
 
 // Завантажуємо загальні службові функції, включаючи `custom_log` та `readJsonFile`.
 require_once ROOT_DIR . '/includes/functions.php';
 
-// Завантажуємо функції взаємодії з Gemini API.
-require_once ROOT_DIR . '/includes/gemini_api.php';
+// Завантажуємо функції взаємодії з Gemini API, включаючи determineRelevantData та getGeminiAnswer.
+require_once ROOT_DIR . '/includes/gemini_api.php'; // Цей файл тепер містить LLM логіку та loadUserData (або припускає її наявність у functions)
+
 
 // Отримуємо Telegram Bot Token зі змінних оточення.
 $telegramToken = getenv('TELEGRAM_TOKEN');
 
-// --- NEW: Define Admin Chat ID ---
+// Визначаємо Admin Chat ID
 define('ADMIN_CHAT_ID', 1282207313); // Ваш Telegram Chat ID
 
 if (!$telegramToken) {
@@ -74,7 +82,8 @@ function sendTelegramMessage(int $chatId, string $text, string $telegramToken): 
     if ($response === false) {
         custom_log("Помилка cURL при надсиланні повідомлення до Chat ID {$chatId}: " . $curlError, 'telegram_error');
     } elseif ($httpCode !== 200) {
-        custom_log("Telegram API повернув HTTP {$httpCode} для Chat ID {$chatId}: " . $response, 'telegram_error');
+         $responseBody = is_string($response) ? $response : json_encode($response); // Логуємо тіло відповіді
+        custom_log("Telegram API повернув HTTP {$httpCode} для Chat ID {$chatId}: " . $responseBody, 'telegram_error');
     } else {
         custom_log("Успішно надіслано повідомлення до Chat ID {$chatId}", 'telegram_webhook');
     }
@@ -87,7 +96,7 @@ if (isset($update['message'])) {
     $text = trim($message['text'] ?? '');
     $lowerText = mb_strtolower($text); // Для перевірки ключових слів без урахування регістру
 
-    // --- NEW: Determine if the request is from an admin ---
+    // Визначаємо, чи запит від адміністратора
     $is_admin_request = ($chatId == ADMIN_CHAT_ID);
 
     custom_log("Обробка повідомлення з Chat ID: {$chatId}. Текст: '{$text}' (Admin: " . ($is_admin_request ? 'Так' : 'Ні') . ")", 'telegram_webhook');
@@ -109,144 +118,202 @@ if (isset($update['message'])) {
     }
     // Основна логіка обробки, якщо це не проста команда або запит "про проект"
     elseif (!empty($text)) {
-        sendTelegramMessage($chatId, "Аналізую ваш запит, хвилинку... 🤖", $telegramToken);
+        // Надсилаємо проміжне повідомлення, щоб користувач не чекав довго
+        sendTelegramMessage($chatId, "🤖 Аналізую ваш запит і готую дані, хвилинку...", $telegramToken);
 
-        $geminiRoute = determineRelevantData($text);
+        // Крок 1: Маршрутизація за допомогою LLM1
+        custom_log("Calling determineRelevantData with query: '{$text}'", 'telegram_webhook');
+        $geminiRouteResult = determineRelevantData($text);
 
-        if (isset($geminiRoute['error'])) {
-            $responseText = "Вибачте, виникла помилка під час аналізу вашого запиту: " . $geminiRoute['error'];
+        if (isset($geminiRouteResult['error'])) {
+            $responseText = "Вибачте, виникла помилка під час аналізу вашого запиту (LLM1): " . $geminiRouteResult['error'];
+            custom_log("LLM1 routing error: " . $responseText, 'telegram_error');
         } else {
-            $fileType = $geminiRoute['file_type'];
-            $targetUsernames = $geminiRoute['target_usernames'] ?? []; // Тепер це масив
-            $followUpQuery = $geminiRoute['follow_up_query'];
-            $contextData = null; // Використовуємо null для перевірки чи були дані завантажені
-            $contextDataJson = '';
-            $dataLoadedSuccessfully = true; // Прапорець успішного завантаження даних
+            $potentialDataSources = $geminiRouteResult['potential_data_sources'];
+            $targetUsernames = $geminiRouteResult['target_usernames']; // Це канонічні імена, знайдені LLM1 у списку
+            $refinedQuery = $geminiRouteResult['refined_query'];
 
-            custom_log("LLM1 Route: file_type='{$fileType}', target_usernames=" . json_encode($targetUsernames) . ", query='{$followUpQuery}'", 'gemini_route');
+            custom_log("LLM1 Route Result: potential_data_sources=" . json_encode($potentialDataSources) . ", target_usernames=" . json_encode($targetUsernames) . ", refined_query='{$refinedQuery}'", 'telegram_webhook');
 
-            switch ($fileType) {
-                case 'users':
-                    $allUsersData = readJsonFile(ROOT_DIR . '/data/users.json');
-                    $contextData = [];
-                    foreach ($allUsersData as $user) {
-                        unset($user['password_hash'], $user['password']);
-                        $contextData[] = $user;
-                    }
-                    break;
-                case 'questions':
-                    $contextData = readJsonFile(ROOT_DIR . '/data/questions.json');
-                    break;
-                case 'traits':
-                    $contextData = readJsonFile(ROOT_DIR . '/data/traits.json');
-                    break;
-                case 'badges':
-                    $contextData = readJsonFile(ROOT_DIR . '/data/badges.json');
-                    break;
-                case 'user_answers': // Обробляє одного або двох користувачів
-                    if (empty($targetUsernames)) {
-                        $responseText = "Для запиту типу 'user_answers' не було визначено користувачів.";
-                        $dataLoadedSuccessfully = false;
-                        break;
-                    }
+            $contextData = []; // Масив для збору всіх даних для LLM2
+            $dataLoadingError = null; // Для фіксації помилки завантаження даних для відповіді LLM2
 
-                    $loadedUsersData = [];
+            // Крок 2: Завантаження даних на основі рекомендацій LLM1
+            custom_log("Starting data loading based on potential_data_sources: " . json_encode($potentialDataSources), 'telegram_webhook');
+
+            // Спочатку спробуємо завантажити дані користувачів, якщо вони потрібні.
+            // Це важливо зробити першими, щоб обробити помилки доступу/існування користувачів.
+            $loadedUserDataSets = []; // Для даних одного або двох користувачів
+            $failedUsernames = []; // Для користувачів, чиї дані не вдалося завантажити
+            $userAnswersRequested = in_array('user_answers', $potentialDataSources);
+
+            if ($userAnswersRequested) {
+                 if (empty($targetUsernames)) {
+                     // LLM1 хотів user_answers, але не ідентифікував користувачів
+                     $dataLoadingError = "Запит стосується даних користувача(ів), але ШІ не визначив жодного імені користувача.";
+                     custom_log($dataLoadingError, 'telegram_error');
+                 } else {
                     foreach ($targetUsernames as $username) {
-                        // --- UPDATED: Pass is_admin_request to loadUserData ---
-                        $loadResult = loadUserData($username, $is_admin_request);
-                        if ($loadResult['success']) {
-                            $loadedUsersData[$username] = $loadResult['data'];
-                        } else {
-                            // If any user data fails to load (e.g., hidden results), set responseText and stop.
-                            $responseText = $loadResult['message'];
-                            $dataLoadedSuccessfully = false;
-                            break 2; // Break out of both the foreach and the switch
-                        }
+                         // --- loadUserData handles existence, hide_results, and admin check ---
+                         $loadResult = loadUserData($username, $is_admin_request);
+                         if ($loadResult['success']) {
+                             $loadedUserDataSets[$username] = $loadResult['data']; // Зберігаємо дані під іменем користувача
+                         } else {
+                             // Якщо дані користувача не завантажилися (наприклад, hide_results або не знайдено файл)
+                             // Зберігаємо повідомлення про помилку для цього користувача.
+                             // Ми НЕ перериваємо цикл одразу, якщо запит на порівняння - спробуємо завантажити іншого.
+                             custom_log("Failed to load data for user '{$username}': " . $loadResult['message'], 'telegram_error');
+                             $failedUsernames[] = $username . " (" . $loadResult['message'] . ")";
+                         }
                     }
 
-                    if ($dataLoadedSuccessfully) { // Only proceed if all necessary users loaded successfully
-                        if (count($targetUsernames) === 1) {
-                            $contextData = reset($loadedUsersData); // Get the first (and only) user's data
-                        } elseif (count($targetUsernames) === 2) {
-                            // Ensure both users actually have data, even if loadUserData succeeded for one
-                            $user1Data = $loadedUsersData[$targetUsernames[0]] ?? null;
-                            $user2Data = $loadedUsersData[$targetUsernames[1]] ?? null;
-
-                            if (empty($user1Data) || empty($user2Data)) {
-                                $responseText = "Не вдалося завантажити дані для порівняння, або один з користувачів недоступний.";
-                                $dataLoadedSuccessfully = false;
-                                break;
-                            }
-
-                            $contextData = [
-                                'user1_data' => $user1Data,
-                                'user2_data' => $user2Data,
-                                'user1_username' => $targetUsernames[0],
-                                'user2_username' => $targetUsernames[1]
-                            ];
-                        } else {
-                             $responseText = "Отримано невірну кількість імен користувачів для обробки: " . count($targetUsernames) . ". Очікувалось 1 або 2.";
-                             $dataLoadedSuccessfully = false;
-                        }
+                    // Після спроби завантажити всіх цільових користувачів
+                    if (!empty($failedUsernames)) {
+                         $dataLoadingError = "Не вдалося завантажити дані для наступних користувачів: " . implode(", ", $failedUsernames) . ".";
+                         if (empty($loadedUserDataSets)) {
+                             // Якщо ЖОДЕН з цільових користувачів не завантажився
+                             custom_log("No target user data loaded. Setting dataLoadingError: " . $dataLoadingError, 'telegram_error');
+                         } else {
+                             // Якщо деякі користувачі завантажились, але деякі ні (наприклад, при порівнянні)
+                             // dataLoadingError встановлено, але ми продовжимо, щоб LLM2 міг прокоментувати це.
+                             custom_log("Some target user data failed to load, but others succeeded. Message: " . $dataLoadingError, 'telegram_warning');
+                         }
                     }
-                    break;
-                case 'none':
-                default:
-                    // Для 'none' контекст не потрібен, або він вже включений у followUpQuery
-                    $contextData = ['info' => 'Для цього типу запиту не завантажено специфічний файл контексту.'];
-                    break;
+
+                     // Додаємо завантажені дані користувачів до контексту для LLM2
+                     if (!empty($loadedUserDataSets)) {
+                        if (count($loadedUserDataSets) === 1) {
+                            $contextData['user_data'] = reset($loadedUserDataSets); // Беремо першого (і єдиного)
+                            custom_log("Added 1 user data set to context.", 'telegram_webhook');
+                        } elseif (count($loadedUserDataSets) === 2) {
+                             // Припускаємо, що $targetUsernames має 2 імені, і $loadedUsersData має дані для обох
+                            $usernamesLoaded = array_keys($loadedUserDataSets);
+                             $contextData['comparison_data'] = [
+                                'user1_data' => $loadedUserDataSets[$usernamesLoaded[0]],
+                                'user2_data' => $loadedUserDataSets[$usernamesLoaded[1]],
+                                'user1_username' => $usernamesLoaded[0],
+                                'user2_username' => $usernamesLoaded[1]
+                             ];
+                            custom_log("Added 2 user data sets for comparison to context.", 'telegram_webhook');
+                        } else {
+                             // Більше 2 користувачів (хоча LLM1 мав би повернути 0, 1 або 2 для user_answers)
+                             // Це малоймовірно, але варто обробити
+                             $dataLoadingError = "Завантажено невірну кількість наборів даних користувачів для обробки (" . count($loadedUserDataSets) . "). Очікувалось 1 або 2.";
+                             custom_log($dataLoadingError, 'telegram_error');
+                        }
+                     }
+                 }
             }
 
-            // Якщо дані не були завантажені успішно (крім типу 'none', де це нормально)
-            if (!$dataLoadedSuccessfully) {
-                // $responseText вже встановлено з повідомленням про помилку від loadUserData
-                custom_log("Data loading failed. Response: " . $responseText, 'telegram_webhook');
-            } elseif (!empty($followUpQuery)) {
-                // Переконуємось, що $contextData не null і не порожній перед json_encode, особливо для file_type 'none'
-                if ($contextData !== null && !empty($contextData) && !(count($contextData) === 1 && isset($contextData['info']))) { // Check if it's just the default 'info' context
-                    $contextDataJson = json_encode($contextData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-                    if (json_last_error() !== JSON_ERROR_NONE) {
-                        custom_log("JSON encode error for contextData: " . json_last_error_msg(), 'telegram_error');
-                        $responseText = "Внутрішня помилка: не вдалося підготувати дані для ШІ.";
-                        $dataLoadedSuccessfully = false; // Щоб не викликати getGeminiAnswer
-                    }
-                } else { // If contextData is null, empty, or only contains 'info'
-                    if (empty($responseText)) { // Only set responseText if not already set by loadUserData or other logic
-                        $responseText = "Немає даних для аналізу. Можливо, дані приховані або користувач не існує.";
-                    }
-                    custom_log("No valid context data for LLM2. Context: " . json_encode($contextData) . " Response: " . $responseText, 'telegram_webhook');
-                    $dataLoadedSuccessfully = false; // Prevent LLM2 call
-                }
 
-                if ($dataLoadedSuccessfully) { // Продовжуємо, якщо все ще успішно
-                    custom_log("Sending to LLM2: Query='{$followUpQuery}', Context (first 200 chars)='" . substr($contextDataJson, 0, 200) . "...'", 'gemini_request');
-                    $finalAnswer = getGeminiAnswer($followUpQuery, $contextDataJson);
-                    if ($finalAnswer) {
-                        $responseText = $finalAnswer;
-                    } else {
-                        $responseText = "Вибачте, не вдалося отримати відповідь від ШІ. Можливо, питання занадто складне або сталася внутрішня помилка.";
-                    }
+            // Завантажуємо інші типи даних, незалежно від помилок користувачів (якщо вони некритичні)
+            foreach ($potentialDataSources as $sourceType) {
+                 // Дані користувачів вже оброблені вище
+                 if ($sourceType === 'user_answers' || $sourceType === 'none') {
+                     continue;
+                 }
+
+                switch ($sourceType) {
+                    case 'users':
+                        $allUsersData = readJsonFile(USERS_FILE_PATH);
+                        // Фільтруємо чутливі поля перед передачею LLM2
+                        $filteredUsers = [];
+                        if (!empty($allUsersData)) {
+                            foreach($allUsersData as $user) {
+                                unset($user['password_hash'], $user['password'], $user['google_id']); // Залишаємо is_admin, hide_results тощо
+                                $filteredUsers[] = $user;
+                            }
+                        }
+                        $contextData['all_users_list'] = $filteredUsers;
+                        custom_log("Loaded 'users' list data.", 'telegram_webhook');
+                        break;
+                    case 'questions':
+                        $contextData['all_questions'] = readJsonFile(QUESTIONS_FILE_PATH);
+                         custom_log("Loaded 'questions' data.", 'telegram_webhook');
+                        break;
+                    case 'traits':
+                        $contextData['all_traits'] = readJsonFile(TRAITS_FILE_PATH);
+                         custom_log("Loaded 'traits' data.", 'telegram_webhook');
+                        break;
+                    case 'badges':
+                        $contextData['all_badges'] = readJsonFile(BADGES_FILE_PATH);
+                         custom_log("Loaded 'badges' data.", 'telegram_webhook');
+                        break;
+                    // 'user_answers' та 'none' оброблені вище
+                    default:
+                        custom_log("Невідомий тип джерела даних від LLM1 під час завантаження: {$sourceType}", 'telegram_warning');
+                        // Продовжуємо завантажувати інші джерела, якщо є
+                        break;
                 }
+            } // Кінець циклу по potentialDataSources
+
+
+            // Крок 3: Передача даних та уточненого запиту до LLM2 для генерації відповіді
+            custom_log("Proceeding to LLM2. Data loading error: " . ($dataLoadingError ?? 'None'), 'telegram_webhook');
+
+            // Якщо була помилка завантаження КРИТИЧНИХ даних (наприклад, жодного користувача не завантажено, хоча LLM1 їх запросив)
+             // АБО якщо контекст порожній, хоча LLM1 запросив дані (не 'none')
+             // АБО якщо refinedQuery порожній (хоча це малоймовірно з новим промптом для LLM1)
+            if (($userAnswersRequested && empty($loadedUserDataSets)) ||
+                 (empty($contextData) && !in_array('none', $potentialDataSources)) ||
+                 empty($refinedQuery) )
+            {
+                if ($dataLoadingError === null) {
+                     // Якщо specific error wasn't set, provide a general one
+                    $dataLoadingError = "Не вдалося завантажити необхідні дані для відповіді на запит. Можливо, файли даних порожні або пошкоджені.";
+                    custom_log("General data loading failure or empty context for non-'none' request.", 'telegram_error');
+                }
+                // Встановлюємо final responseText з помилкою
+                $responseText = "Виникла проблема під час підготовки даних: " . $dataLoadingError . " " .
+                                "Спробуйте переформулювати запит.";
+
             } else {
-                 // Якщо $responseText ще не встановлено (наприклад, помилкою завантаження даних)
-                if (empty($responseText)) {
-                    $responseText = "Запит не був достатньо уточнений для отримання кінцевої відповіді, або сталася помилка на етапі визначення маршруту.";
+                // Якщо дані (або їх частина) завантажені і є уточнений запит
+                // Перетворюємо зібрані дані контексту в JSON
+                $contextDataJson = json_encode($contextData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                     custom_log("JSON encode error for contextData for LLM2: " . json_last_error_msg(), 'telegram_error');
+                     $responseText = "Внутрішня помилка: не вдалося підготувати дані для ШІ аналізу.";
+                } else {
+                    // Викликаємо LLM2 з уточненим запитом та контекстними даними
+                    custom_log("Calling getGeminiAnswer with refinedQuery='{$refinedQuery}' and context...", 'telegram_webhook');
+                    $finalAnswer = getGeminiAnswer($refinedQuery, $contextDataJson);
+
+                    if ($finalAnswer) {
+                        // Якщо dataLoadingError був (наприклад, один користувач з двох недоступний),
+                        // додаємо його до відповіді LLM2
+                        if ($dataLoadingError !== null) {
+                            $responseText = "⚠️ Частина даних недоступна: " . $dataLoadingError . "\n\n" . $finalAnswer;
+                             custom_log("Added partial data error to LLM2 response.", 'telegram_warning');
+                        } else {
+                             $responseText = $finalAnswer;
+                        }
+
+                    } else {
+                        // Якщо LLM2 не повернув відповіді
+                        $responseText = "Вибачте, не вдалося отримати відповідь від ШІ аналізатора (LLM2). Можливо, питання занадто складне або сталася внутрішня помилка ШІ.";
+                         custom_log("LLM2 returned empty response.", 'telegram_error');
+                    }
                 }
             }
         }
-    } elseif (empty($text) && isset($message['message_id'])) { // Якщо це не текстове повідомлення, але є $message
+    } elseif (empty($text) && isset($update['message']['message_id'])) { // Якщо це не текстове повідомлення, але є $message
         $responseText = "Я отримав ваше повідомлення, але воно не містить тексту. Будь ласка, надсилайте текстові повідомлення.";
+        custom_log("Received non-text message.", 'telegram_webhook');
     }
 
+    // Крок 4: Відправка відповіді користувачу
     if (!empty($responseText)) {
         sendTelegramMessage($chatId, $responseText, $telegramToken);
     } else {
         // Якщо відповідь порожня, логуємо, але не надсилаємо нічого користувачу
         custom_log("No response generated for update (Chat ID: {$chatId}, Text: '{$text}'). Update: " . $input, 'telegram_webhook');
     }
-    http_response_code(200);
+    http_response_code(200); // Завжди повертаємо 200 OK для Telegram, навіть при помилках обробки
 
 } else {
+    // Обробка інших типів оновлень (не повідомлень)
     custom_log('Отримано не-повідомлення або непідтримуваний тип оновлення Telegram. Вміст оновлення: ' . $input, 'telegram_webhook');
     http_response_code(200); // Telegram очікує 200 OK, навіть якщо ми не обробляємо цей тип
 }
