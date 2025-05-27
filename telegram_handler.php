@@ -26,6 +26,9 @@ require_once ROOT_DIR . '/includes/gemini_api.php';
 // Отримуємо Telegram Bot Token зі змінних оточення.
 $telegramToken = getenv('TELEGRAM_TOKEN');
 
+// --- NEW: Define Admin Chat ID ---
+define('ADMIN_CHAT_ID', 1282207313); // Ваш Telegram Chat ID
+
 if (!$telegramToken) {
     custom_log('TELEGRAM_TOKEN не встановлено в файлі .env. Неможливо обробити вебхук Telegram.', 'telegram_error');
     http_response_code(500);
@@ -84,7 +87,10 @@ if (isset($update['message'])) {
     $text = trim($message['text'] ?? '');
     $lowerText = mb_strtolower($text); // Для перевірки ключових слів без урахування регістру
 
-    custom_log("Обробка повідомлення з Chat ID: {$chatId}. Текст: '{$text}'", 'telegram_webhook');
+    // --- NEW: Determine if the request is from an admin ---
+    $is_admin_request = ($chatId == ADMIN_CHAT_ID);
+
+    custom_log("Обробка повідомлення з Chat ID: {$chatId}. Текст: '{$text}' (Admin: " . ($is_admin_request ? 'Так' : 'Ні') . ")", 'telegram_webhook');
 
     $responseText = '';
 
@@ -144,40 +150,44 @@ if (isset($update['message'])) {
                         break;
                     }
 
-                    if (count($targetUsernames) === 1) {
-                        $userData = loadUserData($targetUsernames[0]);
-                        if (empty($userData)) {
-                            $responseText = "Не вдалося завантажити дані для користувача '{$targetUsernames[0]}'. Можливо, такий користувач не проходив тест або дані відсутні.";
-                            $dataLoadedSuccessfully = false;
+                    $loadedUsersData = [];
+                    foreach ($targetUsernames as $username) {
+                        // --- UPDATED: Pass is_admin_request to loadUserData ---
+                        $loadResult = loadUserData($username, $is_admin_request);
+                        if ($loadResult['success']) {
+                            $loadedUsersData[$username] = $loadResult['data'];
                         } else {
-                            $contextData = $userData;
+                            // If any user data fails to load (e.g., hidden results), set responseText and stop.
+                            $responseText = $loadResult['message'];
+                            $dataLoadedSuccessfully = false;
+                            break 2; // Break out of both the foreach and the switch
                         }
-                    } elseif (count($targetUsernames) === 2) {
-                        $userData1 = loadUserData($targetUsernames[0]);
-                        $userData2 = loadUserData($targetUsernames[1]);
+                    }
 
-                        if (empty($userData1) && empty($userData2)) {
-                            $responseText = "Не вдалося завантажити дані для обох користувачів: '{$targetUsernames[0]}' та '{$targetUsernames[1]}'.";
-                            $dataLoadedSuccessfully = false;
-                        } elseif (empty($userData1)) {
-                            $responseText = "Не вдалося завантажити дані для користувача '{$targetUsernames[0]}'. Дані для '{$targetUsernames[1]}' завантажено, але порівняння неможливе без даних першого.";
-                             // Можна адаптувати $followUpQuery для одного користувача, якщо це бажано
-                            $dataLoadedSuccessfully = false;
-                        } elseif (empty($userData2)) {
-                            $responseText = "Не вдалося завантажити дані для користувача '{$targetUsernames[1]}'. Дані для '{$targetUsernames[0]}' завантажено, але порівняння неможливе без даних другого.";
-                            $dataLoadedSuccessfully = false;
-                        } else {
+                    if ($dataLoadedSuccessfully) { // Only proceed if all necessary users loaded successfully
+                        if (count($targetUsernames) === 1) {
+                            $contextData = reset($loadedUsersData); // Get the first (and only) user's data
+                        } elseif (count($targetUsernames) === 2) {
+                            // Ensure both users actually have data, even if loadUserData succeeded for one
+                            $user1Data = $loadedUsersData[$targetUsernames[0]] ?? null;
+                            $user2Data = $loadedUsersData[$targetUsernames[1]] ?? null;
+
+                            if (empty($user1Data) || empty($user2Data)) {
+                                $responseText = "Не вдалося завантажити дані для порівняння, або один з користувачів недоступний.";
+                                $dataLoadedSuccessfully = false;
+                                break;
+                            }
+
                             $contextData = [
-                                'user1_data' => $userData1,
-                                'user2_data' => $userData2,
-                                // Передаємо імена для використання в промпті LLM2
+                                'user1_data' => $user1Data,
+                                'user2_data' => $user2Data,
                                 'user1_username' => $targetUsernames[0],
                                 'user2_username' => $targetUsernames[1]
                             ];
+                        } else {
+                             $responseText = "Отримано невірну кількість імен користувачів для обробки: " . count($targetUsernames) . ". Очікувалось 1 або 2.";
+                             $dataLoadedSuccessfully = false;
                         }
-                    } else {
-                         $responseText = "Отримано невірну кількість імен користувачів для обробки: " . count($targetUsernames) . ". Очікувалось 1 або 2.";
-                         $dataLoadedSuccessfully = false;
                     }
                     break;
                 case 'none':
@@ -189,19 +199,23 @@ if (isset($update['message'])) {
 
             // Якщо дані не були завантажені успішно (крім типу 'none', де це нормально)
             if (!$dataLoadedSuccessfully) {
-                // $responseText вже встановлено з повідомленням про помилку
-                 custom_log("Data loading failed. Response: " . $responseText, 'telegram_webhook');
+                // $responseText вже встановлено з повідомленням про помилку від loadUserData
+                custom_log("Data loading failed. Response: " . $responseText, 'telegram_webhook');
             } elseif (!empty($followUpQuery)) {
-                // Переконуємось, що $contextData не null перед json_encode, особливо для file_type 'none'
-                 if ($contextData !== null) {
+                // Переконуємось, що $contextData не null і не порожній перед json_encode, особливо для file_type 'none'
+                if ($contextData !== null && !empty($contextData) && !(count($contextData) === 1 && isset($contextData['info']))) { // Check if it's just the default 'info' context
                     $contextDataJson = json_encode($contextData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
                     if (json_last_error() !== JSON_ERROR_NONE) {
                         custom_log("JSON encode error for contextData: " . json_last_error_msg(), 'telegram_error');
                         $responseText = "Внутрішня помилка: не вдалося підготувати дані для ШІ.";
                         $dataLoadedSuccessfully = false; // Щоб не викликати getGeminiAnswer
                     }
-                } else { // Якщо contextData все ще null (малоймовірно тут, але для безпеки)
-                    $contextDataJson = json_encode(['info' => 'Контекст не завантажено.']);
+                } else { // If contextData is null, empty, or only contains 'info'
+                    if (empty($responseText)) { // Only set responseText if not already set by loadUserData or other logic
+                        $responseText = "Немає даних для аналізу. Можливо, дані приховані або користувач не існує.";
+                    }
+                    custom_log("No valid context data for LLM2. Context: " . json_encode($contextData) . " Response: " . $responseText, 'telegram_webhook');
+                    $dataLoadedSuccessfully = false; // Prevent LLM2 call
                 }
 
                 if ($dataLoadedSuccessfully) { // Продовжуємо, якщо все ще успішно
