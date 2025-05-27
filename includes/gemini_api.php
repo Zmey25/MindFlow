@@ -60,7 +60,7 @@ function callGeminiApi(array $messages, string $model = 'gemini-2.5-flash-previe
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 90); 
+    curl_setopt($ch, CURLOPT_TIMEOUT, 90);
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -100,6 +100,9 @@ function determineRelevantData(string $userQuery): array {
     $allUsers = readJsonFile(ROOT_DIR . '/data/users.json');
     $usersForLLM = [];
     foreach ($allUsers as $user) {
+        // --- NEW: Filter out hidden users for LLM if not admin, or just include all and let loadUserData handle it.
+        // For determineRelevantData, we can still provide a list of existing users,
+        // but loadUserData will apply the 'hide_results' logic.
         $usersForLLM[] = [
             'username' => $user['username'],
             'first_name' => $user['first_name'] ?? '',
@@ -164,7 +167,7 @@ function determineRelevantData(string $userQuery): array {
                 }
             }
             if ($foundCanonicalUsername) {
-                if (!in_array($foundCanonicalUsername, $validUsernames)) { 
+                if (!in_array($foundCanonicalUsername, $validUsernames)) {
                     $validUsernames[] = $foundCanonicalUsername;
                 }
             } else {
@@ -174,11 +177,11 @@ function determineRelevantData(string $userQuery): array {
 
         if (!empty($notFoundUsernames)) {
             $errorMsgPart = "Не вдалося знайти користувачів: " . implode(', ', $notFoundUsernames) . ".";
-            if (empty($validUsernames)) { 
-                $geminiResponse['file_type'] = 'none'; 
+            if (empty($validUsernames)) {
+                $geminiResponse['file_type'] = 'none';
                 $geminiResponse['target_usernames'] = [];
                 $geminiResponse['follow_up_query'] = $errorMsgPart . " Будь ласка, уточніть імена.";
-            } else { 
+            } else {
                 if (count($geminiResponse['target_usernames']) > 1 && count($validUsernames) < 2) {
                      $geminiResponse['file_type'] = 'none';
                      $geminiResponse['target_usernames'] = [];
@@ -188,9 +191,9 @@ function determineRelevantData(string $userQuery): array {
                 }
             }
         }
-        $geminiResponse['target_usernames'] = $validUsernames; 
+        $geminiResponse['target_usernames'] = $validUsernames;
     }
-    
+
     if ($geminiResponse['file_type'] === 'user_answers' && empty($geminiResponse['target_usernames'])) {
         if (strpos($geminiResponse['follow_up_query'], "Не вдалося знайти") === false && strpos($geminiResponse['follow_up_query'], "Порівняння неможливе") === false) {
             $geminiResponse['follow_up_query'] = "Було запитано дані користувача(ів), але імена не розпізнано або вказано невірно. Уточніть запит.";
@@ -230,7 +233,7 @@ function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string
         $contextDescription = "Надані наступні дані (якщо вони не порожні): \n";
     }
 
-    $maxContextLength = 100000; 
+    $maxContextLength = 100000;
     if (strlen($contextDataJson) > $maxContextLength) {
         $contextDataJsonShortened = substr($contextDataJson, 0, $maxContextLength) . "\n... (дані обрізано через великий розмір)";
         custom_log("Context data for LLM2 was too long, shortened. Original length: " . strlen($contextDataJson), "gemini_warning");
@@ -254,7 +257,7 @@ function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string
         ['role' => 'user', 'parts' => [['text' => $systemInstruction]]]
     ];
 
-    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash-preview-05-20'); 
+    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash-preview-05-20');
 
     if ($geminiResponseText === null) {
         return 'Вибачте, сталася помилка під час генерації відповіді від ШІ (LLM2).';
@@ -267,23 +270,55 @@ function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string
 }
 
 if (!function_exists('loadUserData')) {
-    function loadUserData(string $username): array {
+    /**
+     * Завантажує дані відповідей користувача.
+     *
+     * @param string $username Ім'я користувача, чиї дані потрібно завантажити.
+     * @param bool $isAdminRequest Прапорець, що вказує, чи запит надходить від адміністратора.
+     * @return array Повертає асоціативний масив:
+     *               - 'success': bool, true якщо дані завантажено успішно.
+     *               - 'data': array, завантажені дані користувача або порожній масив у разі невдачі.
+     *               - 'message': string, повідомлення про результат (успіх або помилка).
+     */
+    function loadUserData(string $username, bool $isAdminRequest = false): array {
         if (!preg_match('/^[a-zA-Z0-9_.-]+$/', $username)) {
             custom_log("Спроба завантажити дані для некоректного імені користувача: '{$username}'", 'security_warning');
-            return [];
+            return ['success' => false, 'message' => "Некоректне ім'я користувача.", 'data' => []];
         }
+
+        // --- NEW: Read users.json to check 'hide_results' ---
+        $allUsers = readJsonFile(ROOT_DIR . '/data/users.json');
+        $targetUser = null;
+        foreach ($allUsers as $user) {
+            if ($user['username'] === $username) {
+                $targetUser = $user;
+                break;
+            }
+        }
+
+        if (!$targetUser) {
+            custom_log("Користувача '{$username}' не знайдено в users.json.", 'user_error');
+            return ['success' => false, 'message' => "Користувача '{$username}' не знайдено.", 'data' => []];
+        }
+
+        // Check for hidden results if not an admin request
+        if (isset($targetUser['hide_results']) && $targetUser['hide_results'] === true && !$isAdminRequest) {
+            custom_log("Спроба доступу до прихованих результатів користувача '{$username}' не-адміном.", 'security_warning');
+            return ['success' => false, 'message' => "Результати користувача '{$username}' приховані.", 'data' => []];
+        }
+
         $filePath = ROOT_DIR . '/data/answers/' . $username . '.json';
         if (file_exists($filePath)) {
             $data = readJsonFile($filePath);
             if (empty($data)) {
                  custom_log("Файл даних для користувача '{$username}' порожній або не вдалося прочитати: {$filePath}", 'file_error');
-                 return [];
+                 return ['success' => false, 'message' => "Файл даних для користувача '{$username}' порожній або пошкоджений.", 'data' => []];
             }
-            $data['username_queried'] = $username; 
-            return $data;
+            $data['username_queried'] = $username;
+            return ['success' => true, 'message' => 'Дані завантажено успішно.', 'data' => $data];
         } else {
             custom_log("Файл даних для користувача '{$username}' не знайдено: {$filePath}", 'file_error');
-            return [];
+            return ['success' => false, 'message' => "Дані для користувача '{$username}' не знайдено. Можливо, він не проходив тест.", 'data' => []];
         }
     }
 }
