@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const LOCAL_DATA_PROVIDER_URL = '../get_sheet_data.php';
     const GAME_ROLES_SHEET_NAME = 'whome';
-    const ROLE_REVEAL_DURATION = 5; // seconds the role is shown
+    const ROLE_REVEAL_DURATION = 10; // seconds the role is shown
     const COUNTDOWN_DURATION = 5; // seconds countdown before reveal
     const MAIN_GAME_DURATION = 10 * 60; // 10 minutes in seconds
 
