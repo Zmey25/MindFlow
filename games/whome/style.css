@@ -23,6 +23,7 @@ body {
     overflow-y: auto; /* Дозволити прокрутку, якщо контент не влазить */
     max-height: 95vh;
     box-sizing: border-box; /* Include padding in width */
+    /* Transition for potential size changes? Not really needed for static media query */
 }
 
 .screen {
@@ -60,264 +61,153 @@ h3 {
     width: 100%; /* Make h3 take full width */
 }
 
-/* --- Adjusted: Font size increase for small screens --- */
-@media screen and (max-width: 600px) { /* Adjust breakpoint if needed */
+/* --- Adjusted: Font size increase for small screens (aiming for larger) --- */
+@media screen and (max-width: 600px) {
     #game-container {
-        padding: 15px; /* Reduce padding slightly */
+        padding: 20px; /* Increased padding */
     }
-    h1 { font-size: 2em; }
-    h2 { font-size: 1.4em; }
-    .rules { font-size: 0.9em; } /* Slightly increased rules text */
-    .rules h2 { font-size: 1.3em; } /* Slightly increased rules heading */
+    h1 { font-size: 3em; } /* Increased */
+    h2 { font-size: 2.2em; } /* Increased */
 
-    /* Significant increase for role font size - aiming for around double the base 1.8em */
-    #role-display-area h3 {
-         font-size: 3.8em; /* Increased from 2.8em, closer to double the base 1.8em */
-         padding: 20px; /* Increase padding for larger text */
-    }
-    button {
-        padding: 14px 25px; /* Slightly increase button padding */
-        font-size: 1.1em; /* Slightly increase button font size */
-        min-width: 180px;
-    }
-    #timer-display {
-        font-size: 3.2em; /* Slightly increased timer size */
-    }
-    #roles-reveal-list li {
-        font-size: 1.1em; /* Slightly increased results list font size */
-    }
-    .countdown {
-        font-size: 4.5em; /* Slightly increased countdown size */
-    }
-}
-/* ------------------------------------------------ */
-
-
-.rules {
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 10px 15px;
-    border-radius: 8px;
-    text-align: left;
-    margin-bottom: 20px;
-    font-size: 0.9em;
-}
-.rules h2 {
-    font-size: 1.2em;
-    text-align: center;
-    color: #f0f0f0;
-}
-.rules p {
-    margin: 5px 0;
-    line-height: 1.4;
-}
-
-label {
-    display: block;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #eee;
-}
-
-input[type="number"],
-select {
-    width: calc(100% - 22px);
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #555;
-    background-color: #333;
-    color: #fff;
-    font-size: 1em;
-    box-sizing: border-box; /* Ensure padding is included */
-}
-
-button {
-    background: #ff6b6b; /* Яскраво-червоний */
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 25px; /* Більш заокруглені кнопки */
-    font-size: 1.1em;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-top: 10px;
-    min-width: 200px; /* Мінімальна ширина для кнопок */
-    box-sizing: border-box; /* Include padding/border in width */
-    -webkit-tap-highlight-color: transparent; /* Prevent tap highlight on mobile */
-}
-
-button:hover {
-    background-color: #ff4757; /* Темніший червоний при наведенні */
-    transform: translateY(-2px);
-}
-button:active {
-    transform: translateY(0px);
-}
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    transform: none;
-}
-
-
-#start-game-btn {
-    background: #4CAF50; /* Зелений */
-}
-#start-game-btn:hover {
-    background: #45a049;
-}
-
-/* New: Style for Ready button */
-#ready-for-role-btn {
-    background: #3498db; /* Blue */
-}
-#ready-for-role-btn:hover {
-    background: #2980b9;
-}
-
-/* New: Style for role reveal buttons */
-#show-again-btn, #next-player-btn {
-     background: #f0ad4e; /* Orange */
-}
-#show-again-btn:hover, #next-player-btn:hover {
-     background: #ec971f;
-}
-
-/* New: Style for prompt area */
-#seen-prompt-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-#seen-prompt {
-    font-size: 1.2em;
-    margin-bottom: 5px;
-    color: #ffcc00;
-}
-.seen-buttons {
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping on small screens */
-    justify-content: center;
-    gap: 10px; /* Space between buttons */
-}
-.seen-buttons button {
-    margin: 0; /* Remove default button margin-top */
-    min-width: 150px; /* Adjust minimum width */
-}
-
-
-#end-game-early-btn {
-    background: #dc3545; /* Red */
-}
-#end-game-early-btn:hover {
-    background: #c82333;
-}
-
-
-#play-again-btn {
-    background: #5bc0de; /* Блакитний */
-}
-#play-again-btn:hover {
-    background: #31b0d5;
-}
-
-#timer-display {
-    font-size: 3em;
-    font-weight: bold;
-    color: #ffeb3b; /* Жовтий для таймера */
-    margin: 20px 0;
-    padding: 10px 20px;
-    background-color: rgba(0,0,0,0.3);
-    border-radius: 10px;
-}
-
-/* New: Style for countdown */
-.countdown {
-    font-size: 4em;
-    font-weight: bold;
-    color: #a0ffaa; /* Greenish */
-    margin: 20px 0;
-}
-
-.error-text {
-    color: #ff4d4d;
-    font-size: 0.9em;
-    margin-top: 10px;
-}
-
-.info-text {
-    color: #cccccc;
-    font-size: 0.8em;
-    margin-top: 5px;
-}
-
-
-.hidden {
-    display: none !important;
-}
-
-#roles-reveal-list {
-    list-style: none;
-    padding: 0;
-    text-align: left;
-    max-width: 300px;
-    margin: 0 auto;
-    width: 100%; /* Take full width of max-width */
-}
-
-#roles-reveal-list li {
-    background-color: rgba(255,255,255,0.1);
-    padding: 8px 12px;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    font-size: 1.1em;
-    word-break: break-word;
-}
-
-#roles-reveal-list li strong {
-    color: #ffdd57;
-}
-
-#look-away-text { /* Keep this style for rules text, but the element is removed from HTML */
-    font-style: italic;
-    color: #ccc;
-}
-
-#role-display-area p {
-    margin-bottom: 0;
-    font-size: 1.1em;
-}
-
-/* Адаптивність (Adjusted font size for role display and others) */
-@media (max-height: 600px) {
-     /* Adjustments for shorter screens */
-    #game-container {
-        max-height: 98vh; /* Allow more height */
-        padding: 10px;
-    }
     .rules {
-        padding: 5px 10px;
-        margin-bottom: 10px;
+        padding: 15px 20px; /* Increased padding */
+        margin-bottom: 25px; /* Increased margin */
+        font-size: 1.1em; /* Increased base rule text size */
     }
-     .rules h2 { font-size: 1.1em; }
-     .rules p { font-size: 0.8em; margin: 3px 0; }
+    .rules h2 { font-size: 1.8em; } /* Increased rule heading size */
+    .rules p { margin: 8px 0; } /* Increased margin between rules */
+
+
+    label {
+        margin-top: 15px; /* Increased margin */
+        margin-bottom: 8px; /* Increased margin */
+        font-size: 1.2em; /* Increased label font size */
+    }
+
+    input[type="number"],
+    select {
+        width: calc(100% - 30px); /* Adjusted width for larger padding */
+        padding: 15px; /* Increased padding */
+        margin-bottom: 20px; /* Increased margin */
+        font-size: 1.4em; /* Increased font size */
+    }
+
+    button {
+        padding: 18px 30px; /* Significantly increased button padding */
+        font-size: 1.6em; /* Significantly increased button font size */
+        border-radius: 30px; /* Slightly larger rounded corners */
+        margin-top: 15px; /* Increased margin */
+        min-width: 250px; /* Increased minimum width */
+    }
+
+    #start-game-btn {
+         /* Keep base styles, maybe adjust specific padding if needed */
+    }
+
+    #ready-for-role-btn {
+         /* Keep base styles */
+    }
+
+    #show-again-btn, #next-player-btn {
+         /* Keep base styles */
+    }
+
+    #seen-prompt-area {
+         gap: 15px; /* Increased gap */
+    }
+    #seen-prompt {
+        font-size: 1.6em; /* Increased prompt font size */
+        margin-bottom: 10px; /* Increased margin */
+    }
+    .seen-buttons {
+        gap: 15px; /* Increased gap between buttons */
+    }
+     .seen-buttons button {
+        min-width: 180px; /* Increased minimum width */
+     }
+
+
+    #role-display-area p {
+        margin-bottom: 5px; /* Slightly increased margin */
+        font-size: 1.4em; /* Increased "Роль гравця:" font size */
+    }
+
+    /* Significantly increased role font size - aiming for much larger */
+    #role-display-area h3 {
+         font-size: 5.5em; /* Increased significantly from 3.8em */
+         padding: 25px; /* Increased padding */
+         min-height: 1.5em; /* Ensure it has a minimum height even if role is short */
+         display: flex; /* Use flex to center text vertically if needed */
+         justify-content: center;
+         align-items: center;
+    }
+
+    #timer-display {
+        font-size: 4.5em; /* Increased timer size */
+        margin: 30px 0; /* Increased margin */
+        padding: 15px 25px; /* Increased padding */
+    }
+
+    .countdown {
+        font-size: 6em; /* Increased countdown size */
+        margin: 30px 0; /* Increased margin */
+    }
+
+    .error-text {
+        font-size: 1.1em; /* Increased error text size */
+        margin-top: 15px; /* Increased margin */
+    }
+
+    .info-text {
+        font-size: 1em; /* Increased info text size */
+        margin-top: 8px; /* Increased margin */
+    }
+
+    #roles-reveal-list {
+        max-width: 350px; /* Slightly increased max width */
+    }
+
+    #roles-reveal-list li {
+        padding: 12px 18px; /* Increased padding */
+        margin-bottom: 8px; /* Increased margin */
+        font-size: 1.3em; /* Increased results list font size */
+    }
+}
+
+/* Adjustments for very short screens, scaled down slightly */
+@media (max-height: 650px) and (max-width: 600px) { /* Apply if height is also constrained */
+     #game-container {
+        max-height: 98vh;
+        padding: 15px;
+     }
+     h1 { font-size: 2.6em; }
+     h2 { font-size: 2em; }
+     .rules { padding: 10px 15px; margin-bottom: 15px; font-size: 1em;}
+     .rules h2 { font-size: 1.6em; }
+     .rules p { margin: 5px 0;}
+
+     label { font-size: 1.1em; margin-top: 10px; margin-bottom: 5px;}
+     input[type="number"], select { padding: 12px; margin-bottom: 15px; font-size: 1.2em; }
 
      button {
-         padding: 10px 18px; /* Slightly adjusted padding */
-         font-size: 1em; /* Adjusted font size */
-         min-width: 160px;
+         padding: 14px 25px;
+         font-size: 1.4em;
+         min-width: 220px;
+         margin-top: 10px;
+     }
+      .seen-buttons button { min-width: 160px; }
+
+     #role-display-area h3 {
+         font-size: 4.5em; /* Adjusted for shorter screens */
+         padding: 20px;
      }
      #timer-display {
-         font-size: 2.4em; /* Adjusted timer size */
-         margin: 15px 0;
+         font-size: 3.5em;
+         margin: 20px 0;
+         padding: 12px 20px;
      }
-     #role-display-area h3 {
-         font-size: 3em; /* Adjusted for very short screens, still larger than base */
-         padding: 15px;
-     }
-     #roles-reveal-list li { font-size: 1em; } /* Adjusted results list size */
-     .countdown { font-size: 3.5em; } /* Adjusted countdown size */
+     .countdown { font-size: 5em; margin: 20px 0; }
+     .error-text { font-size: 1em; margin-top: 10px; }
+     .info-text { font-size: 0.9em; }
+     #roles-reveal-list li { padding: 10px 15px; margin-bottom: 6px; font-size: 1.2em; }
 }
