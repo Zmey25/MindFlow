@@ -17,8 +17,8 @@
             <div class="rules">
                 <h2>📜 Правила гри:</h2>
                 <p>1. Виберіть кількість гравців (мін. 2) та складність 🧐.</p>
-                <p>2. По черзі передавайте телефон 🤳. Коли ваша черга, натисніть "Я готовий!".</p> <!-- Updated rule -->
-                <p>3. Покажіть іншим свою роль 👀</p> <!-- Updated rule -->
+                <p>2. По черзі передавайте телефон 🤳. Коли ваша черга, натисніть "Я готовий!".</p>
+                <p>3. Покажіть іншим свою роль 👀</p>
                 <p>4. Коли всі отримають ролі, почнеться таймер ⏱️.</p>
                 <p>5. Задавайте по колу питання іншим гравцям про СЕБЕ (відповідь "Так" 👍 або "Ні" 👎), щоб вгадати, хто ви.</p>
                 <p>6. Вгадайте свою роль до закінчення часу! 🎉</p>
@@ -42,20 +42,20 @@
         <div id="role-assignment-screen" class="screen">
             <h2 id="player-turn-info"></h2>
 
-            <!-- New: Player Ready button -->
+            <!-- Player Ready button -->
             <button id="ready-for-role-btn">Я готовий!</button>
 
-            <!-- New: Countdown before showing role -->
+            <!-- Countdown before showing role -->
             <div id="role-countdown" class="countdown hidden"></div>
 
-            <!-- Role display area (modified visibility) -->
+            <!-- Role display area -->
             <div id="role-display-area" class="hidden">
                 <p>Роль гравця:</p>
                 <h3 id="current-role"></h3>
-                <!-- The role itself is now shown for a limited time -->
+                <!-- The role itself is shown for a limited time -->
             </div>
 
-            <!-- New: Prompt and buttons after role reveal -->
+            <!-- Prompt and buttons after role reveal -->
             <div id="seen-prompt-area" class="hidden">
                  <p id="seen-prompt">Усі побачили?</p>
                  <div class="seen-buttons">
@@ -84,9 +84,11 @@
         </div>
     </div>
 
+    <!-- Audio Elements -->
     <audio id="alarm-sound" src="sounds/alarm.mp3" preload="auto"></audio>
-    <!-- Add a shorter sound for role reveal countdown? -->
-    <!-- <audio id="reveal-sound" src="sounds/reveal.mp3" preload="auto"></audio> -->
+    <audio id="tick-tock-sound" src="sounds/tick-tock.wav" preload="auto" loop></audio>
+    <audio id="ding-sound" src="sounds/ding.mp3" preload="auto"></audio>
+
 
     <script src="script.js"></script>
 </body>
