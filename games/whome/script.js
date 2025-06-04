@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const LOCAL_DATA_PROVIDER_URL = '../get_sheet_data.php';
     const GAME_ROLES_SHEET_NAME = 'whome';
     const ROLE_REVEAL_DURATION = 8; // seconds the role is shown
-    const COUNTDOWN_DURATION = 5; // seconds countdown before reveal
+    const COUNTDOWN_DURATION = 6; // seconds countdown before reveal
     const MAIN_GAME_DURATION = 10 * 60; // 10 minutes in seconds
 
     // Елементи DOM
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         readyForRoleBtn.classList.add('hidden'); // Hide ready button
         seenPromptArea.classList.add('hidden'); // Hide prompt area if triggered from 'Show Again'
         roleDisplayArea.classList.add('hidden'); // Hide role if triggered from 'Show Again'
-        playerTurnInfo.textContent = 'Приготуйся...'; // Change prompt
+        playerTurnInfo.textContent = 'Розверни телефон поки не почуеш звук кінця...'; // Change prompt
 
         countdownTimerInterval = setInterval(() => {
             countdownTimeLeft--;
