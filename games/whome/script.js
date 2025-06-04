@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const LOCAL_DATA_PROVIDER_URL = '../get_sheet_data.php';
     const GAME_ROLES_SHEET_NAME = 'whome';
-    const ROLE_REVEAL_DURATION = 10; // seconds the role is shown
+    const ROLE_REVEAL_DURATION = 8; // seconds the role is shown
     const COUNTDOWN_DURATION = 5; // seconds countdown before reveal
     const MAIN_GAME_DURATION = 10 * 60; // 10 minutes in seconds
 
@@ -40,8 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Стан гри
     let numPlayers = 0;
     let difficulty = '';
-    let allRoles = []; // All roles fetched from data source
-    let availableRoles = []; // Roles available to be assigned for this game
+    let allRoles = []; // All roles fetched from data source, filtered by difficulty
+    // let availableRoles = []; // Removed - will shuffle allRoles directly for assignment
     let assignedRoles = []; // [{ playerIndex: 0, role: "Роль1" }, ...]
     let currentPlayerIndexForRole = 0;
 
@@ -74,7 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
      // Function to request wake lock
      async function requestWakeLock() {
-        if ('wakeLock' in navigator && !wakeLock) {
+        // Check if we are currently on the gamePlay screen before requesting
+        if ('wakeLock' in navigator && !wakeLock && screens.gamePlay.classList.contains('active')) {
             try {
                 wakeLock = await navigator.wakeLock.request('screen');
                 // if (wakeLockStatus) wakeLockStatus.textContent = 'Screen wake lock active.';
@@ -117,6 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchRoles() {
         errorMessage.textContent = 'Завантаження ролей... ⏳';
         startGameBtn.disabled = true; // Disable button while fetching
+        assignedRoles = []; // Ensure this is empty before fetching/assigning
+
         try {
             // Запит до нашого локального PHP-скрипта
             const response = await fetch(`${LOCAL_DATA_PROVIDER_URL}?sheetName=${encodeURIComponent(GAME_ROLES_SHEET_NAME)}`);
@@ -154,12 +157,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (allRoles.length < numPlayers) {
                 errorMessage.textContent = `😥 Недостатньо унікальних ролей (${allRoles.length}) на листі "${GAME_ROLES_SHEET_NAME}" для ${numPlayers} гравців на рівні "${difficulty}".`;
+                // We could potentially allow fewer unique roles if players don't mind duplicates,
+                // but the game is better with unique roles. Let's stick to requiring enough unique roles.
                 return false;
             }
 
-            // Use a copy for assigning, so we don't modify the original `allRoles`
-            availableRoles = [...allRoles];
-            shuffleArray(availableRoles); // Перемішуємо доступні ролі
+            // --- Improved Role Assignment ---
+            // Shuffle the *entire* filtered list
+            shuffleArray(allRoles);
+
+            // Assign the first 'numPlayers' roles from the shuffled list
+            for (let i = 0; i < numPlayers; i++) {
+                 assignedRoles.push({ playerIndex: i, role: allRoles[i] });
+            }
+            // --- End Improved Role Assignment ---
+
+            console.log("Assigned roles:", assignedRoles); // For debugging
             errorMessage.textContent = '';
             return true;
 
@@ -174,19 +187,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startRoleAssignment() {
         currentPlayerIndexForRole = 0;
-        assignedRoles = [];
-        // Assign roles now before starting the player-by-player reveal
-        for (let i = 0; i < numPlayers; i++) {
-             // Take roles from the shuffled available list
-             assignedRoles.push({ playerIndex: i, role: availableRoles[i] });
-        }
-        console.log("Assigned roles:", assignedRoles); // For debugging
-
-        // Prepare for the first player
+        // Roles are already assigned in fetchRoles now
         prepareNextPlayerForRole();
     }
 
     function prepareNextPlayerForRole() {
+        // Clear previous timers before starting a new sequence
+        clearInterval(roleRevealTimerInterval);
+        clearInterval(countdownTimerInterval);
+
         // Hide everything first
         readyForRoleBtn.classList.add('hidden');
         roleCountdown.classList.add('hidden');
@@ -205,10 +214,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startCountdown() {
+        clearInterval(countdownTimerInterval); // Clear any existing countdown timer
         countdownTimeLeft = COUNTDOWN_DURATION;
         roleCountdown.textContent = countdownTimeLeft;
         roleCountdown.classList.remove('hidden'); // Show countdown
         readyForRoleBtn.classList.add('hidden'); // Hide ready button
+        seenPromptArea.classList.add('hidden'); // Hide prompt area if triggered from 'Show Again'
+        roleDisplayArea.classList.add('hidden'); // Hide role if triggered from 'Show Again'
         playerTurnInfo.textContent = 'Приготуйся...'; // Change prompt
 
         countdownTimerInterval = setInterval(() => {
@@ -224,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showAndTimerRole() {
+        clearInterval(roleRevealTimerInterval); // Clear any existing reveal timer
         const role = assignedRoles[currentPlayerIndexForRole].role;
         currentRoleText.textContent = role;
         roleDisplayArea.classList.remove('hidden'); // Show role area
@@ -235,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
         roleRevealTimerInterval = setInterval(() => {
             roleRevealTimeLeft--;
             // You could optionally display this timer somewhere
-            console.log(`Role reveal timer: ${roleRevealTimeLeft}`);
+            // console.log(`Role reveal timer: ${roleRevealTimeLeft}`); // Avoid excessive console logs
 
             if (roleRevealTimeLeft <= 0) {
                 clearInterval(roleRevealTimerInterval);
@@ -284,12 +297,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         rolesRevealList.innerHTML = ''; // Очищаємо список
-        assignedRoles.forEach(item => {
-            const li = document.createElement('li');
-            // Use player index + 1 for display numbers (1-based)
-            li.innerHTML = `<strong>Гравець ${item.playerIndex + 1}:</strong> ${item.role}`;
-            rolesRevealList.appendChild(li);
-        });
+        if (assignedRoles.length > 0) {
+             assignedRoles.forEach(item => {
+                 const li = document.createElement('li');
+                 // Use player index + 1 for display numbers (1-based)
+                 li.innerHTML = `<strong>Гравець ${item.playerIndex + 1}:</strong> ${item.role}`;
+                 rolesRevealList.appendChild(li);
+             });
+        } else {
+             // Handle case where game ended before roles were fully assigned? (Shouldn't happen with current flow)
+             const li = document.createElement('li');
+             li.textContent = "Інформація про ролі недоступна.";
+             rolesRevealList.appendChild(li);
+        }
+
         switchScreen('results');
     }
 
@@ -299,11 +320,11 @@ document.addEventListener('DOMContentLoaded', () => {
         numPlayers = parseInt(numPlayersInput.value);
         difficulty = difficultySelect.value;
 
-        if (numPlayers < 2) {
-            errorMessage.textContent = 'Мінімум 2 гравці!';
+        if (isNaN(numPlayers) || numPlayers < 2) {
+            errorMessage.textContent = 'Будь ласка, введіть коректну кількість гравців (мінімум 2).';
             return;
         }
-        errorMessage.textContent = '';
+        errorMessage.textContent = ''; // Clear previous error
 
         // Fetch roles first, then start assignment if successful
         const rolesFetched = await fetchRoles();
@@ -317,8 +338,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // New: Handler for "Show Again" button after role reveal
     showAgainBtn.addEventListener('click', () => {
-         seenPromptArea.classList.add('hidden'); // Hide prompt area
-         showAndTimerRole(); // Restart the reveal process for the same player
+        // *** CHANGE: Call startCountdown to re-run the preparation sequence ***
+         startCountdown();
     });
 
     // New: Handler for "Next Player" button after role reveal
@@ -336,9 +357,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     playAgainBtn.addEventListener('click', () => {
         // Скидання стану для нової гри
-        allRoles = [];
-        availableRoles = [];
-        assignedRoles = [];
+        allRoles = []; // Clear fetched roles
+        assignedRoles = []; // Clear assigned roles
         currentPlayerIndexForRole = 0;
 
         // Clear all potential timers
@@ -347,25 +367,26 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(gameTimerInterval);
         releaseWakeLock(); // Ensure wake lock is off
 
-        timeLeft = MAIN_GAME_DURATION; // Reset timer value display starts clean
-        updateGameTimerDisplay(); // Update display
+        gameTimeLeft = MAIN_GAME_DURATION; // Reset timer value display starts clean
+        updateGameTimerDisplay(); // Update display (will show initial 10:00)
 
         // Reset form inputs
         numPlayersInput.value = "2";
         difficultySelect.value = "Easy";
         errorMessage.textContent = ''; // Clear any old error messages
 
-        // Hide all dynamic elements from role assignment/game
+        // Hide all dynamic elements from role assignment/game (ensure clean state)
         readyForRoleBtn.classList.add('hidden');
         roleCountdown.classList.add('hidden');
         roleDisplayArea.classList.add('hidden');
         seenPromptArea.classList.add('hidden');
-        currentRoleText.textContent = '';
 
-        switchScreen('setup'); // Go back to setup
+        // Switch back to the setup screen
+        switchScreen('setup');
     });
 
-    // --- Initialization ---
-    switchScreen('setup'); // Show the initial setup screen
-    updateGameTimerDisplay(); // Display initial timer value (10:00)
+    // Initial setup display on load
+    switchScreen('setup');
+    // Ensure timer display is correct initially
+    updateGameTimerDisplay();
 });
