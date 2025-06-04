@@ -1,3 +1,4 @@
+/* games/whome/style.css */
 body {
     font-family: 'Montserrat', sans-serif;
     margin: 0;
@@ -21,6 +22,7 @@ body {
     max-width: 400px; /* Максимальна ширина для телефонів */
     overflow-y: auto; /* Дозволити прокрутку, якщо контент не влазить */
     max-height: 95vh;
+    box-sizing: border-box; /* Include padding in width */
 }
 
 .screen {
@@ -47,13 +49,44 @@ h2 {
 }
 
 h3 {
-    font-size: 1.8em;
+    font-size: 1.8em; /* Base size */
     color: #a0ffaa; /* Світло-зелений для ролі */
     margin: 5px 0 15px 0;
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 8px;
+    word-break: break-word; /* Prevent long words overflowing */
+    box-sizing: border-box; /* Include padding in width */
+    width: 100%; /* Make h3 take full width */
 }
+
+/* --- New: Font size increase for small screens --- */
+@media screen and (max-width: 600px) { /* Adjust breakpoint if needed */
+    #game-container {
+        padding: 15px; /* Reduce padding slightly */
+    }
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.4em; }
+    .rules { font-size: 0.85em; }
+    /* Increase role font size - aiming for significantly larger */
+    #role-display-area h3 {
+         font-size: 2.8em; /* Increase from 1.8em */
+         padding: 15px; /* Increase padding */
+    }
+    button {
+        padding: 12px 20px; /* Adjust button padding */
+        font-size: 1em; /* Adjust button font size */
+        min-width: 180px;
+    }
+    #timer-display {
+        font-size: 2.8em; /* Slightly adjust timer size */
+    }
+    #roles-reveal-list li {
+        font-size: 1em; /* Adjust results list font size */
+    }
+}
+/* ------------------------------------------------ */
+
 
 .rules {
     background-color: rgba(255, 255, 255, 0.05);
@@ -105,6 +138,7 @@ button {
     transition: background-color 0.3s ease, transform 0.2s ease;
     margin-top: 10px;
     min-width: 200px; /* Мінімальна ширина для кнопок */
+    box-sizing: border-box; /* Include padding/border in width */
 }
 
 button:hover {
@@ -123,12 +157,53 @@ button:active {
     background: #45a049;
 }
 
-#role-seen-btn, #end-game-early-btn {
-    background: #f0ad4e; /* Помаранчевий */
+/* New: Style for Ready button */
+#ready-for-role-btn {
+    background: #3498db; /* Blue */
 }
-#role-seen-btn:hover, #end-game-early-btn:hover {
-    background: #ec971f;
+#ready-for-role-btn:hover {
+    background: #2980b9;
 }
+
+/* New: Style for role reveal buttons */
+#show-again-btn, #next-player-btn {
+     background: #f0ad4e; /* Orange */
+}
+#show-again-btn:hover, #next-player-btn:hover {
+     background: #ec971f;
+}
+
+/* New: Style for prompt area */
+#seen-prompt-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+#seen-prompt {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    color: #ffcc00;
+}
+.seen-buttons {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    justify-content: center;
+    gap: 10px; /* Space between buttons */
+}
+.seen-buttons button {
+    margin: 0; /* Remove default button margin-top */
+    min-width: 150px; /* Adjust minimum width */
+}
+
+
+#end-game-early-btn {
+    background: #dc3545; /* Red */
+}
+#end-game-early-btn:hover {
+    background: #c82333;
+}
+
 
 #play-again-btn {
     background: #5bc0de; /* Блакитний */
@@ -147,11 +222,26 @@ button:active {
     border-radius: 10px;
 }
 
+/* New: Style for countdown */
+.countdown {
+    font-size: 4em;
+    font-weight: bold;
+    color: #a0ffaa; /* Greenish */
+    margin: 20px 0;
+}
+
 .error-text {
     color: #ff4d4d;
     font-size: 0.9em;
     margin-top: 10px;
 }
+
+.info-text {
+    color: #cccccc;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
 
 .hidden {
     display: none !important;
@@ -163,6 +253,7 @@ button:active {
     text-align: left;
     max-width: 300px;
     margin: 0 auto;
+    width: 100%; /* Take full width of max-width */
 }
 
 #roles-reveal-list li {
@@ -171,25 +262,51 @@ button:active {
     margin-bottom: 5px;
     border-radius: 5px;
     font-size: 1.1em;
+    word-break: break-word;
 }
 
 #roles-reveal-list li strong {
     color: #ffdd57;
 }
 
-#look-away-text {
+#look-away-text { /* Keep this style for rules text, but the element is removed from HTML */
     font-style: italic;
     color: #ccc;
 }
 
 #role-display-area p {
     margin-bottom: 0;
+    font-size: 1.1em;
 }
 
-/* Адаптивність */
+/* Адаптивність (already included the font size part above) */
+/* Keep existing media query for general layout if needed */
 @media (max-height: 600px) {
-    h1 { font-size: 1.8em; }
-    .rules { font-size: 0.8em; }
-    button { padding: 10px 20px; font-size: 1em; }
-    #timer-display { font-size: 2.5em; }
+     /* Adjustments for shorter screens */
+    #game-container {
+        max-height: 98vh; /* Allow more height */
+        padding: 10px;
+    }
+    .rules {
+        padding: 5px 10px;
+        margin-bottom: 10px;
+    }
+     .rules h2 { font-size: 1.1em; }
+     .rules p { font-size: 0.8em; margin: 3px 0; }
+
+     button {
+         padding: 8px 15px;
+         font-size: 0.9em;
+         min-width: 160px;
+     }
+     #timer-display {
+         font-size: 2em;
+         margin: 10px 0;
+     }
+     #role-display-area h3 {
+         font-size: 2em; /* Adjust for very short screens */
+         padding: 8px;
+     }
+     #roles-reveal-list li { font-size: 0.9em; }
+     .countdown { font-size: 3em; }
 }
