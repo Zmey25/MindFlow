@@ -17,8 +17,8 @@
             <div class="rules">
                 <h2>📜 Правила гри:</h2>
                 <p>1. Виберіть кількість гравців (мін. 2) та складність 🧐.</p>
-                <p>2. По черзі передавайте телефон 🤳. Коли ваша черга, хтось інший натискає "Показати роль".</p>
-                <p>3. Не підглядайте! 🤫 Запам'ятайте свою роль.</p>
+                <p>2. По черзі передавайте телефон 🤳. Коли ваша черга, натисніть "Я готовий!".</p> <!-- Updated rule -->
+                <p>3. Запам'ятайте свою роль під час показу. 👀</p> <!-- Updated rule -->
                 <p>4. Коли всі отримають ролі, почнеться таймер ⏱️.</p>
                 <p>5. Задавайте по колу питання іншим гравцям про СЕБЕ (відповідь "Так" 👍 або "Ні" 👎), щоб вгадати, хто ви.</p>
                 <p>6. Вгадайте свою роль до закінчення часу! 🎉</p>
@@ -41,13 +41,28 @@
         <!-- Екран роздачі ролей -->
         <div id="role-assignment-screen" class="screen">
             <h2 id="player-turn-info"></h2>
-            <p id="look-away-text">Інший гравець, натисніть, щоб показати роль 👇</p>
+
+            <!-- New: Player Ready button -->
+            <button id="ready-for-role-btn">Я готовий!</button>
+
+            <!-- New: Countdown before showing role -->
+            <div id="role-countdown" class="countdown hidden"></div>
+
+            <!-- Role display area (modified visibility) -->
             <div id="role-display-area" class="hidden">
                 <p>Твоя роль:</p>
                 <h3 id="current-role"></h3>
-                <button id="role-seen-btn">✅ Зрозуміло, передаю телефон</button>
+                <!-- The role itself is now shown for a limited time -->
             </div>
-            <button id="show-role-btn">👀 Показати роль</button>
+
+            <!-- New: Prompt and buttons after role reveal -->
+            <div id="seen-prompt-area" class="hidden">
+                 <p id="seen-prompt">Усі побачили?</p>
+                 <div class="seen-buttons">
+                    <button id="show-again-btn">Показати ще раз</button>
+                    <button id="next-player-btn">Йдемо далі</button>
+                 </div>
+            </div>
         </div>
 
         <!-- Екран гри (таймер) -->
@@ -56,6 +71,8 @@
             <p>Задавайте питання та відгадуйте!</p>
             <div id="timer-display">10:00</div>
             <button id="end-game-early-btn">🏁 Завершити достроково</button>
+             <!-- Optional: Display wake lock status -->
+             <!-- <p id="wake-lock-status" class="info-text"></p> -->
         </div>
 
         <!-- Екран результатів -->
@@ -68,8 +85,8 @@
     </div>
 
     <audio id="alarm-sound" src="sounds/alarm.mp3" preload="auto"></audio>
-    <!-- Створіть папку sounds та покладіть туди файл alarm.mp3 -->
-    <!-- Можете знайти безкоштовний звук будильника онлайн -->
+    <!-- Add a shorter sound for role reveal countdown? -->
+    <!-- <audio id="reveal-sound" src="sounds/reveal.mp3" preload="auto"></audio> -->
 
     <script src="script.js"></script>
 </body>
