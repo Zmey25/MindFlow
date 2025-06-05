@@ -1,232 +1,270 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['game_started']) || $_SESSION['game_started'] !== true || $_SESSION['game_over'] === true) {
-    header('Location: index.php');
+// --- Перевірки стану гри на початку ---
+if (!isset($_SESSION['game_started']) || $_SESSION['game_started'] !== true) {
+    header('Location: index.php?new_game=true'); // Якщо гра не почата, налаштовуємо нову
+    exit;
+}
+if (isset($_SESSION['game_over']) && $_SESSION['game_over'] === true) {
+    header('Location: game_over.php'); // Якщо гра завершена, показуємо екран завершення
     exit;
 }
 
-$questions_data = $_SESSION['all_questions_data'] ?? [];
+// Завантаження даних (припускаємо, що вони вже в сесії з index.php або game_over.php для "грати знов")
+$questions_data_map = $_SESSION['all_questions_data'] ?? []; // Це має бути асоціативний масив ID => QuestionData
 $category_styles = json_decode(file_get_contents('data/category_styles.json'), true);
 
-if (empty($questions_data) || empty($category_styles)) {
-    // Критична помилка, питання або стилі не завантажені
+if (empty($questions_data_map) || empty($category_styles)) {
     $_SESSION['game_over'] = true;
-    $_SESSION['game_over_message'] = "Помилка: Файли гри (питання/стилі) не знайдено або пошкоджено.";
+    $_SESSION['game_over_message'] = "Помилка: Файли гри (питання/стилі) не завантажено належним чином.";
     header('Location: game_over.php');
     exit;
 }
 
-// Допоміжні функції
+// --- Допоміжні функції --- (залишаються переважно ті ж, але з невеликими уточненнями)
 function get_active_players_indices() {
     $active_indices = [];
-    foreach ($_SESSION['players'] as $index => $player) {
-        if ($player['active']) {
-            $active_indices[] = $index;
+    if (isset($_SESSION['players']) && is_array($_SESSION['players'])) {
+        foreach ($_SESSION['players'] as $index => $player) {
+            if (isset($player['active']) && $player['active']) {
+                $active_indices[] = $index;
+            }
         }
     }
     return $active_indices;
 }
 
-function get_next_active_player_index($current_index) {
-    $active_indices = get_active_players_indices();
-    if (empty($active_indices)) return null;
+function get_next_active_player_index($current_index_in_session) {
+    $all_players = $_SESSION['players'] ?? [];
+    if (empty($all_players)) return null;
 
-    $current_pos_in_active = array_search($current_index, $active_indices);
-    if ($current_pos_in_active === false) { // Якщо поточний гравець став неактивним
-        // Шукаємо наступного активного від поточного індекса
-        $next_idx = ($current_index + 1) % count($_SESSION['players']);
-        while(!$_SESSION['players'][$next_idx]['active'] && $next_idx != $current_index) {
-            $next_idx = ($next_idx + 1) % count($_SESSION['players']);
+    $num_players = count($all_players);
+    $next_idx = ($current_index_in_session + 1) % $num_players;
+    $checked_count = 0;
+
+    while ($checked_count < $num_players) {
+        if (isset($all_players[$next_idx]['active']) && $all_players[$next_idx]['active']) {
+            return $next_idx;
         }
-        return $_SESSION['players'][$next_idx]['active'] ? $next_idx : null; // Якщо всі неактивні крім одного (що не має бути)
+        $next_idx = ($next_idx + 1) % $num_players;
+        $checked_count++;
     }
-    
-    $next_active_pos = ($current_pos_in_active + 1) % count($active_indices);
-    return $active_indices[$next_active_pos];
+    return null; // Немає інших активних гравців
 }
+
 
 function select_question() {
-    if (empty($_SESSION['available_question_ids'])) {
-        // Якщо пул закінчився, перемішуємо всі ID знову
-        $all_q_ids = array_keys($_SESSION['all_questions_data']);
-        shuffle($all_q_ids);
-        $_SESSION['available_question_ids'] = $all_q_ids;
+    // Переконатися, що all_questions_data існує і є асоціативним масивом
+    if (!isset($_SESSION['all_questions_data']) || !is_array($_SESSION['all_questions_data'])) {
+        // Критична помилка - дані питань відсутні або пошкоджені
+        error_log("select_question: all_questions_data is missing or not an array.");
+        return null; 
     }
-    // Беремо останній ID з перемішаного масиву (або перший, якщо array_shift)
+
+    // Якщо пул доступних ID порожній, оновлюємо його
+    if (!isset($_SESSION['available_question_ids']) || empty($_SESSION['available_question_ids'])) {
+        $all_question_ids_from_map = array_keys($_SESSION['all_questions_data']);
+        if (empty($all_question_ids_from_map)) {
+            // Питань взагалі немає
+            error_log("select_question: No question IDs available from all_questions_data map.");
+            return null;
+        }
+        shuffle($all_question_ids_from_map);
+        $_SESSION['available_question_ids'] = $all_question_ids_from_map;
+        // error_log("Question pool refreshed. New pool size: " . count($_SESSION['available_question_ids']));
+    }
+    
     $question_id = array_pop($_SESSION['available_question_ids']);
-    $_SESSION['current_question_id'] = $question_id;
-    return $_SESSION['all_questions_data'][$question_id] ?? null;
+    // error_log("Selected question ID: " . $question_id . ". Pool size after pop: " . count($_SESSION['available_question_ids']));
+
+
+    if ($question_id === null || !isset($_SESSION['all_questions_data'][$question_id])) {
+        // Це може статися, якщо available_question_ids був порожній, але не оновився,
+        // або якщо ID з пулу немає в all_questions_data (малоймовірно при правильній ініціалізації)
+        error_log("select_question: Failed to get a valid question_id or question_data for ID: " . var_export($question_id, true));
+        // Спробуємо ще раз, можливо, пул оновиться
+        if (empty($_SESSION['available_question_ids'])) { // Якщо пул справді порожній після pop
+            $all_question_ids_from_map = array_keys($_SESSION['all_questions_data']);
+            shuffle($all_question_ids_from_map);
+            $_SESSION['available_question_ids'] = $all_question_ids_from_map;
+            if (empty($_SESSION['available_question_ids'])) return null; // Якщо все ще порожній
+            $question_id = array_pop($_SESSION['available_question_ids']);
+             if ($question_id === null || !isset($_SESSION['all_questions_data'][$question_id])) return null;
+        } else {
+            return null; // Якщо не вдалося отримати питання
+        }
+    }
+    
+    // Зберігаємо саме дані питання, а не тільки ID, для поточного ходу
+    $_SESSION['current_question_data'] = $_SESSION['all_questions_data'][$question_id];
+    return $_SESSION['current_question_data'];
 }
 
-// --- Обробка дій гравця ---
+// --- Обробка POST-запитів ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
-    $current_player_idx = $_SESSION['current_player_index'];
-    $player_data = &$_SESSION['players'][$current_player_idx]; // Reference for direct modification
+    $current_player_idx_on_action = $_SESSION['current_player_index']; // Зберігаємо індекс на момент дії
+    $player_data = &$_SESSION['players'][$current_player_idx_on_action];
+
+    $made_move = false; // Прапорець, чи була здійснена дія, що передає хід
 
     if ($action === 'completed') {
-        $current_question = $_SESSION['all_questions_data'][$_SESSION['current_question_id']] ?? null;
-        if ($current_question) {
-            if (isset($current_question['bonus_skip_on_complete']) && $current_question['bonus_skip_on_complete'] === true) {
+        $current_question_processed = $_SESSION['current_question_data'] ?? null; // Використовуємо збережене питання
+        if ($current_question_processed) {
+            if (isset($current_question_processed['bonus_skip_on_complete']) && $current_question_processed['bonus_skip_on_complete'] === true) {
                 $player_data['skips_left']++;
             }
-            if (!empty($current_question['deferred_text_template']) && !empty($current_question['deferred_turns_player']) && $current_question['deferred_turns_player'] > 0) {
+            if (!empty($current_question_processed['deferred_text_template']) && !empty($current_question_processed['deferred_turns_player']) && $current_question_processed['deferred_turns_player'] > 0) {
                 $player_data['deferred_effects'][] = [
-                    'template' => $current_question['deferred_text_template'],
-                    'turns_left' => (int)$current_question['deferred_turns_player'],
-                    'question_id' => $current_question['id'] 
+                    'template' => $current_question_processed['deferred_text_template'],
+                    'turns_left' => (int)$current_question_processed['deferred_turns_player'],
+                    'question_id' => $current_question_processed['id'] 
                 ];
             }
         }
-        // Перехід ходу
-        $next_player_idx = get_next_active_player_index($current_player_idx);
-        if ($next_player_idx === null) { // Немає активних гравців
-            $_SESSION['game_over'] = true;
-            $_SESSION['game_over_message'] = "Залишився лише один гравець або гравців не залишилось!";
-        } else {
-            if ($next_player_idx < $_SESSION['current_player_index'] && count(get_active_players_indices()) > 1) { // Перейшли на початок кола
-                 $_SESSION['current_round']++;
-            }
-            $_SESSION['current_player_index'] = $next_player_idx;
-        }
-
+        $made_move = true;
     } elseif ($action === 'skip') {
         if ($player_data['skips_left'] > 0) {
             $player_data['skips_left']--;
-            // Нове питання для того ж гравця, хід не передається
-            $_SESSION['current_question_data'] = select_question();
+            $_SESSION['current_question_data'] = null; // Скидаємо поточне питання, щоб select_question() вибрав нове
+                                                       // для ЦЬОГО Ж гравця
         }
-        // Якщо немає пропусків, нічого не відбувається, гравець має обрати іншу дію
+        // Хід не передається, гравець залишається той самий. Редирект оновить сторінку.
     } elseif ($action === 'quit') {
         $player_data['active'] = false;
+        $made_move = true; // Ця дія також передає хід
+    }
+
+    if ($made_move) {
         $active_players_count = count(get_active_players_indices());
-        if ($active_players_count < 2) {
+        if ($active_players_count < 2) { // Потрібно >= 2 для продовження гри
             $_SESSION['game_over'] = true;
-            $_SESSION['game_over_message'] = $active_players_count === 1 ? "Залишився лише один гравець!" : "Гравців не залишилось!";
+            $_SESSION['game_over_message'] = $active_players_count === 1 ? "Залишився лише один переможець!" : "Гравців не залишилось! Гра завершена.";
         } else {
-            // Перехід ходу, якщо гра не закінчена
-            $next_player_idx = get_next_active_player_index($current_player_idx); // отримаємо наступного від того, хто вийшов
-             if ($next_player_idx === null) {
-                 $_SESSION['game_over'] = true; // Малоймовірно, але перевірка
-                 $_SESSION['game_over_message'] = "Не вдалося знайти наступного гравця.";
-             } else {
-                // Якщо той, хто вийшов, був останнім у списку і наступний - перший, це може інкрементувати раунд
-                // Логіка інкрементації раунду вже є в 'completed', але тут також потрібно
-                // Оскільки той, хто вийшов, вже неактивний, get_next_active_player_index знайде першого активного
-                // Якщо новий current_player_index менший за старий (індекс гравця, що вийшов), і активних гравців > 1, тоді коло завершене
-                // Важливо: тут $current_player_idx - це індекс того, хто ВИЙШОВ.
-                // Наступний гравець вже визначений. Якщо $next_player_idx < $current_player_idx (і це не перший хід гри) - це нове коло.
-                // Однак, коректніше інкрементувати раунд, коли *поточний* (новий) індекс менший за *попередній* (старий активний) індекс.
-                // Цю логіку вже має get_next_active_player_index + блок "completed"
+            $next_player_idx = get_next_active_player_index($current_player_idx_on_action);
+            if ($next_player_idx === null) { // Не повинно статися, якщо active_players_count >= 2
+                $_SESSION['game_over'] = true;
+                $_SESSION['game_over_message'] = "Помилка: Не вдалося визначити наступного гравця.";
+            } else {
+                // Перевірка на початок нового раунду
+                // Раунд збільшується, якщо наступний гравець має менший індекс, ніж той, хто ходив (і це не той самий гравець)
+                // Або якщо наступний гравець - перший активний, а попередній був останнім активним
+                $active_indices = get_active_players_indices();
+                $pos_current_in_active = array_search($current_player_idx_on_action, $active_indices);
+                $pos_next_in_active = array_search($next_player_idx, $active_indices);
+
+                if ($pos_next_in_active !== false && $pos_current_in_active !== false && $pos_next_in_active < $pos_current_in_active) {
+                    // Це відбувається, коли переходимо з, наприклад, останнього активного на першого активного
+                    // Або якщо гравець вибув, і наступний активний має менший індекс
+                     $_SESSION['current_round']++;
+                } else if (count($active_indices) > 0 && $next_player_idx == $active_indices[0] && $current_player_idx_on_action == end($active_indices) && $current_player_idx_on_action != $next_player_idx) {
+                    // Явніша перевірка для переходу з останнього на першого
+                    $_SESSION['current_round']++;
+                }
+
+
                 $_SESSION['current_player_index'] = $next_player_idx;
-             }
+                $_SESSION['current_question_data'] = null; // Дуже важливо: скидаємо питання для наступного гравця
+            }
         }
     }
-    // Після будь-якої дії, що змінює стан, перевіряємо, чи не час завершувати гру
-    if ($_SESSION['current_round'] > 5) {
+    // Перевірка кінця гри за раундами ПІСЛЯ можливого інкременту раунду
+    if (isset($_SESSION['current_round']) && $_SESSION['current_round'] > 5) {
         $_SESSION['game_over'] = true;
         $_SESSION['game_over_message'] = "Гра завершена! 5 кіл зіграно. Час для відпочинку!";
     }
-    if ($_SESSION['game_over']) {
-        header('Location: game_over.php');
-        exit;
-    }
-    // Якщо дія була 'skip', сторінка просто перезавантажиться з новим питанням для того ж гравця.
-    // Для 'completed' та 'quit' (якщо гра не закінчилась), сторінка перезавантажиться для наступного гравця.
-    header('Location: game.php'); // Перезавантаження для оновлення стану
+
+    // Редирект після будь-якої дії для оновлення сторінки та стану
+    // Якщо game_over встановлено, редирект буде на game_over.php на початку наступного завантаження game.php
+    header('Location: game.php');
     exit;
 }
 
-// --- Підготовка даних для відображення ---
-$current_player_idx = $_SESSION['current_player_index'];
-$current_player_data = &$_SESSION['players'][$current_player_idx];
+// --- Підготовка даних для відображення (після всіх обробок POST) ---
+// Якщо питання не вибране для поточного гравця (напр., перший хід або після 'skip' або після передачі ходу)
+if (!isset($_SESSION['current_question_data']) || $_SESSION['current_question_data'] === null) {
+    // error_log("Current question is null, selecting new one for player: " . $_SESSION['current_player_index']);
+    $_SESSION['current_question_data'] = select_question();
+    if ($_SESSION['current_question_data'] === null) {
+        // Якщо select_question повернув null (немає питань або помилка)
+        $_SESSION['game_over'] = true;
+        $_SESSION['game_over_message'] = "Помилка: Не вдалося завантажити питання для гри. Можливо, питання закінчились або файл пошкоджено.";
+        error_log("Critical: select_question returned null. Ending game.");
+        header('Location: game_over.php'); // Негайно перенаправляємо
+        exit;
+    }
+}
 
-// Обробка відкладених ефектів для поточного гравця
+$current_player_idx = $_SESSION['current_player_index'];
+// Перевірка, чи існує гравець з таким індексом і чи він активний
+if (!isset($_SESSION['players'][$current_player_idx]) || !$_SESSION['players'][$current_player_idx]['active']) {
+    // Спроба знайти наступного активного, якщо поточний чомусь неактивний
+    $fallback_idx = get_next_active_player_index($current_player_idx -1 < 0 ? count($_SESSION['players'])-1 : $current_player_idx -1); // Починаємо пошук з попереднього
+    if ($fallback_idx !== null) {
+        $_SESSION['current_player_index'] = $fallback_idx;
+        $_SESSION['current_question_data'] = null; // Потрібно нове питання для нового гравця
+        error_log("Fallback: current player was inactive or invalid. Switched to player index: " . $fallback_idx);
+        header('Location: game.php'); // Перезавантажуємо для оновлення
+        exit;
+    } else {
+        // Якщо немає активних гравців (мало б бути оброблено в POST)
+        $_SESSION['game_over'] = true;
+        $_SESSION['game_over_message'] = "Немає активних гравців для продовження гри.";
+        error_log("Critical: No active players found, current_player_index was invalid.");
+        header('Location: game_over.php');
+        exit;
+    }
+}
+$current_player_data = &$_SESSION['players'][$current_player_idx]; // & для прямої модифікації deferred_effects
+
+
+// Обробка відкладених ефектів (залишається схожою, але для $current_player_data)
 $deferred_messages_to_display = [];
 if (!empty($current_player_data['deferred_effects'])) {
     $active_effects = [];
     foreach ($current_player_data['deferred_effects'] as $effect) {
-        if ($effect['turns_left'] > 0) {
+        if (isset($effect['turns_left']) && $effect['turns_left'] > 0) {
             $text = str_replace('{TURNS_LEFT}', $effect['turns_left'], $effect['template']);
-            $text = str_replace('{PLAYER_NAME}', htmlspecialchars($current_player_data['name']), $text); // Якщо в шаблоні є ім'я
+            $text = str_replace('{PLAYER_NAME}', htmlspecialchars($current_player_data['name']), $text);
             $deferred_messages_to_display[] = $text;
             
-            $effect['turns_left']--; // Зменшуємо лічильник тільки для активних ефектів поточного гравця
-            if ($effect['turns_left'] > 0) { // Якщо ефект ще активний, зберігаємо його
+            $effect['turns_left']--; 
+            if ($effect['turns_left'] > 0) {
                 $active_effects[] = $effect;
             }
         }
     }
-    $current_player_data['deferred_effects'] = $active_effects; // Оновлюємо список активних ефектів
+    $current_player_data['deferred_effects'] = $active_effects;
 }
 
+$current_question = $_SESSION['current_question_data']; // Вже має бути встановлене
 
-// Вибір питання, якщо воно ще не встановлено для поточного ходу
-if (!isset($_SESSION['current_question_data']) || $_SESSION['current_question_data'] === null) {
-    $_SESSION['current_question_data'] = select_question();
-}
-$current_question = $_SESSION['current_question_data'];
-
-if (!$current_question) { // Якщо питання не вдалося вибрати (напр. порожній JSON)
-    $_SESSION['game_over'] = true;
-    $_SESSION['game_over_message'] = "Помилка: Не вдалося завантажити питання для гри.";
-    header('Location: game_over.php');
-    exit;
-}
-
-// Підготовка тексту питання
+// Підготовка тексту питання (залишається схожою)
 $question_text = $current_question['text'];
 $question_text = str_replace('{PLAYER_NAME}', htmlspecialchars($current_player_data['name']), $question_text);
-
-// Обробка {RANDOM_PLAYER_NAME}
 if (strpos($question_text, '{RANDOM_PLAYER_NAME}') !== false) {
-    $other_active_players = [];
+    $other_active_players_names = [];
     foreach ($_SESSION['players'] as $idx => $p_data) {
         if ($p_data['active'] && $idx != $current_player_idx) {
-            $other_active_players[] = htmlspecialchars($p_data['name']);
+            $other_active_players_names[] = htmlspecialchars($p_data['name']);
         }
     }
-    if (!empty($other_active_players)) {
-        $random_other_player_name = $other_active_players[array_rand($other_active_players)];
-        $question_text = str_replace('{RANDOM_PLAYER_NAME}', $random_other_player_name, $question_text);
+    if (!empty($other_active_players_names)) {
+        $random_name = $other_active_players_names[array_rand($other_active_players_names)];
+        $question_text = str_replace('{RANDOM_PLAYER_NAME}', $random_name, $question_text);
     } else {
-        // Якщо немає інших активних гравців, замінюємо на щось нейтральне або прибираємо частину
         $question_text = str_replace('{RANDOM_PLAYER_NAME}', '(інший гравець)', $question_text);
     }
 }
 
 $style_info = $category_styles[$current_question['category']] ?? $category_styles['Default'];
 
-$next_player_real_idx = get_next_active_player_index($current_player_idx);
-$next_player_name = ($next_player_real_idx !== null) ? $_SESSION['players'][$next_player_real_idx]['name'] : 'Нікого';
-
-// Важливо: після POST-запиту, який не був skip, питання має бути вибрано заново для НАСТУПНОГО гравця.
-// Якщо це не POST або був skip, то $_SESSION['current_question_data'] вже містить питання для поточного.
-// Ця логіка вже врахована вище: select_question() викликається, якщо $_SESSION['current_question_data'] порожнє.
-// Після 'completed' або 'quit', ми робимо редирект, і на наступному завантаженні, якщо
-// $_SESSION['current_question_data'] не було очищено (а воно не очищається), то буде те саме питання.
-// Отже, після успішного 'completed' чи 'quit' (якщо гра триває), ТРЕБА скидати поточне питання.
-// Це робиться так: перед редиректом після 'completed' або 'quit', якщо хід передається:
-// $_SESSION['current_question_data'] = null; (Це було пропущено, додаю в обробку POST)
-
-// Коригування: Скидання поточного питання ПІСЛЯ успішного виконання чи виходу
-// Це вже зроблено неявно, бо select_question() викликається при кожному завантаженні game.php
-// якщо $_SESSION['current_question_data'] не існує.
-// Краще скидати його явно, щоб новий гравець отримав нове питання.
-// Додано в POST-обробку: якщо хід передається, $_SESSION['current_question_data'] = null;
-// Насправді, краще не скидати, а дозволити select_question() зробити свою роботу на наступному завантаженні.
-// Якщо був 'skip', то select_question() вже оновив $_SESSION['current_question_data'].
-// Якщо був 'completed' або 'quit', то після редиректу, на початку скрипта game.php,
-// якщо `$_SESSION['current_question_data']` не скинуте, то гравець, що отримав хід, побачить те саме питання.
-// Тому, після `completed` або `quit` (що веде до зміни гравця), `$_SESSION['current_question_data'] = null;` має бути перед редиректом.
-// Однак, простіше, якщо select_question() викликається завжди, якщо це не skip.
-// Давайте зробимо так: якщо дія НЕ 'skip', то $_SESSION['current_question_data'] = null; перед редиректом
-// Це вже реалізовано тим, що після POST-запиту з 'completed' або 'quit' відбувається редирект,
-// а при наступному завантаженні `game.php` блок `if (!isset($_SESSION['current_question_data']))`
-// знову викличе `select_question()`. Так що поточна логіка має працювати.
+$next_player_for_button_idx = get_next_active_player_index($current_player_idx);
+$next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_SESSION['players'][$next_player_for_button_idx])) ? $_SESSION['players'][$next_player_for_button_idx]['name'] : 'Нікого';
 
 ?>
+<!-- Решта HTML game.php залишається такою ж -->
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -243,16 +281,12 @@ $next_player_name = ($next_player_real_idx !== null) ? $_SESSION['players'][$nex
 </head>
 <body>
     <div class="game-page">
-        <div class="background-icons-container">
-            <!-- Іконки будуть додані JS -->
-        </div>
-        
+        <div class="background-icons-container"></div>
         <div id="game-data-container" 
              data-icon-classes='<?php echo json_encode($style_info['icon_classes'] ?? [$style_info['icon_class'] ?? 'fas fa-question-circle']); ?>'
              data-icon-color="<?php echo htmlspecialchars($style_info['icon_color']); ?>"
              data-icon-opacity="<?php echo htmlspecialchars($style_info['icon_opacity'] ?? 0.1); ?>">
         </div>
-
         <div class="category-display">
             Категорія: <?php echo htmlspecialchars($current_question['category']); ?>
         </div>
@@ -260,7 +294,6 @@ $next_player_name = ($next_player_real_idx !== null) ? $_SESSION['players'][$nex
             Раунд: <?php echo $_SESSION['current_round']; ?>/5 <br>
             <?php echo htmlspecialchars($current_player_data['name']); ?> (Пропусків: <?php echo $current_player_data['skips_left']; ?>)
         </div>
-
         <div class="question-container">
             <div class="current-player-name">Хід гравця: <?php echo htmlspecialchars($current_player_data['name']); ?></div>
             <div class="question-text">
@@ -275,13 +308,12 @@ $next_player_name = ($next_player_real_idx !== null) ? $_SESSION['players'][$nex
                 </div>
             <?php endif; ?>
         </div>
-
         <form method="POST" action="game.php" class="action-buttons">
             <button type="submit" name="action" value="skip" class="btn-skip" <?php echo ($current_player_data['skips_left'] <= 0) ? 'disabled' : ''; ?>>
                 Пропустити (<?php echo $current_player_data['skips_left']; ?>)
             </button>
             <button type="submit" name="action" value="completed" class="btn-done">
-                Виконано -> <?php echo htmlspecialchars($next_player_name); ?>
+                Виконано -> <?php echo htmlspecialchars($next_player_name_for_button); ?>
             </button>
             <button type="submit" name="action" value="quit" class="btn-quit" onclick="return confirm('Ви впевнені, що хочете вийти з гри? Це не можна буде скасувати.');">
                 Вийти з гри
