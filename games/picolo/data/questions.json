@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, розкажи про свою найяскравішу мрію. Якщо відмовляєшся, зроби 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 2,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зроби 10 присідань. Або {RANDOM_PLAYER_NAME} вигадує тобі інший штраф (і 3 ковтки, якщо відмовляєшся від обох).",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 3,
+    "category": "Подарунок",
+    "text": "Вітаємо, {PLAYER_NAME}! Ти отримуєш імунітет на наступні 2 своїх ходи! Можеш пропускати завдання.",
+    "deferred_text_template": "{PLAYER_NAME}, у тебе ще {TURNS_LEFT} хід(ходи) імунітету!",
+    "deferred_turns_player": 2, 
+    "bonus_skip_on_complete": false 
+  },
+  {
+    "id": 4,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, прочитай своє останнє SMS/повідомлення в месенджері вголос (крім службових). Відмова - 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true 
+  }
+]
