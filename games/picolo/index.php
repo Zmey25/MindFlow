@@ -1,32 +1,38 @@
 <?php
 session_start();
 
-// Якщо гра вже йде, перенаправляємо на game.php
-if (isset($_SESSION['game_started']) && $_SESSION['game_started'] === true && !(isset($_GET['new_game']) && $_GET['new_game'] === 'true')) {
+// Скидання сесії для нової гри, якщо це вказано або гра ще не починалась
+if ((isset($_GET['new_game']) && $_GET['new_game'] === 'true') || !isset($_SESSION['game_started'])) {
+    $_SESSION = []; 
+    // session_destroy(); // Якщо використовуєте, то потрібен session_start() одразу після
+    // session_start(); 
+} elseif (isset($_SESSION['game_started']) && $_SESSION['game_started'] === true && $_SESSION['game_over'] === false) {
+    // Якщо гра вже йде і не завершена, перенаправляємо на game.php
     header('Location: game.php');
+    exit;
+} elseif (isset($_SESSION['game_started']) && $_SESSION['game_over'] === true) {
+    // Якщо гра завершена, але користувач зайшов на index.php, перенаправимо на game_over.php
+    header('Location: game_over.php');
     exit;
 }
 
-// Скидання сесії для нової гри
-$_SESSION = []; // Очищення всіх даних сесії
-// session_destroy(); // Можна використати, але тоді треба знову session_start()
-// session_start(); // Якщо використовували session_destroy()
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // ... (код валідації гравців залишається тим самим) ...
     $players_input = isset($_POST['players']) ? (array)$_POST['players'] : [];
     $players = [];
     foreach ($players_input as $name) {
         $trimmed_name = trim($name);
         if (!empty($trimmed_name)) {
-            $players[] = htmlspecialchars($trimmed_name); // XSS protection
+            $players[] = htmlspecialchars($trimmed_name);
         }
     }
 
     if (count($players) < 2) {
         $error = 'Будь ласка, введіть імена щонайменше двох гравців.';
     } else {
-        $_SESSION['initial_player_names'] = $players; // Зберігаємо для "Грати знов"
+        $_SESSION['initial_player_names'] = $players; 
         
         $game_players = [];
         foreach ($players as $name) {
@@ -34,35 +40,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'name' => $name,
                 'skips_left' => 1,
                 'active' => true,
-                'deferred_effects' => [] // Для відкладених завдань/бонусів
+                'deferred_effects' => []
             ];
         }
         $_SESSION['players'] = $game_players;
         $_SESSION['current_player_index'] = 0;
         $_SESSION['current_round'] = 1;
         $_SESSION['game_started'] = true;
-        $_SESSION['game_over'] = false;
+        $_SESSION['game_over'] = false; // Явно встановлюємо
+        $_SESSION['current_question_data'] = null; // Переконатися, що питання не вибране до першого ходу
 
         // Завантаження та перемішування питань
-        $all_questions = json_decode(file_get_contents('data/questions.json'), true);
-        if (is_array($all_questions)) {
-            $question_ids = array_map(function($q) { return $q['id']; }, $all_questions);
+        $all_questions_raw = json_decode(file_get_contents('data/questions.json'), true);
+        if (is_array($all_questions_raw) && !empty($all_questions_raw)) {
+            // Створюємо асоціативний масив питань за ID для легкого доступу
+            $_SESSION['all_questions_data'] = array_column($all_questions_raw, null, 'id');
+            
+            // Створюємо масив ID для перемішування
+            $question_ids = array_keys($_SESSION['all_questions_data']);
             shuffle($question_ids);
-            $_SESSION['available_question_ids'] = $question_ids;
-            $_SESSION['all_questions_data'] = array_column($all_questions, null, 'id'); // Для швидкого доступу за ID
+            $_SESSION['available_question_ids'] = $question_ids; // Пул доступних ID
+            
         } else {
-            // Обробка помилки завантаження питань
-            $_SESSION['game_started'] = false; // Зупинити гру, якщо питання не завантажені
-            $error = "Помилка завантаження файлу питань. Будь ласка, перевірте файл data/questions.json.";
+            $_SESSION['game_started'] = false;
+            $error = "Помилка завантаження файлу питань або файл порожній. Перевірте data/questions.json.";
         }
         
-        if ($_SESSION['game_started']) {
+        if ($_SESSION['game_started'] && empty($error)) { // Перевіряємо $error
             header('Location: game.php');
             exit;
         }
     }
 }
 ?>
+<!-- Решта HTML index.php залишається такою ж -->
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -82,7 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div id="player-inputs">
                 <div class="player-input-group">
                     <input type="text" name="players[]" placeholder="Ім'я гравця 1" required>
-                    <!-- Кнопка видалення не потрібна для перших двох -->
                 </div>
                 <div class="player-input-group">
                     <input type="text" name="players[]" placeholder="Ім'я гравця 2" required>
