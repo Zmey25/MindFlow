@@ -11,143 +11,67 @@ body, html {
 
 /* Setup and Gameover Pages (no changes) */
 .setup-page, .gameover-page {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    text-align: center;
-    background: #2c3e50;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; padding: 20px; box-sizing: border-box; text-align: center; background: #2c3e50;
 }
 .setup-page h1, .gameover-page h1 { margin-bottom: 20px; }
 .setup-page p, .gameover-page p { margin-bottom: 15px; }
-.setup-page form, .gameover-page form {
-    width: 100%;
-    max-width: 80vw;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.setup-page input[type="text"] {
-    padding: 12px 18px; margin: 8px 0; border-radius: 8px; border: 1px solid #4e5d6c; font-size: 1em; box-sizing: border-box; width: 100%; background-color: #34495e; color: white; border: 1px solid #567086;
-}
+.setup-page form, .gameover-page form { width: 100%; max-width: 80vw; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+.setup-page input[type="text"] { padding: 12px 18px; margin: 8px 0; border-radius: 8px; border: 1px solid #4e5d6c; font-size: 1em; box-sizing: border-box; width: 100%; background-color: #34495e; color: white; border: 1px solid #567086; }
 .setup-page input[type="text"]::placeholder { color: #bdc3c7; }
 .setup-page .player-input-group { display: flex; margin-bottom: 8px; width: 100%; }
 .setup-page .player-input-group input { flex-grow: 1; margin-right: 5px; margin-bottom: 0; }
 .setup-page .remove-player-btn { background-color: #e74c3c; color: white; border: none; padding: 12px 15px; cursor: pointer; flex-shrink: 0; border-radius: 8px; transition: transform 0.2s ease, filter 0.2s ease; width: 20%; }
 .setup-page .remove-player-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
-.setup-page button, .gameover-page button {
-    padding: 15px 20px; margin: 8px 0; border-radius: 8px; border: none; font-size: 1.1em; box-sizing: border-box; width: 90%; max-width: 320px; cursor: pointer; font-weight: bold; transition: transform 0.2s ease, filter 0.2s ease;
-}
+.setup-page button, .gameover-page button { padding: 15px 20px; margin: 8px 0; border-radius: 8px; border: none; font-size: 1.1em; box-sizing: border-box; width: 90%; max-width: 320px; cursor: pointer; font-weight: bold; transition: transform 0.2s ease, filter 0.2s ease; }
 .setup-page button:hover, .gameover-page button:hover { transform: scale(1.03); filter: brightness(1.1); }
 .setup-page .add-player-btn { background-color: #27ae60; color: white; margin-bottom: 20px; }
 .setup-page .start-game-btn, .gameover-page .play-again-btn, .gameover-page .new-game-btn { background-color: #3498db; color: white; }
 .gameover-page .new-game-btn { background-color: #f39c12; }
 
-/* Game Page (UPDATED) */
+/* Game Page */
 .game-page {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    padding: 15px;
-    box-sizing: border-box;
-    position: relative;
+    display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 100%; height: 100%; padding: 15px; box-sizing: border-box; position: relative;
 }
-
-/* Gradient background as a pseudo-element with z-index 1 */
 .game-page::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--game-background, #333); /* Fallback color */
-    z-index: 1;
-    transition: background 0.7s ease-in-out;
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--game-background, #333); z-index: 1; transition: background 0.7s ease-in-out;
 }
-
-/* Icons container with z-index 2 (above the gradient) */
 .background-icons-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 2;
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 2;
 }
 
-.background-icons-container span {
+/* --- ОСЬ ВИПРАВЛЕННЯ: селектор тепер 'i', а не 'span' --- */
+.background-icons-container i {
     position: absolute;
     font-size: 15vw;
     animation: floatIcon 30s infinite linear alternate;
     color: var(--icon-color, rgba(255, 255, 255, 0.1));
     will-change: transform, opacity;
     opacity: 0;
-    user-select: none; /* Make icons unselectable */
+    user-select: none;
 }
 
 @keyframes floatIcon {
-    0% {
-        transform: translate(0vw, 0vh) rotate(0deg);
-        opacity: 0;
-    }
-    10% {
-        opacity: var(--icon-opacity, 0.1);
-    }
-    90% {
-        opacity: var(--icon-opacity, 0.1);
-    }
-    100% {
-        transform: translate(calc(var(--randX) * 20vw - 10vw), calc(var(--randY) * 20vh - 10vh)) rotate(360deg);
-        opacity: 0;
-    }
+    0% { transform: translate(0vw, 0vh) rotate(0deg); opacity: 0; }
+    10% { opacity: var(--icon-opacity, 0.1); }
+    90% { opacity: var(--icon-opacity, 0.1); }
+    100% { transform: translate(calc(var(--randX) * 20vw - 10vw), calc(var(--randY) * 20vh - 10vh)) rotate(360deg); opacity: 0; }
 }
 
-/* Content elements with z-index 5 or higher */
 .category-display, .round-player-info, .question-container, .action-buttons {
-    position: relative;
-    z-index: 5;
+    position: relative; z-index: 5;
 }
-
 .category-display, .round-player-info {
-    position: absolute;
-    top: 10px;
-    font-size: clamp(0.7em, 2.5vw, 0.9em);
-    background-color: rgba(0,0,0,0.4);
-    padding: 5px 10px;
-    border-radius: 5px;
+    position: absolute; top: 10px; font-size: clamp(0.7em, 2.5vw, 0.9em); background-color: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 5px;
 }
 .category-display { left: 10px; }
 .round-player-info { right: 10px; text-align: right; }
-
-.question-container {
-    text-align: center; margin-top: 5vh; margin-bottom: 2vh; padding: 15px; background-color: rgba(0,0,0,0.3); border-radius: 10px; max-width: 90%; width: 100%; overflow-y: auto; max-height: 55vh;
-}
-.current-player-name {
-    font-size: clamp(1.5em, 5vw, 2em); font-weight: bold; margin-bottom: 10px; color: #f1c40f;
-}
-.question-text {
-    font-size: clamp(1.1em, 4vw, 1.5em); line-height: 1.4; min-height: 80px; margin-bottom: 15px;
-}
-.deferred-messages {
-    margin-top: 15px; font-size: clamp(0.8em, 2.5vw, 1em); font-style: italic; background-color: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; border-left: 4px solid #f0ad4e; text-align: left;
-}
+.question-container { text-align: center; margin-top: 5vh; margin-bottom: 2vh; padding: 15px; background-color: rgba(0,0,0,0.3); border-radius: 10px; max-width: 90%; width: 100%; overflow-y: auto; max-height: 55vh; }
+.current-player-name { font-size: clamp(1.5em, 5vw, 2em); font-weight: bold; margin-bottom: 10px; color: #f1c40f; }
+.question-text { font-size: clamp(1.1em, 4vw, 1.5em); line-height: 1.4; min-height: 80px; margin-bottom: 15px; }
+.deferred-messages { margin-top: 15px; font-size: clamp(0.8em, 2.5vw, 1em); font-style: italic; background-color: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; border-left: 4px solid #f0ad4e; text-align: left; }
 .deferred-messages strong { display: block; margin-bottom: 5px; }
-.action-buttons {
-    display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 80vw; margin: 0 auto 10px auto; padding-bottom: 10px;
-}
-.action-buttons button {
-    padding: 15px; font-size: clamp(1.1em, 4vw, 1.3em); border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease, filter 0.2s ease; width: 100%; font-weight: 500;
-}
+.action-buttons { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 80vw; margin: 0 auto 10px auto; padding-bottom: 10px; }
+.action-buttons button { padding: 15px; font-size: clamp(1.1em, 4vw, 1.3em); border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease, filter 0.2s ease; width: 100%; font-weight: 500; }
 .action-buttons button:active { transform: scale(0.97); }
 .action-buttons button:hover { transform: scale(1.02); filter: brightness(1.1); }
 .btn-skip { background-color: #e67e22; color: white; }
