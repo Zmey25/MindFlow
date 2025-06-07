@@ -50,18 +50,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['all_questions_data'] = array_column($all_questions_raw, null, 'id');
             $_SESSION['category_styles'] = $category_styles;
 
-            $temp_pool = [];
+            $weighted_questions = [];
             foreach ($all_questions_raw as $question) {
                 $category = $question['category'];
                 $weight = $category_styles[$category]['weight'] ?? 0;
                 if ($weight > 0) {
-                    for ($i = 0; $i < $weight; $i++) {
-                        $temp_pool[] = $question['id'];
-                    }
+                    $weighted_questions[$weight][] = $question['id'];
                 }
             }
-            shuffle($temp_pool);
-            $_SESSION['game_question_pool'] = $temp_pool;
+            krsort($weighted_questions);
+
+            $final_pool = [];
+            foreach ($weighted_questions as $weight => $ids) {
+                shuffle($ids);
+                $final_pool = array_merge($final_pool, $ids);
+            }
+            $_SESSION['game_question_pool'] = $final_pool;
 
         } else {
             $_SESSION['game_started'] = false;
