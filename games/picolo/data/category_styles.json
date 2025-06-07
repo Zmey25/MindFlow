@@ -3,30 +3,35 @@
     "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     "icon_classes": ["fas fa-comments", "far fa-comment-dots", "fas fa-brain"],
     "icon_color": "rgba(255, 255, 255, 0.08)",
-    "icon_opacity": 0.08
+    "icon_opacity": 0.08,
+    "weight": 40
   },
   "Штраф": {
     "background": "linear-gradient(to right, #cb2d3e, #ef473a)",
     "icon_classes": ["fas fa-skull-crossbones", "fas fa-bomb", "fas fa-biohazard"],
     "icon_color": "rgba(0, 0, 0, 0.1)",
-    "icon_opacity": 0.1
+    "icon_opacity": 0.1,
+    "weight": 10
   },
   "Подарунок": {
     "background": "linear-gradient(135deg, #f6d365 0%, #fda085 100%)",
     "icon_classes": ["fas fa-gift", "fas fa-star", "fas fa-magic"],
     "icon_color": "rgba(255, 255, 255, 0.15)",
-    "icon_opacity": 0.15
+    "icon_opacity": 0.15,
+    "weight": 10
   },
   "Виклик": {
     "background": "linear-gradient(to right, #11998e, #38ef7d)",
     "icon_classes": ["fas fa-bolt", "fas fa-running", "fas fa-microphone-alt"],
     "icon_color": "rgba(0, 0, 0, 0.1)",
-    "icon_opacity": 0.1
+    "icon_opacity": 0.1,
+    "weight": 20
   },
   "Default": {
     "background": "#333",
     "icon_classes": ["fas fa-question-circle"],
     "icon_color": "rgba(255, 255, 255, 0.05)",
-    "icon_opacity": 0.05
+    "icon_opacity": 0.05,
+    "weight": 0
   }
 }
