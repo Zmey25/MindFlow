@@ -88,7 +88,7 @@ body, html {
     border: none; /* No border for these buttons */
     font-size: 1.1em; /* Slightly larger font */
     box-sizing: border-box;
-    width: 100%;
+    width: 20%;
     max-width: 320px; /* Keep a max-width for uniformity with current design, or change to 80vw like form */
     cursor: pointer;
     font-weight: bold;
