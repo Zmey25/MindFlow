@@ -54,13 +54,11 @@ function select_question() {
     global $questions_data_map;
 
     if (!isset($_SESSION['game_question_pool']) || empty($_SESSION['game_question_pool'])) {
-        error_log("select_question: No questions left in the pool.");
         return null;
     }
-
+    
     $question_id = array_shift($_SESSION['game_question_pool']);
     if ($question_id === null || !isset($questions_data_map[$question_id])) {
-        error_log("select_question: Failed to get valid question_id from pool or data map for ID: " . var_export($question_id, true));
         return null;
     }
 
@@ -113,17 +111,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $_SESSION['game_over'] = true;
                 $_SESSION['game_over_message'] = "Помилка: Не вдалося визначити наступного гравця.";
             } else {
-                $active_indices = get_active_players_indices();
-                $pos_current_in_active = array_search($current_player_idx_on_action, $active_indices);
-                $pos_next_in_active = array_search($next_player_idx, $active_indices);
-
-                if ($pos_next_in_active !== false && $pos_current_in_active !== false && $pos_next_in_active < $pos_current_in_active) {
-                     $_SESSION['current_round']++;
-                } else if (count($active_indices) > 0 && $next_player_idx == $active_indices[0] && $current_player_idx_on_action == end($active_indices) && $current_player_idx_on_action != $next_player_idx) {
-                    $_SESSION['current_round']++;
-                }
-
                 $_SESSION['current_player_index'] = $next_player_idx;
+                $active_indices = get_active_players_indices();
+                if (count($active_indices) > 0 && $next_player_idx == $active_indices[0]) {
+                     $_SESSION['current_round']++;
+                }
             }
         }
     }
@@ -141,7 +133,6 @@ if (!isset($_SESSION['current_question_data']) || $_SESSION['current_question_da
     if ($_SESSION['current_question_data'] === null) {
         $_SESSION['game_over'] = true;
         $_SESSION['game_over_message'] = "Питання закінчились! Гра завершена.";
-        error_log("Critical: select_question returned null because question pool is empty. Ending game.");
         header('Location: game_over.php');
         exit;
     }
@@ -153,13 +144,11 @@ if (!isset($_SESSION['players'][$current_player_idx]) || !$_SESSION['players'][$
     if ($fallback_idx !== null) {
         $_SESSION['current_player_index'] = $fallback_idx;
         $_SESSION['current_question_data'] = null;
-        error_log("Fallback: current player was inactive or invalid. Switched to player index: " . $fallback_idx);
         header('Location: game.php');
         exit;
     } else {
         $_SESSION['game_over'] = true;
         $_SESSION['game_over_message'] = "Немає активних гравців для продовження гри.";
-        error_log("Critical: No active players found, current_player_index was invalid.");
         header('Location: game_over.php');
         exit;
     }
@@ -205,10 +194,8 @@ if (strpos($question_text, '{RANDOM_PLAYER_NAME}') !== false) {
 }
 
 $style_info = $category_styles[$current_question['category']] ?? $category_styles['Default'];
-
 $next_player_for_button_idx = get_next_active_player_index($current_player_idx);
 $next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_SESSION['players'][$next_player_for_button_idx])) ? $_SESSION['players'][$next_player_for_button_idx]['name'] : 'Нікого';
-
 ?>
 <!DOCTYPE html>
 <html lang="uk">
@@ -217,21 +204,16 @@ $next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Гра: Хід <?php echo htmlspecialchars($current_player_data['name']); ?></title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        .game-page {
-            background: <?php echo $style_info['background']; ?>;
-        }
-    </style>
 </head>
 <body>
     <div class="game-page">
         <div class="background-icons-container"></div>
         <div id="game-data-container"
-             data-icon-classes='<?php echo json_encode($style_info['icon_classes'] ?? ['fas fa-question-circle']); ?>'
+             data-background-gradient="<?php echo htmlspecialchars($style_info['background']); ?>"
              data-icon-color="<?php echo htmlspecialchars($style_info['icon_color']); ?>"
              data-icon-opacity="<?php echo htmlspecialchars($style_info['icon_opacity'] ?? 0.1); ?>">
         </div>
+        
         <div class="category-display">
             Категорія: <?php echo htmlspecialchars($current_question['category']); ?>
         </div>
