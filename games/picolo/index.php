@@ -1,17 +1,14 @@
 <?php
 session_start();
 
-// Скидання сесії для нової гри, якщо це вказано або гра ще не починалась
 if ((isset($_GET['new_game']) && $_GET['new_game'] === 'true') || !isset($_SESSION['game_started'])) {
-    $_SESSION = []; 
-    // session_destroy(); // Якщо використовуєте, то потрібен session_start() одразу після
-    // session_start(); 
+    $_SESSION = [];
+    // session_destroy(); // If used, session_start() must follow immediately.
+    // session_start();
 } elseif (isset($_SESSION['game_started']) && $_SESSION['game_started'] === true && $_SESSION['game_over'] === false) {
-    // Якщо гра вже йде і не завершена, перенаправляємо на game.php
     header('Location: game.php');
     exit;
 } elseif (isset($_SESSION['game_started']) && $_SESSION['game_over'] === true) {
-    // Якщо гра завершена, але користувач зайшов на index.php, перенаправимо на game_over.php
     header('Location: game_over.php');
     exit;
 }
@@ -19,7 +16,6 @@ if ((isset($_GET['new_game']) && $_GET['new_game'] === 'true') || !isset($_SESSI
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // ... (код валідації гравців залишається тим самим) ...
     $players_input = isset($_POST['players']) ? (array)$_POST['players'] : [];
     $players = [];
     foreach ($players_input as $name) {
@@ -32,8 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (count($players) < 2) {
         $error = 'Будь ласка, введіть імена щонайменше двох гравців.';
     } else {
-        $_SESSION['initial_player_names'] = $players; 
-        
+        $_SESSION['initial_player_names'] = $players;
+
         $game_players = [];
         foreach ($players as $name) {
             $game_players[] = [
@@ -47,33 +43,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['current_player_index'] = 0;
         $_SESSION['current_round'] = 1;
         $_SESSION['game_started'] = true;
-        $_SESSION['game_over'] = false; // Явно встановлюємо
-        $_SESSION['current_question_data'] = null; // Переконатися, що питання не вибране до першого ходу
+        $_SESSION['game_over'] = false;
+        $_SESSION['current_question_data'] = null;
 
-        // Завантаження та перемішування питань
+        // Load all questions and category styles
         $all_questions_raw = json_decode(file_get_contents('data/questions.json'), true);
-        if (is_array($all_questions_raw) && !empty($all_questions_raw)) {
-            // Створюємо асоціативний масив питань за ID для легкого доступу
-            $_SESSION['all_questions_data'] = array_column($all_questions_raw, null, 'id');
-            
-            // Створюємо масив ID для перемішування
-            $question_ids = array_keys($_SESSION['all_questions_data']);
-            shuffle($question_ids);
-            $_SESSION['available_question_ids'] = $question_ids; // Пул доступних ID
-            
+        $category_styles = json_decode(file_get_contents('data/category_styles.json'), true);
+
+        if (is_array($all_questions_raw) && !empty($all_questions_raw) && is_array($category_styles) && !empty($category_styles)) {
+            $_SESSION['all_questions_data'] = array_column($all_questions_raw, null, 'id'); // Master map of ID => QuestionData
+            $_SESSION['category_styles'] = $category_styles; // Store category styles in session
+
+            // Prepare questions grouped by category and their shuffled IDs
+            $questions_by_category = [];
+            foreach ($all_questions_raw as $question) {
+                $category = $question['category'];
+                if (!isset($questions_by_category[$category])) {
+                    $questions_by_category[$category] = [];
+                }
+                $questions_by_category[$category][] = $question['id'];
+            }
+            $_SESSION['questions_by_category'] = $questions_by_category;
+
+            // Initialize available question IDs for each category (shuffled)
+            $_SESSION['available_question_ids_by_category'] = [];
+            foreach ($questions_by_category as $category => $ids) {
+                shuffle($ids);
+                $_SESSION['available_question_ids_by_category'][$category] = $ids;
+            }
+
         } else {
             $_SESSION['game_started'] = false;
-            $error = "Помилка завантаження файлу питань або файл порожній. Перевірте data/questions.json.";
+            $error = "Помилка завантаження файлів гри (питання/стилі) або файли порожні. Перевірте data/questions.json та data/category_styles.json.";
         }
-        
-        if ($_SESSION['game_started'] && empty($error)) { // Перевіряємо $error
+
+        if ($_SESSION['game_started'] && empty($error)) {
             header('Location: game.php');
             exit;
         }
     }
 }
 ?>
-<!-- Решта HTML index.php залишається такою ж -->
 <!DOCTYPE html>
 <html lang="uk">
 <head>
