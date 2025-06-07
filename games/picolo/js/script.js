@@ -66,10 +66,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     iconElement.style.setProperty('--icon-color', iconColor); // Встановлюємо CSS змінну
                     iconElement.style.setProperty('--icon-opacity', iconOpacity);
 
-
-                    // Випадкове позиціонування та розмір
-                    iconElement.style.left = (Math.random() * 110 - 5) + 'vw'; // -5vw to 105vw
-                    iconElement.style.top = (Math.random() * 110 - 5) + 'vh';  // -5vh to 105vh
+                    // Оновлено: Забезпечуємо, щоб іконки спочатку були в межах вьюпорту
+                    iconElement.style.left = (Math.random() * 100) + 'vw'; // 0vw to 100vw
+                    iconElement.style.top = (Math.random() * 100) + 'vh';  // 0vh to 100vh
                     iconElement.style.fontSize = (Math.random() * 8 + 10) + 'vw'; // 10vw to 18vw
 
                     // Випадкова тривалість та затримка анімації (тривалість залишається повільною)
