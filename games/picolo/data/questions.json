@@ -20,8 +20,8 @@
     "category": "Подарунок",
     "text": "Вітаємо, {PLAYER_NAME}! Ти отримуєш імунітет на наступні 2 своїх ходи! Можеш пропускати завдання.",
     "deferred_text_template": "{PLAYER_NAME}, у тебе ще {TURNS_LEFT} хід(ходи) імунітету!",
-    "deferred_turns_player": 2, 
-    "bonus_skip_on_complete": false 
+    "deferred_turns_player": 2,
+    "bonus_skip_on_complete": false
   },
   {
     "id": 4,
@@ -29,6 +29,206 @@
     "text": "{PLAYER_NAME}, прочитай своє останнє SMS/повідомлення в месенджері вголос (крім службових). Відмова - 3 ковтки.",
     "deferred_text_template": null,
     "deferred_turns_player": 0,
-    "bonus_skip_on_complete": true 
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 5,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, розкажи про найбезглуздішу річ, в яку ти вірив(ла) у дитинстві. Відмова - 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 6,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, назви свій таємний талант, про який мало хто знає. Якщо відмовляєшся, покажи його! Або зроби 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 7,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, яка твоя найдивніша звичка? Відмова - 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 8,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, розкажи про найбільш незручний момент у твоєму житті. Відмова - 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 9,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, якби ти міг(могла) повечеряти з трьома будь-якими людьми (живими чи мертвими), хто б це був? Відмова - 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 10,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, яка пісня, книга або фільм змінили твій погляд на світ? Відмова - 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 11,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, розкажи про своє перше кохання. Відмова - 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 12,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, назви річ, якою ти пишаєшся, але рідко про неї говориш. Відмова - 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 13,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, який твій найбільший страх? Відмова - 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 14,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, якби ти міг(могла) мати одну суперздібність, яка б це була і чому? Відмова - 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 15,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, танцюй танець маленьких каченят протягом 30 секунд. Відмова - 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 16,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, до кінця наступного кола розмовляй з іноземним акцентом, який вибере для тебе {RANDOM_PLAYER_NAME}. Відмова - 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 17,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зроби комплімент кожному гравцю, починаючи зі слів \"О, мій повелителю...\". Відмова - 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 18,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, заспівай приспів будь-якої пісні, яку замовить {RANDOM_PLAYER_NAME}. Відмова - 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 19,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, дозволь гравцям намалювати тобі щось на руці маркером. Відмова - 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 20,
+    "category": "Подарунок",
+    "text": "Король Правил! {PLAYER_NAME}, ти можеш вигадати одне нове правило, яке діятиме до кінця гри (або поки його не скасує інший Король Правил).",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 21,
+    "category": "Подарунок",
+    "text": "{PLAYER_NAME}, ти отримуєш право один раз передати своє завдання будь-якому іншому гравцю. Цей бонус діє, поки ти його не використаєш.",
+    "deferred_text_template": "{PLAYER_NAME}, у тебе є право передати завдання. Скористаєшся ним?",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 22,
+    "category": "Подарунок",
+    "text": "{PLAYER_NAME}, вибери гравця. Він повинен зробити тобі комплімент. Або 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 23,
+    "category": "Подарунок",
+    "text": "Майстер Ковтків! {PLAYER_NAME}, ти можеш змусити будь-якого гравця зробити 2 ковтки просто зараз.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 24,
+    "category": "Подарунок",
+    "text": "Музичний диктатор! {PLAYER_NAME}, вибери пісню, яку всі мають слухати протягом наступних 5 хвилин. Твій вибір - закон!",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 25,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, імітуй будь-якого гравця за столом, поки інші не вгадають, хто це. Відмова - 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 26,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, подзвони другу і спробуй продати йому уявний товар (напр. дресированого таргана). Тримайся на лінії хвилину. Відмова - 4 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 27,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, дозволь гравцям написати одне слово на стікері та прикріпити тобі на лоба. Ти маєш вгадати це слово, ставлячи питання, на які можна відповісти 'так' або 'ні'. Відмова - 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 28,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, з'їж ложку гострого соусу (якщо є) або змішай три будь-які інгредієнти з холодильника і з'їж ложку цього. Відмова - 4 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 29,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, зроби стійку на руках біля стіни на 10 секунд. Або попроси {RANDOM_PLAYER_NAME} вигадати тобі еквівалентне фізичне завдання. Відмова - 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
   }
 ]
