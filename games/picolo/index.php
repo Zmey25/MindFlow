@@ -3,8 +3,6 @@ session_start();
 
 if ((isset($_GET['new_game']) && $_GET['new_game'] === 'true') || !isset($_SESSION['game_started'])) {
     $_SESSION = [];
-    // session_destroy(); // If used, session_start() must follow immediately.
-    // session_start();
 } elseif (isset($_SESSION['game_started']) && $_SESSION['game_started'] === true && $_SESSION['game_over'] === false) {
     header('Location: game.php');
     exit;
@@ -12,7 +10,6 @@ if ((isset($_GET['new_game']) && $_GET['new_game'] === 'true') || !isset($_SESSI
     header('Location: game_over.php');
     exit;
 }
-
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,31 +43,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['game_over'] = false;
         $_SESSION['current_question_data'] = null;
 
-        // Load all questions and category styles
         $all_questions_raw = json_decode(file_get_contents('data/questions.json'), true);
         $category_styles = json_decode(file_get_contents('data/category_styles.json'), true);
 
         if (is_array($all_questions_raw) && !empty($all_questions_raw) && is_array($category_styles) && !empty($category_styles)) {
-            $_SESSION['all_questions_data'] = array_column($all_questions_raw, null, 'id'); // Master map of ID => QuestionData
-            $_SESSION['category_styles'] = $category_styles; // Store category styles in session
+            $_SESSION['all_questions_data'] = array_column($all_questions_raw, null, 'id');
+            $_SESSION['category_styles'] = $category_styles;
 
-            // Prepare questions grouped by category and their shuffled IDs
-            $questions_by_category = [];
+            $temp_pool = [];
             foreach ($all_questions_raw as $question) {
                 $category = $question['category'];
-                if (!isset($questions_by_category[$category])) {
-                    $questions_by_category[$category] = [];
+                $weight = $category_styles[$category]['weight'] ?? 0;
+                if ($weight > 0) {
+                    for ($i = 0; $i < $weight; $i++) {
+                        $temp_pool[] = $question['id'];
+                    }
                 }
-                $questions_by_category[$category][] = $question['id'];
             }
-            $_SESSION['questions_by_category'] = $questions_by_category;
-
-            // Initialize available question IDs for each category (shuffled)
-            $_SESSION['available_question_ids_by_category'] = [];
-            foreach ($questions_by_category as $category => $ids) {
-                shuffle($ids);
-                $_SESSION['available_question_ids_by_category'][$category] = $ids;
-            }
+            shuffle($temp_pool);
+            $_SESSION['game_question_pool'] = $temp_pool;
 
         } else {
             $_SESSION['game_started'] = false;
