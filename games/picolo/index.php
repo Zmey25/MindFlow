@@ -50,26 +50,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['all_questions_data'] = array_column($all_questions_raw, null, 'id');
             $_SESSION['category_styles'] = $category_styles;
 
-            $weighted_questions = [];
+            $questions_for_sorting = [];
             foreach ($all_questions_raw as $question) {
                 $category = $question['category'];
-                $weight = $category_styles[$category]['weight'] ?? 0;
+                $weight = $category_styles[$category]['weight'] ?? 1;
                 if ($weight > 0) {
-                    $weighted_questions[$weight][] = $question['id'];
+                    // Формула зваженого випадкового сортування (A-Res)
+                    $random_score = pow(mt_rand() / mt_getrandmax(), 1.0 / $weight);
+                    $questions_for_sorting[] = [
+                        'id' => $question['id'],
+                        'score' => $random_score
+                    ];
                 }
             }
-            krsort($weighted_questions);
+            
+            usort($questions_for_sorting, function ($a, $b) {
+                return $b['score'] <=> $a['score'];
+            });
 
-            $final_pool = [];
-            foreach ($weighted_questions as $weight => $ids) {
-                shuffle($ids);
-                $final_pool = array_merge($final_pool, $ids);
-            }
-            $_SESSION['game_question_pool'] = $final_pool;
+            $_SESSION['game_question_pool'] = array_column($questions_for_sorting, 'id');
 
         } else {
             $_SESSION['game_started'] = false;
-            $error = "Помилка завантаження файлів гри (питання/стилі) або файли порожні. Перевірте data/questions.json та data/category_styles.json.";
+            $error = "Помилка завантаження файлів гри (питання/стилі) або файли порожні.";
         }
 
         if ($_SESSION['game_started'] && empty($error)) {
