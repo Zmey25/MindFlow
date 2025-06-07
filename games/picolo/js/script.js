@@ -9,12 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
             playerCount++;
             const newPlayerGroup = document.createElement('div');
             newPlayerGroup.classList.add('player-input-group');
-            
             const newInput = document.createElement('input');
             newInput.type = 'text';
             newInput.name = 'players[]';
             newInput.placeholder = 'Ім\'я гравця ' + playerCount;
-
             const removeBtn = document.createElement('button');
             removeBtn.type = 'button';
             removeBtn.classList.add('remove-player-btn');
@@ -27,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert('Мінімум 2 гравці потрібні для гри.');
                 }
             });
-
             newPlayerGroup.appendChild(newInput);
             newPlayerGroup.appendChild(removeBtn);
             playerInputsContainer.appendChild(newPlayerGroup);
@@ -40,38 +37,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const gameDataElement = document.getElementById('game-data-container');
 
     if (gamePage && iconsContainer && gameDataElement) {
-        // Встановлюємо фон через CSS-змінну
         const backgroundGradient = gameDataElement.dataset.backgroundGradient;
         if (backgroundGradient) {
             document.documentElement.style.setProperty('--game-background', backgroundGradient);
         }
 
-        const iconColor = gameDataElement.dataset.iconColor || 'rgba(255, 255, 255, 0.1)';
-        const iconOpacity = parseFloat(gameDataElement.dataset.iconOpacity) || 0.1;
+        try {
+            const iconClasses = JSON.parse(gameDataElement.dataset.iconClasses);
+            const iconColor = gameDataElement.dataset.iconColor || 'rgba(255, 255, 255, 0.1)';
+            const iconOpacity = parseFloat(gameDataElement.dataset.iconOpacity) || 0.1;
 
-        const numIcons = Math.floor(Math.random() * 8) + 8; // 8-15 іконок
+            const numIcons = Math.floor(Math.random() * 8) + 8;
 
-        for (let i = 0; i < numIcons; i++) {
-            // Використовуємо <span> та текстовий символ '★' для тесту
-            const iconElement = document.createElement('span');
-            iconElement.textContent = '★';
-            
-            iconElement.style.setProperty('--icon-color', iconColor);
-            iconElement.style.setProperty('--icon-opacity', iconOpacity);
-            iconElement.style.setProperty('--randX', Math.random());
-            iconElement.style.setProperty('--randY', Math.random());
-
-            iconElement.style.left = (Math.random() * 100) + 'vw';
-            iconElement.style.top = (Math.random() * 100) + 'vh';
-            iconElement.style.fontSize = (Math.random() * 8 + 10) + 'vw';
-
-            const duration = Math.random() * 15 + 20; // 20-35s
-            const delay = Math.random() * -duration;
-            
-            iconElement.style.animationDuration = duration + 's';
-            iconElement.style.animationDelay = delay + 's';
-            
-            iconsContainer.appendChild(iconElement);
+            if (iconClasses && iconClasses.length > 0) {
+                for (let i = 0; i < numIcons; i++) {
+                    const iconElement = document.createElement('i');
+                    const randomIconClass = iconClasses[Math.floor(Math.random() * iconClasses.length)];
+                    iconElement.className = randomIconClass;
+                    
+                    iconElement.style.setProperty('--icon-color', iconColor);
+                    iconElement.style.setProperty('--icon-opacity', iconOpacity);
+                    iconElement.style.setProperty('--randX', Math.random());
+                    iconElement.style.setProperty('--randY', Math.random());
+                    iconElement.style.left = (Math.random() * 100) + 'vw';
+                    iconElement.style.top = (Math.random() * 100) + 'vh';
+                    iconElement.style.fontSize = (Math.random() * 8 + 10) + 'vw';
+                    const duration = Math.random() * 15 + 20;
+                    const delay = Math.random() * -duration;
+                    iconElement.style.animationDuration = duration + 's';
+                    iconElement.style.animationDelay = delay + 's';
+                    
+                    iconsContainer.appendChild(iconElement);
+                }
+            }
+        } catch (e) {
+            console.error("Error setting up background icons:", e);
         }
     }
 
