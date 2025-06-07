@@ -31,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
         unset($_SESSION['game_over_message']);
         $_SESSION['current_question_data'] = null;
 
-        // Reload and re-shuffle the question pool similar to index.php
         $all_questions_raw = json_decode(file_get_contents('data/questions.json'), true);
         $category_styles = json_decode(file_get_contents('data/category_styles.json'), true);
 
@@ -39,21 +38,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
             $_SESSION['all_questions_data'] = array_column($all_questions_raw, null, 'id');
             $_SESSION['category_styles'] = $category_styles;
 
-            $questions_by_category = [];
+            $temp_pool = [];
             foreach ($all_questions_raw as $question) {
                 $category = $question['category'];
-                if (!isset($questions_by_category[$category])) {
-                    $questions_by_category[$category] = [];
+                $weight = $category_styles[$category]['weight'] ?? 0;
+                if ($weight > 0) {
+                    for ($i = 0; $i < $weight; $i++) {
+                        $temp_pool[] = $question['id'];
+                    }
                 }
-                $questions_by_category[$category][] = $question['id'];
             }
-            $_SESSION['questions_by_category'] = $questions_by_category;
-
-            $_SESSION['available_question_ids_by_category'] = [];
-            foreach ($questions_by_category as $category => $ids) {
-                shuffle($ids);
-                $_SESSION['available_question_ids_by_category'][$category] = $ids;
-            }
+            shuffle($temp_pool);
+            $_SESSION['game_question_pool'] = $temp_pool;
 
         } else {
             $_SESSION['game_started'] = false;
