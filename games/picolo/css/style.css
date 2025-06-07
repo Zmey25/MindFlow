@@ -74,6 +74,7 @@ body, html {
     flex-shrink: 0;
     border-radius: 8px; /* Apply border-radius to remove button too */
     transition: transform 0.2s ease, filter 0.2s ease; /* Add transition for hover */
+    width: 20%;
 }
 .setup-page .remove-player-btn:hover {
     transform: scale(1.05);
@@ -88,7 +89,7 @@ body, html {
     border: none; /* No border for these buttons */
     font-size: 1.1em; /* Slightly larger font */
     box-sizing: border-box;
-    width: 20%;
+    width: 90%;
     max-width: 320px; /* Keep a max-width for uniformity with current design, or change to 80vw like form */
     cursor: pointer;
     font-weight: bold;
