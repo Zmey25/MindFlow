@@ -4,7 +4,7 @@ body, html {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     color: white;
     -webkit-tap-highlight-color: transparent;
 }
@@ -28,19 +28,25 @@ body, html {
 .setup-page p, .gameover-page p {
     margin-bottom: 15px;
 }
-.setup-page input[type="text"], 
-.setup-page button,
-.gameover-page button {
+
+/* Form and input styling for setup/gameover pages */
+.setup-page form, .gameover-page form {
+    width: 100%;
+    max-width: 80vw; /* Buttons and inputs will be up to 80% of viewport width */
+    margin: 0 auto; /* Center the form */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items inside the form */
+}
+
+.setup-page input[type="text"] {
     padding: 12px 18px;
-    margin: 8px 0;
+    margin: 8px 0; /* Add margin for inputs */
     border-radius: 8px;
     border: 1px solid #4e5d6c;
     font-size: 1em;
     box-sizing: border-box;
-    width: 100%;
-    max-width: 320px;
-}
-.setup-page input[type="text"] {
+    width: 100%; /* Take full width of its container */
     background-color: #34495e;
     color: white;
     border: 1px solid #567086;
@@ -48,29 +54,56 @@ body, html {
 .setup-page input[type="text"]::placeholder {
     color: #bdc3c7;
 }
+
 .setup-page .player-input-group {
     display: flex;
     margin-bottom: 8px;
-    width: 100%;
-    max-width: 320px;
+    width: 100%; /* Takes full width of the form */
 }
 .setup-page .player-input-group input {
     flex-grow: 1;
     margin-right: 5px;
-    margin-bottom: 0; /* Скасувати загальний margin */
+    margin-bottom: 0;
 }
 .setup-page .remove-player-btn {
     background-color: #e74c3c;
     color: white;
     border: none;
-    padding: 12px 15px; /* Зробити однаковим по висоті з інпутом */
+    padding: 12px 15px;
     cursor: pointer;
-    flex-shrink: 0; /* Щоб кнопка не стискалась */
+    flex-shrink: 0;
+    border-radius: 8px; /* Apply border-radius to remove button too */
+    transition: transform 0.2s ease, filter 0.2s ease; /* Add transition for hover */
 }
+.setup-page .remove-player-btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.setup-page button,
+.gameover-page button {
+    padding: 15px 20px; /* Increased padding for larger feel */
+    margin: 8px 0;
+    border-radius: 8px;
+    border: none; /* No border for these buttons */
+    font-size: 1.1em; /* Slightly larger font */
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 320px; /* Keep a max-width for uniformity with current design, or change to 80vw like form */
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s ease, filter 0.2s ease; /* Add transition for hover */
+}
+
+.setup-page button:hover,
+.gameover-page button:hover {
+    transform: scale(1.03); /* Slight zoom on hover */
+    filter: brightness(1.1); /* Slightly brighter on hover */
+}
+
 .setup-page .add-player-btn {
     background-color: #27ae60;
     color: white;
-    border: none;
     margin-bottom: 20px;
 }
 .setup-page .start-game-btn,
@@ -78,8 +111,6 @@ body, html {
 .gameover-page .new-game-btn {
     background-color: #3498db;
     color: white;
-    font-weight: bold;
-    border: none;
 }
 .gameover-page .new-game-btn {
     background-color: #f39c12;
@@ -113,10 +144,10 @@ body, html {
 .background-icons-container i {
     position: absolute;
     opacity: 0;
-    font-size: 15vw; /* Динамічний розмір від ширини екрану */
+    font-size: 15vw;
     animation: floatIcon 25s infinite linear alternate;
-    color: var(--icon-color, rgba(255, 255, 255, 0.1)); /* Змінна для кольору */
-    will-change: transform, opacity; /* Оптимізація анімації */
+    color: var(--icon-color, rgba(255, 255, 255, 0.1));
+    will-change: transform, opacity;
 }
 
 @keyframes floatIcon {
@@ -142,7 +173,7 @@ body, html {
 .category-display, .round-player-info {
     position: absolute;
     top: 10px;
-    font-size: clamp(0.7em, 2.5vw, 0.9em); /* Адаптивний розмір шрифту */
+    font-size: clamp(0.7em, 2.5vw, 0.9em);
     background-color: rgba(0,0,0,0.4);
     padding: 5px 10px;
     border-radius: 5px;
@@ -154,15 +185,15 @@ body, html {
 
 .question-container {
     text-align: center;
-    margin-top: 5vh; /* Зменшено для більшого контенту */
+    margin-top: 5vh;
     margin-bottom: 2vh;
     padding: 15px;
     background-color: rgba(0,0,0,0.3);
     border-radius: 10px;
     max-width: 90%;
     width: 100%;
-    overflow-y: auto; /* Додано прокрутку, якщо текст завеликий */
-    max-height: 55vh; /* Обмеження висоти */
+    overflow-y: auto;
+    max-height: 55vh;
     z-index: 5;
 }
 
@@ -170,7 +201,7 @@ body, html {
     font-size: clamp(1.5em, 5vw, 2em);
     font-weight: bold;
     margin-bottom: 10px;
-    color: #f1c40f; /* Акцентний колір для імені */
+    color: #f1c40f;
 }
 
 .question-text {
@@ -200,29 +231,35 @@ body, html {
     flex-direction: column;
     gap: 10px;
     width: 100%;
-    max-width: 350px;
-    padding-bottom: 10px; /* Відступ знизу */
+    max-width: 80vw; /* Increased max-width to 80% of viewport width */
+    margin: 0 auto 10px auto; /* Center the buttons, add bottom margin */
+    padding-bottom: 10px;
     z-index: 5;
 }
 
 .action-buttons button {
     padding: 15px;
-    font-size: clamp(1em, 3.5vw, 1.2em);
+    font-size: clamp(1.1em, 4vw, 1.3em); /* Slightly larger font */
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition: background-color 0.2s ease, transform 0.1s ease, filter 0.2s ease; /* Add filter to transition */
     width: 100%;
     font-weight: 500;
 }
 .action-buttons button:active {
     transform: scale(0.97);
 }
+.action-buttons button:hover {
+    transform: scale(1.02); /* Slightly less zoom than main page buttons */
+    filter: brightness(1.1);
+}
 
-.btn-skip { background-color: #e67e22; color: white; } /* Помаранчевий */
-.btn-skip:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed; } /* Сірий для disabled */
-.btn-done { background-color: #2ecc71; color: white; } /* Зелений */
-.btn-quit { background-color: #e74c3c; color: white; } /* Червоний */
+
+.btn-skip { background-color: #e67e22; color: white; }
+.btn-skip:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed; }
+.btn-done { background-color: #2ecc71; color: white; }
+.btn-quit { background-color: #e74c3c; color: white; }
 
 /* Адаптивність для менших екранів */
 @media (max-height: 600px) {
