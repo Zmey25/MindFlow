@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// ... (перевірка, чи гра дійсно завершена, залишається) ...
 if (!isset($_SESSION['game_over']) || $_SESSION['game_over'] !== true) {
     if (isset($_SESSION['game_started']) && $_SESSION['game_started'] === true) {
         header('Location: game.php');
@@ -15,7 +14,6 @@ $message = $_SESSION['game_over_message'] ?? "Гра завершена!";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
     if (isset($_SESSION['initial_player_names'])) {
-        // ... (відновлення гравців) ...
         $players = [];
         foreach ($_SESSION['initial_player_names'] as $name) {
             $players[] = [
@@ -31,22 +29,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
         $_SESSION['game_started'] = true;
         $_SESSION['game_over'] = false;
         unset($_SESSION['game_over_message']);
-        $_SESSION['current_question_data'] = null; // Важливо для першого ходу нової гри
+        $_SESSION['current_question_data'] = null;
 
-        // Перезавантаження та перемішування пулу питань
+        // Reload and re-shuffle the question pool similar to index.php
         $all_questions_raw = json_decode(file_get_contents('data/questions.json'), true);
-        if (is_array($all_questions_raw) && !empty($all_questions_raw)) {
+        $category_styles = json_decode(file_get_contents('data/category_styles.json'), true);
+
+        if (is_array($all_questions_raw) && !empty($all_questions_raw) && is_array($category_styles) && !empty($category_styles)) {
             $_SESSION['all_questions_data'] = array_column($all_questions_raw, null, 'id');
-            $question_ids = array_keys($_SESSION['all_questions_data']);
-            shuffle($question_ids);
-            $_SESSION['available_question_ids'] = $question_ids;
+            $_SESSION['category_styles'] = $category_styles;
+
+            $questions_by_category = [];
+            foreach ($all_questions_raw as $question) {
+                $category = $question['category'];
+                if (!isset($questions_by_category[$category])) {
+                    $questions_by_category[$category] = [];
+                }
+                $questions_by_category[$category][] = $question['id'];
+            }
+            $_SESSION['questions_by_category'] = $questions_by_category;
+
+            $_SESSION['available_question_ids_by_category'] = [];
+            foreach ($questions_by_category as $category => $ids) {
+                shuffle($ids);
+                $_SESSION['available_question_ids_by_category'][$category] = $ids;
+            }
+
         } else {
-            // Якщо тут помилка, гра не зможе початися, перенаправляємо на index з помилкою
-            $_SESSION['game_started'] = false; // Явно
+            $_SESSION['game_started'] = false;
             header('Location: index.php?error=questions_reload_failed_game_over');
             exit;
         }
-        
+
         header('Location: game.php');
         exit;
     } else {
@@ -54,19 +68,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
         exit;
     }
 }
-// ... (код для new_game_entirely залишається) ...
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_game_entirely'])) {
     $_SESSION = [];
-    session_destroy(); 
-    // Потрібно знову стартувати сесію, щоб index.php міг її використовувати
-    // або просто перенаправити, а index.php сам її почне.
-    // Але для чистоти краще так:
-    session_start(); 
-    header('Location: index.php?new_game=true'); 
+    session_destroy();
+    session_start();
+    header('Location: index.php?new_game=true');
     exit;
 }
 ?>
-<!-- HTML для game_over.php залишається тим самим -->
 <!DOCTYPE html>
 <html lang="uk">
 <head>
