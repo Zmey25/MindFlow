@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// --- Перевірки стану гри на початку ---
 if (!isset($_SESSION['game_started']) || $_SESSION['game_started'] !== true) {
     header('Location: index.php?new_game=true');
     exit;
@@ -11,20 +10,16 @@ if (isset($_SESSION['game_over']) && $_SESSION['game_over'] === true) {
     exit;
 }
 
-// Load data from session (should be populated by index.php or game_over.php)
-$questions_data_map = $_SESSION['all_questions_data'] ?? []; // ID => QuestionData
-$category_styles = $_SESSION['category_styles'] ?? []; // CategoryName => StyleData
-$questions_by_category = $_SESSION['questions_by_category'] ?? []; // CategoryName => [ID, ID, ...]
-$available_question_ids_by_category = &$_SESSION['available_question_ids_by_category']; // & for direct modification
+$questions_data_map = $_SESSION['all_questions_data'] ?? [];
+$category_styles = $_SESSION['category_styles'] ?? [];
 
-if (empty($questions_data_map) || empty($category_styles) || empty($questions_by_category) || empty($available_question_ids_by_category)) {
+if (empty($questions_data_map) || empty($category_styles) || empty($_SESSION['game_question_pool'])) {
     $_SESSION['game_over'] = true;
-    $_SESSION['game_over_message'] = "Помилка: Файли гри (питання/стилі/категорії) не завантажено належним чином.";
+    $_SESSION['game_over_message'] = "Помилка: Файли гри (питання/стилі) не завантажено належним чином або питання вичерпано.";
     header('Location: game_over.php');
     exit;
 }
 
-// --- Допоміжні функції ---
 function get_active_players_indices() {
     $active_indices = [];
     if (isset($_SESSION['players']) && is_array($_SESSION['players'])) {
@@ -56,54 +51,16 @@ function get_next_active_player_index($current_index_in_session) {
 }
 
 function select_question() {
-    global $questions_data_map, $category_styles, $questions_by_category, $available_question_ids_by_category;
+    global $questions_data_map;
 
-    // Step 1: Select a category based on weights
-    $weighted_categories = [];
-    $total_weight = 0;
-    foreach ($category_styles as $category_name => $data) {
-        if (isset($data['weight']) && $data['weight'] > 0 && isset($questions_by_category[$category_name]) && !empty($questions_by_category[$category_name])) {
-            $weighted_categories[$category_name] = (int)$data['weight'];
-            $total_weight += (int)$data['weight'];
-        }
-    }
-
-    if ($total_weight === 0) {
-        error_log("select_question: No active categories with weights or no questions in them.");
+    if (empty($_SESSION['game_question_pool'])) {
+        error_log("select_question: No questions left in the pool.");
         return null;
     }
 
-    $rand = mt_rand(1, $total_weight);
-    $selected_category = null;
-    foreach ($weighted_categories as $category => $weight) {
-        $rand -= $weight;
-        if ($rand <= 0) {
-            $selected_category = $category;
-            break;
-        }
-    }
-
-    if ($selected_category === null) {
-        error_log("select_question: Failed to select a category. This should not happen if total_weight > 0.");
-        return null; // Fallback
-    }
-
-    // Step 2: Select a question from the chosen category
-    if (!isset($available_question_ids_by_category[$selected_category]) || empty($available_question_ids_by_category[$selected_category])) {
-        // If the pool for this category is empty, refill it
-        if (!isset($questions_by_category[$selected_category]) || empty($questions_by_category[$selected_category])) {
-            error_log("select_question: No questions found for selected category: " . $selected_category);
-            return null;
-        }
-        $all_ids_in_category = $questions_by_category[$selected_category];
-        shuffle($all_ids_in_category);
-        $available_question_ids_by_category[$selected_category] = $all_ids_in_category;
-    }
-
-    $question_id = array_pop($available_question_ids_by_category[$selected_category]);
-
+    $question_id = array_pop($_SESSION['game_question_pool']);
     if ($question_id === null || !isset($questions_data_map[$question_id])) {
-        error_log("select_question: Failed to get a valid question_id or question_data for ID: " . var_export($question_id, true) . " from category: " . $selected_category);
+        error_log("select_question: Failed to get valid question_id from pool or data map for ID: " . var_export($question_id, true));
         return null;
     }
 
@@ -112,7 +69,6 @@ function select_question() {
 }
 
 
-// --- Обробка POST-запитів ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
     $current_player_idx_on_action = $_SESSION['current_player_index'];
@@ -138,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     } elseif ($action === 'skip') {
         if ($player_data['skips_left'] > 0) {
             $player_data['skips_left']--;
-            $_SESSION['current_question_data'] = null; // Forces new question for THIS player
+            $made_move = true;
         }
     } elseif ($action === 'quit') {
         $player_data['active'] = false;
@@ -146,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 
     if ($made_move) {
+        $_SESSION['current_question_data'] = null; // Crucial fix: Reset current question to fetch a new one
         $active_players_count = count(get_active_players_indices());
         if ($active_players_count < 2) {
             $_SESSION['game_over'] = true;
@@ -167,7 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 }
 
                 $_SESSION['current_player_index'] = $next_player_idx;
-                $_SESSION['current_question_data'] = null;
             }
         }
     }
@@ -180,12 +136,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     exit;
 }
 
-// --- Підготовка даних для відображення (після всіх обробок POST) ---
 if (!isset($_SESSION['current_question_data']) || $_SESSION['current_question_data'] === null) {
     $_SESSION['current_question_data'] = select_question();
     if ($_SESSION['current_question_data'] === null) {
         $_SESSION['game_over'] = true;
-        $_SESSION['game_over_message'] = "Помилка: Не вдалося завантажити питання для гри. Можливо, питання закінчились або файл пошкоджено.";
+        $_SESSION['game_over_message'] = "Помилка: Не вдалося завантажити питання для гри. Можливо, питання закінчились.";
         error_log("Critical: select_question returned null. Ending game.");
         header('Location: game_over.php');
         exit;
@@ -212,7 +167,6 @@ if (!isset($_SESSION['players'][$current_player_idx]) || !$_SESSION['players'][$
 $current_player_data = &$_SESSION['players'][$current_player_idx];
 
 
-// Process deferred effects
 $deferred_messages_to_display = [];
 if (!empty($current_player_data['deferred_effects'])) {
     $active_effects = [];
@@ -233,7 +187,6 @@ if (!empty($current_player_data['deferred_effects'])) {
 
 $current_question = $_SESSION['current_question_data'];
 
-// Prepare question text
 $question_text = $current_question['text'];
 $question_text = str_replace('{PLAYER_NAME}', htmlspecialchars($current_player_data['name']), $question_text);
 if (strpos($question_text, '{RANDOM_PLAYER_NAME}') !== false) {
@@ -300,7 +253,7 @@ $next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_
         </div>
         <div class="action-buttons">
             <form method="POST" action="game.php" style="width: 100%;">
-                <button type="submit" name="action" value="done" class="btn-done">
+                <button type="submit" name="action" value="completed" class="btn-done">
                     Виконано! (Наступний: <?php echo $next_player_name_for_button; ?>)
                 </button>
             </form>
