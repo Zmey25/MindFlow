@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Логіка для index.php (додавання/видалення гравців) ---
+    // --- Логіка для index.php (без змін) ---
     const playerInputsContainer = document.getElementById('player-inputs');
     const addPlayerBtn = document.getElementById('add-player');
     
     if (playerInputsContainer && addPlayerBtn) {
         let playerCount = playerInputsContainer.querySelectorAll('.player-input-group').length;
-
         addPlayerBtn.addEventListener('click', function() {
             playerCount++;
             const newPlayerGroup = document.createElement('div');
@@ -15,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
             newInput.type = 'text';
             newInput.name = 'players[]';
             newInput.placeholder = 'Ім\'я гравця ' + playerCount;
-            // newInput.required = true; // 'required' краще залишити тільки для перших двох
 
             const removeBtn = document.createElement('button');
             removeBtn.type = 'button';
@@ -23,10 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
             removeBtn.textContent = 'X';
             removeBtn.title = 'Видалити гравця';
             removeBtn.addEventListener('click', function() {
-                // Не даємо видалити, якщо гравців менше 3 (залишається 2)
                 if (playerInputsContainer.querySelectorAll('.player-input-group').length > 2) {
                     newPlayerGroup.remove();
-                    // Оновлюємо playerCount та плейсхолдери, якщо це важливо, але простіше так
                 } else {
                     alert('Мінімум 2 гравці потрібні для гри.');
                 }
@@ -36,73 +32,59 @@ document.addEventListener('DOMContentLoaded', function() {
             newPlayerGroup.appendChild(removeBtn);
             playerInputsContainer.appendChild(newPlayerGroup);
         });
-
-        // Додаємо обробники для кнопок видалення, які вже є (якщо вони є)
-        // Це не потрібно, якщо перші два поля не мають кнопки видалення
     }
 
-    // --- Логіка для game.php (анімація фонових іконок) ---
+    // --- Логіка для game.php (UPDATED) ---
     const gamePage = document.querySelector('.game-page');
     const iconsContainer = document.querySelector('.background-icons-container');
     const gameDataElement = document.getElementById('game-data-container');
 
     if (gamePage && iconsContainer && gameDataElement) {
-        try {
-            const iconClassesJSON = gameDataElement.dataset.iconClasses;
-            const iconClasses = JSON.parse(iconClassesJSON); // ['fas fa-gift', 'fas fa-star']
-            const iconColor = gameDataElement.dataset.iconColor || 'rgba(255, 255, 255, 0.1)';
-            const iconOpacity = parseFloat(gameDataElement.dataset.iconOpacity) || 0.1;
+        // Встановлюємо фон через CSS-змінну
+        const backgroundGradient = gameDataElement.dataset.backgroundGradient;
+        if (backgroundGradient) {
+            document.documentElement.style.setProperty('--game-background', backgroundGradient);
+        }
 
-            // Змінено: Рандомна кількість іконок від 8 до 20
-            const numIcons = Math.floor(Math.random() * 13) + 8; // 8-20 іконок
+        const iconColor = gameDataElement.dataset.iconColor || 'rgba(255, 255, 255, 0.1)';
+        const iconOpacity = parseFloat(gameDataElement.dataset.iconOpacity) || 0.1;
 
-            if (iconClasses && iconClasses.length > 0 && iconClasses[0] !== "none") {
-                for (let i = 0; i < numIcons; i++) {
-                    const iconElement = document.createElement('i');
-                    // Вибираємо випадкову іконку з масиву
-                    const randomIconClass = iconClasses[Math.floor(Math.random() * iconClasses.length)];
-                    iconElement.className = randomIconClass; // Наприклад, "fas fa-gift"
-                    
-                    iconElement.style.setProperty('--icon-color', iconColor); // Встановлюємо CSS змінну
-                    iconElement.style.setProperty('--icon-opacity', iconOpacity);
+        const numIcons = Math.floor(Math.random() * 8) + 8; // 8-15 іконок
 
-                    // Оновлено: Забезпечуємо, щоб іконки спочатку були в межах вьюпорту
-                    iconElement.style.left = (Math.random() * 100) + 'vw'; // 0vw to 100vw
-                    iconElement.style.top = (Math.random() * 100) + 'vh';  // 0vh to 100vh
-                    iconElement.style.fontSize = (Math.random() * 8 + 10) + 'vw'; // 10vw to 18vw
+        for (let i = 0; i < numIcons; i++) {
+            // Використовуємо <span> та текстовий символ '★' для тесту
+            const iconElement = document.createElement('span');
+            iconElement.textContent = '★';
+            
+            iconElement.style.setProperty('--icon-color', iconColor);
+            iconElement.style.setProperty('--icon-opacity', iconOpacity);
+            iconElement.style.setProperty('--randX', Math.random());
+            iconElement.style.setProperty('--randY', Math.random());
 
-                    // Випадкова тривалість та затримка анімації (тривалість залишається повільною)
-                    const duration = Math.random() * 10 + 25; // 25-35s (трохи повільніше)
-                    const delay = Math.random() * -duration; // Негативна затримка, щоб анімації починались з різних фаз
-                    
-                    iconElement.style.animationDuration = duration + 's';
-                    iconElement.style.animationDelay = delay + 's';
-                    
-                    iconsContainer.appendChild(iconElement);
-                }
-            }
-        } catch (e) {
-            console.error("Error parsing icon classes or setting up background icons:", e);
-            console.error("Dataset value was:", gameDataElement.dataset.iconClasses);
+            iconElement.style.left = (Math.random() * 100) + 'vw';
+            iconElement.style.top = (Math.random() * 100) + 'vh';
+            iconElement.style.fontSize = (Math.random() * 8 + 10) + 'vw';
+
+            const duration = Math.random() * 15 + 20; // 20-35s
+            const delay = Math.random() * -duration;
+            
+            iconElement.style.animationDuration = duration + 's';
+            iconElement.style.animationDelay = delay + 's';
+            
+            iconsContainer.appendChild(iconElement);
         }
     }
 
-    // Запобігання масштабуванню подвійним тапом на iOS
+    // Запобігання масштабуванню (без змін)
     if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
         let lastTouchEnd = 0;
         document.documentElement.addEventListener('touchend', function (event) {
             const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
+            if (now - lastTouchEnd <= 300) { event.preventDefault(); }
             lastTouchEnd = now;
         }, { passive: false });
     }
-     // Запобігання масштабуванню pinch-to-zoom
     document.documentElement.addEventListener('touchstart', function (event) {
-        if (event.touches.length > 1) {
-            event.preventDefault();
-        }
+        if (event.touches.length > 1) { event.preventDefault(); }
     }, { passive: false });
-
 });
