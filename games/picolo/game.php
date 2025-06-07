@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+// ... (весь ваш PHP код до тега <!DOCTYPE html> залишається без змін)
 if (!isset($_SESSION['game_started']) || $_SESSION['game_started'] !== true) {
     header('Location: index.php?new_game=true');
     exit;
@@ -111,11 +112,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $_SESSION['game_over'] = true;
                 $_SESSION['game_over_message'] = "Помилка: Не вдалося визначити наступного гравця.";
             } else {
-                $_SESSION['current_player_index'] = $next_player_idx;
-                $active_indices = get_active_players_indices();
-                if (count($active_indices) > 0 && $next_player_idx == $active_indices[0]) {
+                 $active_indices = get_active_players_indices();
+                $pos_current_in_active = array_search($current_player_idx_on_action, $active_indices);
+                $pos_next_in_active = array_search($next_player_idx, $active_indices);
+
+                if ($pos_next_in_active !== false && $pos_current_in_active !== false && $pos_next_in_active < $pos_current_in_active) {
                      $_SESSION['current_round']++;
+                } else if (count($active_indices) > 0 && $next_player_idx == $active_indices[0] && $current_player_idx_on_action == end($active_indices) && $current_player_idx_on_action != $next_player_idx) {
+                    $_SESSION['current_round']++;
                 }
+                $_SESSION['current_player_index'] = $next_player_idx;
             }
         }
     }
@@ -175,7 +181,6 @@ if (!empty($current_player_data['deferred_effects'])) {
 }
 
 $current_question = $_SESSION['current_question_data'];
-
 $question_text = $current_question['text'];
 $question_text = str_replace('{PLAYER_NAME}', htmlspecialchars($current_player_data['name']), $question_text);
 if (strpos($question_text, '{RANDOM_PLAYER_NAME}') !== false) {
@@ -196,6 +201,7 @@ if (strpos($question_text, '{RANDOM_PLAYER_NAME}') !== false) {
 $style_info = $category_styles[$current_question['category']] ?? $category_styles['Default'];
 $next_player_for_button_idx = get_next_active_player_index($current_player_idx);
 $next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_SESSION['players'][$next_player_for_button_idx])) ? $_SESSION['players'][$next_player_for_button_idx]['name'] : 'Нікого';
+
 ?>
 <!DOCTYPE html>
 <html lang="uk">
@@ -204,15 +210,19 @@ $next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Гра: Хід <?php echo htmlspecialchars($current_player_data['name']); ?></title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script>
+        window.GAME_DATA = {
+            backgroundGradient: <?php echo json_encode($style_info['background']); ?>,
+            iconClasses: <?php echo json_encode($style_info['icon_classes'] ?? ['fas fa-question-circle']); ?>,
+            iconColor: <?php echo json_encode($style_info['icon_color']); ?>,
+            iconOpacity: <?php echo json_encode($style_info['icon_opacity'] ?? 0.1); ?>
+        };
+    </script>
 </head>
 <body>
     <div class="game-page">
         <div class="background-icons-container"></div>
-        <div id="game-data-container"
-             data-background-gradient="<?php echo htmlspecialchars($style_info['background']); ?>"
-             data-icon-color="<?php echo htmlspecialchars($style_info['icon_color']); ?>"
-             data-icon-opacity="<?php echo htmlspecialchars($style_info['icon_opacity'] ?? 0.1); ?>">
-        </div>
         
         <div class="category-display">
             Категорія: <?php echo htmlspecialchars($current_question['category']); ?>
