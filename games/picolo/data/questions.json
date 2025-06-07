@@ -230,5 +230,805 @@
     "deferred_text_template": null,
     "deferred_turns_player": 0,
     "bonus_skip_on_complete": true
+  },
+  {
+    "id": 30,
+    "category": "Розкрийся!",
+    "text": "Яку свою рису характеру ти вважаєш найсильнішою, а яку — найслабшою?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 31,
+    "category": "Розкрийся!",
+    "text": "Опиши момент, який фундаментально змінив твій погляд на життя.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 32,
+    "category": "Розкрийся!",
+    "text": "Чим ти найбільше пишаєшся, але рідко про це говориш?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 33,
+    "category": "Розкрийся!",
+    "text": "Який найбільший урок тобі дало кохання або дружба?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 34,
+    "category": "Розкрийся!",
+    "text": "Якби ти міг/могла дати одну пораду собі у 16-річному віці, що б ти сказав/сказала?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 35,
+    "category": "Розкрийся!",
+    "text": "Розкажи про страх, який ти намагаєшся подолати.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 36,
+    "category": "Розкрийся!",
+    "text": "Що для тебе особисто означає 'успішне життя'?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 37,
+    "category": "Розкрийся!",
+    "text": "Опиши час, коли ти відчував/відчувала, що тебе по-справжньому зрозуміли.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 38,
+    "category": "Розкрийся!",
+    "text": "Якби ти міг/могла змінити одну річ у світі, що б це було?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 39,
+    "category": "Розкрийся!",
+    "text": "Яку цінність ти найбільше пріоритезуєш у стосунках з іншими людьми?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 40,
+    "category": "Штраф",
+    "text": "Заспівай приспів найпопулярнішої зараз пісні в TikTok. Якщо не знаєш, співай 'Червону руту'.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 41,
+    "category": "Штраф",
+    "text": "Дозволь {RANDOM_PLAYER_NAME} написати смішний (але пристойний) коментар під твоїм останнім постом в Instagram/Facebook.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 42,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, наступні 3 кола ти повинен/повинна говорити з дивним акцентом, який виберуть інші гравці.",
+    "deferred_text_template": "{PLAYER_NAME} говорить з дивним акцентом.",
+    "deferred_turns_player": 3,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 43,
+    "category": "Штраф",
+    "text": "З'їж ложку дивної харчової комбінації, створеної іншими гравцями (напр. кетчуп з варенням).",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 44,
+    "category": "Штраф",
+    "text": "Зроби 'дзвінок другу', але дзвони в піцерію і спробуй замовити суші.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 45,
+    "category": "Подарунок",
+    "text": "Ти отримуєш імунітет! Наступного разу, коли тобі випаде картка 'Штраф', ти можеш її пропустити.",
+    "deferred_text_template": "{PLAYER_NAME} має імунітет від 'Штрафу'.",
+    "deferred_turns_player": 100,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 46,
+    "category": "Подарунок",
+    "text": "Признач {RANDOM_PLAYER_NAME} своїм 'чашконосцем' на наступні 3 кола. Він/вона має слідкувати, щоб твій келих був повний.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 47,
+    "category": "Подарунок",
+    "text": "Королівський указ! Змусь будь-якого гравця виконати одне завдання з категорії 'Виклик' на твій вибір.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 48,
+    "category": "Подарунок",
+    "text": "Ти отримуєш бонусний хід! Після завершення цього ходу, візьми ще одну картку.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 49,
+    "category": "Подарунок",
+    "text": "Обмін долями! Поміняйся картками (якщо є) або місцями з будь-яким гравцем на свій вибір.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 50,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, імпровізуй 30-секундний реп про будь-який об'єкт у цій кімнаті.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 51,
+    "category": "Виклик",
+    "text": "Протягом 60 секунд розмовляй на тему, яку обере {RANDOM_PLAYER_NAME}, не зупиняючись довше ніж на 3 секунди.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 52,
+    "category": "Виклик",
+    "text": "Не використовуючи слів, покажи пантомімою свою професію або хобі, поки інші не вгадають.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 53,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, зроби 15 присідань. Відмова — випий штрафний напій.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 54,
+    "category": "Виклик",
+    "text": "Зроби найкращу пародію на будь-якого гравця за столом. Інші мають вгадати, хто це.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 55,
+    "category": "Машина Часу",
+    "text": "Який твій найщасливіший спогад з дитинства?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 56,
+    "category": "Машина Часу",
+    "text": "Розкажи історію про свою першу закоханість або перше розбите серце.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 57,
+    "category": "Машина Часу",
+    "text": "Який найбільш бунтарський вчинок ти зробив/зробила в підлітковому віці?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 58,
+    "category": "Машина Часу",
+    "text": "Опиши найкращу подорож або відпустку, яка в тебе колись була.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 59,
+    "category": "Машина Часу",
+    "text": "Який модний тренд з твого минулого ти зараз вважаєш найбезглуздішим?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 60,
+    "category": "Машина Часу",
+    "text": "Яка порада від батьків чи бабусь/дідусів запам'яталася тобі на все життя?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 61,
+    "category": "Машина Часу",
+    "text": "Поділися спогадом про час, коли ти сміявся/сміялася так сильно, що аж плакав/плакала.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 62,
+    "category": "Машина Часу",
+    "text": "Якою була твоя улюблена книга/фільм/гра в дитинстві? Чому?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 63,
+    "category": "Машина Часу",
+    "text": "Розкажи про дружбу, яка мала на тебе значний вплив.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 64,
+    "category": "Машина Часу",
+    "text": "Який момент зі свого минулого ти хотів/хотіла б пережити ще раз?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 65,
+    "category": "Погляд у Майбутнє",
+    "text": "Де ти бачиш себе через 5 років? Будь конкретним/конкретною.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 66,
+    "category": "Погляд у Майбутнє",
+    "text": "Яку одну навичку ти справді хочеш опанувати в майбутньому?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 67,
+    "category": "Погляд у Майбутнє",
+    "text": "Якби гроші не були проблемою, чим би ти займався/займалася у житті?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 68,
+    "category": "Погляд у Майбутнє",
+    "text": "Опиши свій ідеальний день, від пробудження до сну.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 69,
+    "category": "Погляд у Майбутнє",
+    "text": "Що ти найбільше чекаєш у наступному році?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 70,
+    "category": "Погляд у Майбутнє",
+    "text": "Яку спадщину ти хочеш залишити після себе?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 71,
+    "category": "Погляд у Майбутнє",
+    "text": "Яка твоя велика мрія, про яку ти трохи боїшся говорити вголос?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 72,
+    "category": "Погляд у Майбутнє",
+    "text": "Як ти сподіваєшся змінитися як особистість через 10 років?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 73,
+    "category": "Погляд у Майбутнє",
+    "text": "Якби ти міг/могла мати будь-яку роботу у світі, яка б це була?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 74,
+    "category": "Погляд у Майбутнє",
+    "text": "Що ти обов'язково зробиш, перш ніж станеш 'занадто старим/старою'?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 75,
+    "category": "А що, якби...?",
+    "text": "А що, якби ти міг/могла мати будь-яку суперсилу на 24 години? Яку б ти обрав/обрала і що б зробив/зробила?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 76,
+    "category": "А що, якби...?",
+    "text": "А що, якби ти міг/могла розмовляти з тваринами? До якої тварини ти б звернувся/звернулася першою і що б запитав/запитала?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 77,
+    "category": "А що, якби...?",
+    "text": "А що, якби ти завтра прокинувся/прокинулася в тілі {RANDOM_PLAYER_NAME}? Що б ти зробив/зробила в першу чергу?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 78,
+    "category": "А що, якби...?",
+    "text": "А що, якби тобі дали квиток в один кінець для колонізації Марса? Ти б полетів/полетіла?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 79,
+    "category": "А що, якби...?",
+    "text": "А що, якби ти міг/могла стерти одну подію з історії людства? Що б це було і чому?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 80,
+    "category": "А що, якби...?",
+    "text": "А що, якби ти знайшов/знайшла гаманець із виграшним лотерейним квитком? Що б ти зробив/зробила?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 81,
+    "category": "А що, якби...?",
+    "text": "А що, якби ти міг/могла повечеряти з трьома будь-якими людьми, живими чи мертвими? Хто б це був?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 82,
+    "category": "А що, якби...?",
+    "text": "А що, якби ти на один день став/стала президентом країни? Який перший закон ти б ухвалив/ухвалила?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 83,
+    "category": "А що, якби...?",
+    "text": "А що, якби інтернет раптово зник назавжди? Як би змінилося твоє життя?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 84,
+    "category": "А що, якби...?",
+    "text": "А що, якби ти дізнався/дізналася, що ти персонаж у відеогрі? Яким би був твій головний квест?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 85,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, обери гравця. По черзі розкажіть про ваше перше враження один про одного.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 86,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, обери гравця. У вас 30 секунд, щоб знайти три спільні риси, про які ви раніше не знали.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 87,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, зроби щирий і конкретний комплімент {RANDOM_PLAYER_NAME}. Потім він/вона має зробити тобі комплімент у відповідь.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 88,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, обери гравця. Разом придумайте таємне рукостискання і продемонструйте його.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 89,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, обери гравця. Подивіться один одному в очі і спробуйте не сміятися протягом 30 секунд. Хто перший засміявся - виконує бажання переможця.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 90,
+    "category": "Сміхопанорама",
+    "text": "Розкажи найганебнішу історію, яка з тобою трапилася.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 91,
+    "category": "Сміхопанорама",
+    "text": "Опиши останній раз, коли ти нестримно сміявся/сміялася.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 92,
+    "category": "Сміхопанорама",
+    "text": "Яку найдурнішу річ ти зробив/зробила заради розваги?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 93,
+    "category": "Сміхопанорама",
+    "text": "Розкажи свій найкращий/найгірший 'батьківський' жарт.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 94,
+    "category": "Сміхопанорама",
+    "text": "Придумай нове безглузде свято і поясни його традиції.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 95,
+    "category": "Сміхопанорама",
+    "text": "Якби ти мав/мала описати своє особисте життя назвою фільму, яка б це була назва?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 96,
+    "category": "Сміхопанорама",
+    "text": "Розкажи правдиву історію, але заміни в ній ключовий іменник словом 'сосиска'. Група має вгадати оригінальне слово.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 97,
+    "category": "Сміхопанорама",
+    "text": "Яка в тебе є дивна звичка?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 98,
+    "category": "Сміхопанорама",
+    "text": "Зімітуй відому людину або іншого гравця, поки хтось не вгадає, хто це.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 99,
+    "category": "Сміхопанорама",
+    "text": "У що найкумедніше ти вірив/вірила в дитинстві?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 100,
+    "category": "Етична Дилема",
+    "text": "Ти бачиш, як партнер твого хорошого друга/подруги зраджує йому/їй. Розкажеш другові, поговориш з партнером чи залишишся осторонь? Поясни свій вибір.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 101,
+    "category": "Етична Дилема",
+    "text": "Ти можеш натиснути кнопку, яка дасть тобі мільйон доларів, але десь у світі помре незнайома тобі людина. Натиснеш?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 102,
+    "category": "Етична Дилема",
+    "text": "Ти єдиний свідок злочину, скоєного членом твоєї родини. Чи повідомиш ти в поліцію?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 103,
+    "category": "Етична Дилема",
+    "text": "Твоя компанія ось-ось збанкрутує. У тебе є шанс врятувати її, уклавши юридично сумнівну угоду, яка збереже робочі місця для всіх. Ти зробиш це?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 104,
+    "category": "Етична Дилема",
+    "text": "Ти знайшов гаманець, повний грошей, з документами власника. Власник — дуже багата і неприємна людина. Повернеш гаманець?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 105,
+    "category": "Світ Кіно та Музики",
+    "text": "Який фільм ти можеш передивлятися знову і знову?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 106,
+    "category": "Світ Кіно та Музики",
+    "text": "Якби твоє життя було фільмом, якого жанру він був би і хто б зіграв тебе в головній ролі?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 107,
+    "category": "Світ Кіно та Музики",
+    "text": "Назви пісню, яка завжди змушує тебе танцювати.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 108,
+    "category": "Світ Кіно та Музики",
+    "text": "З яким кіноперсонажем ти найбільше себе асоціюєш?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 109,
+    "category": "Світ Кіно та Музики",
+    "text": "Яку книгу, на твою думку, повинен прочитати кожен?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 110,
+    "category": "Світ Кіно та Музики",
+    "text": "Якби ти міг/могла бути учасником будь-якого музичного гурту, який би це був гурт?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 111,
+    "category": "Світ Кіно та Музики",
+    "text": "Який твій 'guilty pleasure' фільм або пісня, які ти таємно обожнюєш?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 112,
+    "category": "Світ Кіно та Музики",
+    "text": "Опиши сюжет відомого фільму так погано, щоб це звучало смішно.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 113,
+    "category": "Світ Кіно та Музики",
+    "text": "Фінал якого серіалу розчарував тебе найбільше?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 114,
+    "category": "Світ Кіно та Музики",
+    "text": "Створи плейлист з 3 пісень, який представляє твою особистість.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 115,
+    "category": "Таємна Скринька",
+    "text": "Яка найбільша брехня, яку ти коли-небудь казав/казала, і тебе не зловили?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 116,
+    "category": "Таємна Скринька",
+    "text": "Що єдине ти ніколи б не хотів/хотіла, щоб про тебе дізналися твої батьки?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 117,
+    "category": "Таємна Скринька",
+    "text": "Який твій найбільший життєвий жаль на даний момент?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 118,
+    "category": "Таємна Скринька",
+    "text": "Про що ти мріяв/мріяла востаннє, що можеш згадати?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 119,
+    "category": "Таємна Скринька",
+    "text": "Якби ти міг/могла безкарно зробити одну незаконну річ, що б це було?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 120,
+    "category": "Креативний Куточок",
+    "text": "Придумай нове, креативне застосування для звичайної скріпки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 121,
+    "category": "Креативний Куточок",
+    "text": "У тебе є 60 секунд. Напиши короткий вірш (хайку або лімерик) про {RANDOM_PLAYER_NAME}.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 122,
+    "category": "Креативний Куточок",
+    "text": "Намалюй 'духовну тварину' для гравця ліворуч від тебе. У тебе 1 хвилина. Головне — не якість!",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 123,
+    "category": "Креативний Куточок",
+    "text": "Придумай слоган і короткий джингл для вигаданого продукту, наприклад, 'їстівні шкарпетки'.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 124,
+    "category": "Креативний Куточок",
+    "text": "Запропонуй групі ідею нового, жахливого фільму. Будь якомога переконливішим/переконливішою.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 125,
+    "category": "Бліц!",
+    "text": "(10 секунд) Назви 5 речей, які б ти взяв/взяла з дому під час пожежі. Час пішов!",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 126,
+    "category": "Бліц!",
+    "text": "(10 секунд) Перше слово, що спадає на думку, коли ти чуєш ім'я {RANDOM_PLAYER_NAME}. Час пішов!",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 127,
+    "category": "Бліц!",
+    "text": "(10 секунд) Ти отримуєш безкоштовний квиток на літак куди завгодно. Куди летиш? Час пішов!",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 128,
+    "category": "Бліц!",
+    "text": "(10 секунд) Твоя улюблена їжа, знаменитість, яку ти не любиш, і що тебе найбільше дратує. Час пішов!",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 129,
+    "category": "Бліц!",
+    "text": "(10 секунд) Скажи комплімент людині праворуч від тебе. Час пішов!",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
   }
 ]
