@@ -13,9 +13,9 @@ if (isset($_SESSION['game_over']) && $_SESSION['game_over'] === true) {
 $questions_data_map = $_SESSION['all_questions_data'] ?? [];
 $category_styles = $_SESSION['category_styles'] ?? [];
 
-if (empty($questions_data_map) || empty($category_styles) || empty($_SESSION['game_question_pool'])) {
+if (empty($questions_data_map) || empty($category_styles) || !isset($_SESSION['game_question_pool'])) {
     $_SESSION['game_over'] = true;
-    $_SESSION['game_over_message'] = "Помилка: Файли гри (питання/стилі) не завантажено належним чином або питання вичерпано.";
+    $_SESSION['game_over_message'] = "Помилка: Файли гри (питання/стилі) не завантажено належним чином.";
     header('Location: game_over.php');
     exit;
 }
@@ -53,12 +53,12 @@ function get_next_active_player_index($current_index_in_session) {
 function select_question() {
     global $questions_data_map;
 
-    if (empty($_SESSION['game_question_pool'])) {
+    if (!isset($_SESSION['game_question_pool']) || empty($_SESSION['game_question_pool'])) {
         error_log("select_question: No questions left in the pool.");
         return null;
     }
 
-    $question_id = array_pop($_SESSION['game_question_pool']);
+    $question_id = array_shift($_SESSION['game_question_pool']);
     if ($question_id === null || !isset($questions_data_map[$question_id])) {
         error_log("select_question: Failed to get valid question_id from pool or data map for ID: " . var_export($question_id, true));
         return null;
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 
     if ($made_move) {
-        $_SESSION['current_question_data'] = null; // Crucial fix: Reset current question to fetch a new one
+        $_SESSION['current_question_data'] = null;
         $active_players_count = count(get_active_players_indices());
         if ($active_players_count < 2) {
             $_SESSION['game_over'] = true;
@@ -140,8 +140,8 @@ if (!isset($_SESSION['current_question_data']) || $_SESSION['current_question_da
     $_SESSION['current_question_data'] = select_question();
     if ($_SESSION['current_question_data'] === null) {
         $_SESSION['game_over'] = true;
-        $_SESSION['game_over_message'] = "Помилка: Не вдалося завантажити питання для гри. Можливо, питання закінчились.";
-        error_log("Critical: select_question returned null. Ending game.");
+        $_SESSION['game_over_message'] = "Питання закінчились! Гра завершена.";
+        error_log("Critical: select_question returned null because question pool is empty. Ending game.");
         header('Location: game_over.php');
         exit;
     }
