@@ -34,44 +34,40 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Логіка для game.php (UPDATED) ---
     const gamePage = document.querySelector('.game-page');
     const iconsContainer = document.querySelector('.background-icons-container');
-    const gameDataElement = document.getElementById('game-data-container');
 
-    if (gamePage && iconsContainer && gameDataElement) {
-        const backgroundGradient = gameDataElement.dataset.backgroundGradient;
-        if (backgroundGradient) {
-            document.documentElement.style.setProperty('--game-background', backgroundGradient);
+    // Перевіряємо, чи існує наш об'єкт з даними
+    if (gamePage && iconsContainer && window.GAME_DATA) {
+        // Встановлюємо фон через CSS-змінну
+        if (window.GAME_DATA.backgroundGradient) {
+            document.documentElement.style.setProperty('--game-background', window.GAME_DATA.backgroundGradient);
         }
 
-        try {
-            const iconClasses = JSON.parse(gameDataElement.dataset.iconClasses);
-            const iconColor = gameDataElement.dataset.iconColor || 'rgba(255, 255, 255, 0.1)';
-            const iconOpacity = parseFloat(gameDataElement.dataset.iconOpacity) || 0.1;
+        const iconClasses = window.GAME_DATA.iconClasses || [];
+        const iconColor = window.GAME_DATA.iconColor || 'rgba(255, 255, 255, 0.1)';
+        const iconOpacity = window.GAME_DATA.iconOpacity || 0.1;
 
-            const numIcons = Math.floor(Math.random() * 8) + 8;
+        const numIcons = Math.floor(Math.random() * 8) + 8; // 8-15 іконок
 
-            if (iconClasses && iconClasses.length > 0) {
-                for (let i = 0; i < numIcons; i++) {
-                    const iconElement = document.createElement('i');
-                    const randomIconClass = iconClasses[Math.floor(Math.random() * iconClasses.length)];
-                    iconElement.className = randomIconClass;
-                    
-                    iconElement.style.setProperty('--icon-color', iconColor);
-                    iconElement.style.setProperty('--icon-opacity', iconOpacity);
-                    iconElement.style.setProperty('--randX', Math.random());
-                    iconElement.style.setProperty('--randY', Math.random());
-                    iconElement.style.left = (Math.random() * 100) + 'vw';
-                    iconElement.style.top = (Math.random() * 100) + 'vh';
-                    iconElement.style.fontSize = (Math.random() * 8 + 10) + 'vw';
-                    const duration = Math.random() * 15 + 20;
-                    const delay = Math.random() * -duration;
-                    iconElement.style.animationDuration = duration + 's';
-                    iconElement.style.animationDelay = delay + 's';
-                    
-                    iconsContainer.appendChild(iconElement);
-                }
+        if (iconClasses.length > 0) {
+            for (let i = 0; i < numIcons; i++) {
+                const iconElement = document.createElement('i');
+                const randomIconClass = iconClasses[Math.floor(Math.random() * iconClasses.length)];
+                iconElement.className = randomIconClass;
+                
+                iconElement.style.setProperty('--icon-color', iconColor);
+                iconElement.style.setProperty('--icon-opacity', iconOpacity);
+                iconElement.style.setProperty('--randX', Math.random());
+                iconElement.style.setProperty('--randY', Math.random());
+                iconElement.style.left = (Math.random() * 100) + 'vw';
+                iconElement.style.top = (Math.random() * 100) + 'vh';
+                iconElement.style.fontSize = (Math.random() * 8 + 10) + 'vw';
+                const duration = Math.random() * 15 + 20;
+                const delay = Math.random() * -duration;
+                iconElement.style.animationDuration = duration + 's';
+                iconElement.style.animationDelay = delay + 's';
+                
+                iconsContainer.appendChild(iconElement);
             }
-        } catch (e) {
-            console.error("Error setting up background icons:", e);
         }
     }
 
