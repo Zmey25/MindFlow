@@ -130,6 +130,8 @@ body, html {
     box-sizing: border-box;
     position: relative;
     transition: background 0.7s ease-in-out;
+    /* Додано: перспектива для кращих 3D-перетворень */
+    perspective: 1000px;
 }
 
 .background-icons-container {
@@ -138,7 +140,7 @@ body, html {
     left: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    overflow: hidden; /* Залишаємо hidden, щоб уникнути смуг прокрутки від іконок за межами вьюпорту */
     z-index: -1;
 }
 
@@ -152,30 +154,31 @@ body, html {
     will-change: transform, opacity;
 }
 
-/* Оновлено: Keyframes для більш складного руху, обертання та зміни масштабу */
+/* Оновлено: Keyframes для більш м'якого дрейфу, обертання та зміни масштабу */
+/* Іконки будуть плавно дрейфувати навколо їхніх початкових випадкових позицій */
 @keyframes floatIcon {
     0% {
-        transform: translate(-60vw, 60vh) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(0.8);
-        opacity: 0;
+        transform: translate(0vw, 0vh) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(0.9);
+        opacity: 0; /* Починаємо невидимими */
     }
-    15% {
-        opacity: var(--icon-opacity, 0.1);
+    10% {
+        opacity: var(--icon-opacity, 0.1); /* З'являємося */
     }
     25% {
-        transform: translate(30vw, -40vh) rotateX(90deg) rotateY(180deg) rotateZ(45deg) scale(1.0);
+        transform: translate(5vw, -5vh) rotateX(90deg) rotateY(180deg) rotateZ(45deg) scale(1);
     }
     50% {
-        transform: translate(60vw, 10vh) rotateX(180deg) rotateY(360deg) rotateZ(90deg) scale(1.2);
+        transform: translate(-5vw, 10vh) rotateX(180deg) rotateY(360deg) rotateZ(90deg) scale(1.1);
     }
     75% {
-        transform: translate(-40vw, 40vh) rotateX(270deg) rotateY(540deg) rotateZ(135deg) scale(1.0);
+        transform: translate(10vw, -10vh) rotateX(270deg) rotateY(540deg) rotateZ(135deg) scale(1);
     }
-    85% {
-        opacity: var(--icon-opacity, 0.1);
+    90% {
+        opacity: var(--icon-opacity, 0.1); /* Починаємо зникати */
     }
     100% {
-        transform: translate(-60vw, -60vh) rotateX(360deg) rotateY(720deg) rotateZ(180deg) scale(0.8);
-        opacity: 0;
+        transform: translate(0vw, 0vh) rotateX(360deg) rotateY(720deg) rotateZ(180deg) scale(0.9);
+        opacity: 0; /* Закінчуємо невидимими */
     }
 }
 
