@@ -53,7 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const iconColor = gameDataElement.dataset.iconColor || 'rgba(255, 255, 255, 0.1)';
             const iconOpacity = parseFloat(gameDataElement.dataset.iconOpacity) || 0.1;
 
-            const numIcons = Math.floor(Math.random() * 5) + 8; // 8-12 іконок
+            // Змінено: Рандомна кількість іконок від 8 до 20
+            const numIcons = Math.floor(Math.random() * 13) + 8; // 8-20 іконок
 
             if (iconClasses && iconClasses.length > 0 && iconClasses[0] !== "none") {
                 for (let i = 0; i < numIcons; i++) {
@@ -71,8 +72,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     iconElement.style.top = (Math.random() * 110 - 5) + 'vh';  // -5vh to 105vh
                     iconElement.style.fontSize = (Math.random() * 8 + 10) + 'vw'; // 10vw to 18vw
 
-                    // Випадкова тривалість та затримка анімації
-                    const duration = Math.random() * 10 + 20; // 20-30s
+                    // Випадкова тривалість та затримка анімації (тривалість залишається повільною)
+                    const duration = Math.random() * 10 + 25; // 25-35s (трохи повільніше)
                     const delay = Math.random() * -duration; // Негативна затримка, щоб анімації починались з різних фаз
                     
                     iconElement.style.animationDuration = duration + 's';
