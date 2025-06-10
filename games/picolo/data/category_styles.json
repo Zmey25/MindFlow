@@ -4,7 +4,7 @@
     "icon_classes": ["fas fa-comments", "far fa-comment-dots", "fas fa-brain"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.08,
-    "weight": 40,
+    "weight": 30,
     "description": "Категорія для глибоких та особистих розмов. Питання, що змушують замислитися про життя, цінності та мрії."
   },
   "Штраф": {
@@ -36,7 +36,7 @@
     "icon_classes": ["fas fa-history", "fas fa-hourglass-half", "fas fa-camera-retro"],
     "icon_color": "rgba(0, 0, 0, 0.5)",
     "icon_opacity": 0.08,
-    "weight": 35,
+    "weight": 30,
     "description": "Поверніться у минуле. Поділіться спогадами з дитинства, юності або просто згадайте яскраві моменти свого життя."
   },
   "Погляд у Майбутнє": {
@@ -92,8 +92,8 @@
     "icon_classes": ["fas fa-key", "fas fa-lock", "fas fa-user-secret"],
     "icon_color": "rgba(255, 255, 255, 0.3)",
     "icon_opacity": 0.05,
-    "weight": 5,
-    "description": "Дуже особисті або провокативні питання. **Правило:** Ви маєте право один раз за гру відмовитись відповідати на питання з цієї категорії без штрафу."
+    "weight": 10,
+    "description": "Дуже особисті або провокативні питання. На цих питаннях завжди є вибір: відповідати чи пити замість відповіді."
   },
   "Креативний Куточок": {
     "background": "linear-gradient(to right, #f2994a, #f2c94c)",
@@ -111,7 +111,79 @@
     "weight": 15,
     "description": "Думайте швидко! **Правило:** Ви повинні дати відповідь на питання протягом 10 секунд. Відповідь не має бути ідеальною, головне — встигнути!"
   },
-  "Default": {
+  "Хто перший?": {
+    "background": "linear-gradient(to right, #f2709c, #ff9472)",
+    "icon_classes": ["fas fa-fist-raised", "fas fa-trophy", "fas fa-brain"],
+    "icon_color": "rgba(255, 255, 255, 0.5)",
+    "icon_opacity": 0.1,
+    "weight": 20,
+    "description": "Питання на швидкість. Хто першим вигукне правильну відповідь, отримує право 'нагородити' трьома ковтками будь-якого гравця на свій вибір. Готуйте свої рефлекси!"
+  },
+  "Ланцюгова Реакція": {
+    "background": "linear-gradient(to right, #00c6ff, #0072ff)",
+    "icon_classes": ["fas fa-sync-alt", "fas fa-users", "fas fa-link"],
+    "icon_color": "rgba(255, 255, 255, 0.5)",
+    "icon_opacity": 0.09,
+    "weight": 25,
+    "description": "Для усіх! Задається тема (напр., марки авто, рок-гурти). Починаючи з вас, кожен гравець по колу називає одне слово. Перший, хто повториться, замовкне або назве щось недоречне, програє та п'є 3 ковтки."
+  },
+  "Ігровий Вірус": {
+    "background": "linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%)",
+    "icon_classes": ["fas fa-virus", "fas fa-biohazard", "fas fa-exclamation-triangle"],
+    "icon_color": "rgba(0, 0, 0, 0.5)",
+    "icon_opacity": 0.1,
+    "weight": 25,
+    "description": "Епідемія! На одне коло для всіх гравців вводиться правило (напр., не можна казати 'я', заборонено схрещувати руки). Порушник, якого 'спіймали', негайно п'є штрафний ковток. На початку вашого наступного ходу буде нагадування про зняття карантину."
+  },
+  "Дуель": {
+    "background": "linear-gradient(to right, #ff512f, #dd2476)",
+    "icon_classes": ["fas fa-bolt", "fas fa-stopwatch", "fas fa-users-slash"],
+    "icon_color": "rgba(255, 255, 255, 0.5)",
+    "icon_opacity": 0.12,
+    "weight": 25,
+    "description": "Змагання! Ви та випадковий гравець. Гра задає тему. Суперник закриває вуха. У вас є 10 секунд, щоб назвати якомога більше асоціацій. Потім те ж саме робить суперник. У кого менше — той п'є 3 ковтки."
+  },
+  "Спільний Розум": {
+    "background": "linear-gradient(to right, #9796f0, #fbc7d4)",
+    "icon_classes": ["fas fa-brain", "fas fa-bullhorn", "fas fa-users"],
+    "icon_color": "rgba(0, 0, 0, 0.5)",
+    "icon_opacity": 0.08,
+    "weight": 25,
+    "description": "Асоціації! Грою задається слово-тема. На рахунок 'три' всі гравці одночасно вигукують першу асоціацію. Гравці, чиї асоціації опинились в меншості (або виявились унікальними), п'ють 2 ковтки. Думай як всі... або ні!"
+  },
+  "Кривий Художник": {
+    "background": "linear-gradient(to right, #f8cdda, #1d2b64)",
+    "icon_classes": ["fas fa-paint-brush", "fas fa-pencil-ruler", "fas fa-question"],
+    "icon_color": "rgba(255, 255, 255, 0.5)",
+    "icon_opacity": 0.1,
+    "weight": 10,
+    "description": "Малювання! Гра дає об'єкт. Намалюйте його за 30 секунд. Покажіть малюнок гравцю на ваш вибір. Якщо він вгадує, що це, — ви перемогли! Якщо ні — ви п'єте 3 ковтки. Талант не обов'язковий! Букви малювати заборонено!"
+  },
+  "Перекличка": {
+    "background": "linear-gradient(to right, #bdc3c7, #2c3e50)",
+    "icon_classes": ["fas fa-user-tag", "fas fa-tshirt", "fas fa-shoe-prints"],
+    "icon_color": "rgba(255, 255, 255, 0.5)",
+    "icon_opacity": 0.09,
+    "weight": 25,
+    "description": "Ті, у кого...! Всі, у кого є певна річ або ознака (напр., телефон Samsung, борода, одяг з секонду), роблять по 2 ковтки. Уважно слухайте, кого це стосується цього разу."
+  },
+    "Таємно": {
+    "background": "linear-gradient(to right, #bdc3c7, #2c3e50)",
+    "icon_classes": ["fas fa-user-tag", "fas fa-tshirt", "fas fa-shoe-prints"],
+    "icon_color": "rgba(255, 255, 255, 0.5)",
+    "icon_opacity": 0.09,
+    "weight": 20,
+    "description": "Питання починаются з фрази 'Не читай це питання вголос', а далі гравцю треба заставити інших зробити чи сказати щось кумедне, але без слів."
+  },
+      "Обирайте": {
+    "background": "linear-gradient(to right, #bdc3c7, #2c3e50)",
+    "icon_classes": ["fas fa-user-tag", "fas fa-tshirt", "fas fa-shoe-prints"],
+    "icon_color": "rgba(255, 255, 255, 0.5)",
+    "icon_opacity": 0.09,
+    "weight": 20,
+    "description": "Питання для всіх, щоб ви обрали? Одне чи інше. Відповідайте одночасно, хто в меньшості - п'є 3 ковтки."
+  },
+    "Default": {
     "background": "#333",
     "icon_classes": ["fas fa-question-circle"],
     "icon_color": "rgba(255, 255, 255, 0.4)",
