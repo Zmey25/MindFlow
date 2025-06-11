@@ -259,7 +259,7 @@ body, html {
 /* Timer Styles */
 .timer-container {
     position: absolute;
-    top: 10px;
+    top: 80px;
     right: 10px;
     width: clamp(50px, 12vw, 80px);
     height: clamp(50px, 12vw, 80px);
@@ -272,7 +272,6 @@ body, html {
     color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     z-index: 10;
-    margin-top: 100px;
 }
 
 .timer-circle {
@@ -286,7 +285,6 @@ body, html {
     border: 3px solid transparent;
     box-sizing: border-box;
     transition: background-color 0.5s ease;
-    margin-top: 100px;
 }
 
 /* ADDED STYLES for timer visibility */
