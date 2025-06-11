@@ -48,8 +48,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
+
+        // --- NEW: Add sound to "Done" button ---
+        const doneButton = document.querySelector('.btn-done');
+        if (doneButton) {
+            doneButton.addEventListener('click', function() {
+                const doneSound = new Audio('sounds/ding.mp3');
+                doneSound.play().catch(e => console.warn("Done sound was blocked."));
+            });
+        }
         
-        // --- REVISED: Timer and Sound Logic ---
+        // --- REVISED: Simplified Timer and Sound Logic ---
         const timerContainer = document.getElementById('timer-container');
         const { mainTimerDuration, initialTimerValue, initialPhase } = window.GAME_DATA;
         
@@ -59,26 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
             let currentPhase = initialPhase;
             let timerInterval;
             
-            // Define audio objects
             const tickSound = new Audio('sounds/tick-tock.wav');
             tickSound.loop = true;
             const dingSound = new Audio('sounds/ding.mp3');
-            let audioUnlocked = false;
-
-            // Simplified unlock function
-            const unlockAudio = () => {
-                if (audioUnlocked) return;
-                // This is a common trick to unlock audio context in browsers
-                tickSound.play();
-                tickSound.pause();
-                audioUnlocked = true;
-                console.log("Audio context unlocked. Sounds will play on the next timer.");
-            };
-            
-            // Attach unlock function to first user interaction
-            document.querySelectorAll('.action-btn').forEach(btn => {
-                btn.addEventListener('click', unlockAudio, { once: true });
-            });
 
             const stopAllSounds = () => {
                 tickSound.pause();
@@ -97,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 stopAllSounds();
                 updateTimerDisplay();
 
-                // If timer already expired, do nothing
                 if (currentPhase === 'main' && secondsLeft <= 0) return;
 
                 timerInterval = setInterval(() => {
@@ -105,25 +96,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateTimerDisplay();
 
                     if (currentPhase === 'reading' && secondsLeft <= 0) {
-                        // Switch to main phase
                         currentPhase = 'main';
                         secondsLeft = mainTimerDuration;
                         updateTimerDisplay();
-                        
-                        // Try to play sound if unlocked
-                        if (audioUnlocked) {
-                            tickSound.play().catch(e => console.warn("Tick-tock sound was blocked by the browser."));
-                        }
+                        tickSound.play().catch(e => console.warn("Timer sound blocked. Interact with the page to enable sound."));
 
                     } else if (currentPhase === 'main' && secondsLeft <= 0) {
-                        // Timer ends
                         clearInterval(timerInterval);
                         stopAllSounds();
-
-                        // Try to play sound if unlocked
-                        if (audioUnlocked) {
-                            dingSound.play().catch(e => console.warn("Ding sound was blocked by the browser."));
-                        }
+                        dingSound.play().catch(e => console.warn("Timer sound blocked."));
                     }
                 }, 1000);
             };
