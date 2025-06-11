@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Constant for the reading timer duration
 const READING_TIMER_DURATION = 10;
 
 // Basic game state checks
@@ -14,7 +13,6 @@ if (isset($_SESSION['game_over']) && $_SESSION['game_over'] === true) {
     exit;
 }
 
-// Ensure necessary game data is loaded
 $questions_data_map = $_SESSION['all_questions_data'] ?? [];
 $category_styles = $_SESSION['category_styles'] ?? [];
 
@@ -25,10 +23,6 @@ if (empty($questions_data_map) || empty($category_styles) || !isset($_SESSION['g
     exit;
 }
 
-/**
- * Returns an array of indices of currently active players.
- * @return array
- */
 function get_active_players_indices() {
     $active_indices = [];
     if (isset($_SESSION['players']) && is_array($_SESSION['players'])) {
@@ -41,18 +35,13 @@ function get_active_players_indices() {
     return $active_indices;
 }
 
-/**
- * Determines the index of the next active player in the sequence.
- * @param int $current_index_in_session The session index of the current player.
- * @return int|null The index of the next active player, or null if none found.
- */
 function get_next_active_player_index($current_index_in_session) {
     $all_players = $_SESSION['players'] ?? [];
     if (empty($all_players)) return null;
 
     $num_players = count($all_players);
     $next_idx = ($current_index_in_session + 1) % $num_players;
-    $checked_count = 0; // To prevent infinite loop in case no active players
+    $checked_count = 0;
 
     while ($checked_count < $num_players) {
         if (isset($all_players[$next_idx]['active']) && $all_players[$next_idx]['active']) {
@@ -61,14 +50,9 @@ function get_next_active_player_index($current_index_in_session) {
         $next_idx = ($next_idx + 1) % $num_players;
         $checked_count++;
     }
-    return null; // No active players found
+    return null;
 }
 
-/**
- * Selects the next question from the pool and stores it in session.
- * Stores current question and player as "last" before selecting new.
- * @return array|null The selected question data, or null if no questions left.
- */
 function select_question() {
     global $questions_data_map;
 
@@ -76,8 +60,7 @@ function select_question() {
         return null;
     }
     
-    // Store current question data and player index before fetching a new one
-    // This allows for a "go back" feature
+    // Save current state as "last state" before selecting a new question
     $_SESSION['last_displayed_question_data'] = $_SESSION['current_question_data'] ?? null;
     $_SESSION['last_player_index'] = $_SESSION['current_player_index'] ?? null;
 
@@ -96,22 +79,19 @@ function select_question() {
 }
 
 
-// Handle POST requests for player actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
     $current_player_idx_on_action = $_SESSION['current_player_index'];
     $player_data = &$_SESSION['players'][$current_player_idx_on_action];
 
-    $made_move = false; // Flag to determine if player action implies a turn change
+    $made_move = false;
 
     if ($action === 'completed') {
         $current_question_processed = $_SESSION['current_question_data'] ?? null;
         if ($current_question_processed) {
-            // Apply bonus skip if question specifies it
             if (isset($current_question_processed['bonus_skip_on_complete']) && $current_question_processed['bonus_skip_on_complete'] === true) {
                 $player_data['skips_left']++;
             }
-            // Add deferred effects if question specifies it
             if (!empty($current_question_processed['deferred_text_template']) && !empty($current_question_processed['deferred_turns_player']) && $current_question_processed['deferred_turns_player'] > 0) {
                 $player_data['deferred_effects'][] = [
                     'template' => $current_question_processed['deferred_text_template'],
@@ -122,35 +102,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
         $made_move = true;
     } elseif ($action === 'skip') {
-        // Allow skip only if skips are available
         if ($player_data['skips_left'] > 0) {
             $player_data['skips_left']--;
             $made_move = true;
         }
     } elseif ($action === 'quit') {
-        // Mark player as inactive and proceed
         $player_data['active'] = false;
         $made_move = true;
     } elseif ($action === 'go_back') {
-        // Allow going back only once per turn
-        if ($_SESSION['can_go_back'] && $_SESSION['last_displayed_question_data'] !== null && $_SESSION['last_player_index'] !== null) {
+        // "Go back" logic
+        if (($_SESSION['can_go_back'] ?? false) && isset($_SESSION['last_displayed_question_data']) && isset($_SESSION['last_player_index'])) {
             $_SESSION['current_question_data'] = $_SESSION['last_displayed_question_data'];
             $_SESSION['current_player_index'] = $_SESSION['last_player_index'];
-            $_SESSION['can_go_back'] = false; // Disable go back after use
+            $_SESSION['can_go_back'] = false; // Disable after use
             
-            // Reset timer for the restored question
             $_SESSION['timer_phase'] = 'reading';
             $_SESSION['timer_started_at'] = time();
 
-            header('Location: game.php'); // Redirect to show previous question
+            header('Location: game.php');
             exit;
         }
     }
 
-    // Logic to proceed to next turn if a player action was made
     if ($made_move) {
-        $_SESSION['current_question_data'] = null; // Clear current question to force selection of new one
-        $_SESSION['can_go_back'] = true; // Enable go back for the next turn
+        $_SESSION['current_question_data'] = null; // Force new question selection
+        $_SESSION['can_go_back'] = true; // Enable "go back" for the next turn
 
         $active_players_count = count(get_active_players_indices());
 
@@ -160,42 +136,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         } else {
             $next_player_idx = get_next_active_player_index($current_player_idx_on_action);
             if ($next_player_idx === null) {
-                // This should ideally not happen if active_players_count is > 0
                 $_SESSION['game_over'] = true;
                 $_SESSION['game_over_message'] = "Помилка: Не вдалося визначити наступного гравця.";
             } else {
-                 // Check for round completion
                  $active_indices = get_active_players_indices();
-                
-                 // Check if the next player is the first active player AND
-                 // if the current player was the last active player, or if the index wraps around.
-                 // This handles scenarios where players quit, making the active indices non-sequential.
                  $current_is_last_active = ($current_player_idx_on_action == end($active_indices));
                  $next_is_first_active = ($next_player_idx == $active_indices[0]);
                  
-                 // If the next player is the first active player, and we weren't already at the start,
-                 // increment round. This prevents incrementing round if there's only one player left
-                 // and they are the first and last active.
                  if ($next_is_first_active && ($current_player_idx_on_action !== $next_player_idx || count($active_indices) === 1)) {
                      $_SESSION['current_round']++;
                  }
-
                 $_SESSION['current_player_index'] = $next_player_idx;
             }
         }
     }
 
-    // Check for max rounds (e.g., 5 rounds)
     if (isset($_SESSION['current_round']) && $_SESSION['current_round'] > 5) {
         $_SESSION['game_over'] = true;
         $_SESSION['game_over_message'] = "Гра завершена! 5 кіл зіграно. Час для відпочинку!";
     }
 
-    header('Location: game.php'); // Redirect to prevent re-submission on refresh
+    header('Location: game.php');
     exit;
 }
 
-// If no current question data or it's null, select a new one
 if (!isset($_SESSION['current_question_data']) || $_SESSION['current_question_data'] === null) {
     $_SESSION['current_question_data'] = select_question();
     if ($_SESSION['current_question_data'] === null) {
@@ -206,24 +170,17 @@ if (!isset($_SESSION['current_question_data']) || $_SESSION['current_question_da
     }
 }
 
-// Ensure current player is active. If not, find next active.
 $current_player_idx = $_SESSION['current_player_index'];
 if (!isset($_SESSION['players'][$current_player_idx]) || !$_SESSION['players'][$current_player_idx]['active']) {
-    // If current player is inactive or doesn't exist, try to find the next active player starting from previous
-    // This handles cases where the current player quits and we need to immediately switch.
     $fallback_idx = get_next_active_player_index($current_player_idx - 1 < 0 ? count($_SESSION['players']) - 1 : $current_player_idx - 1);
     if ($fallback_idx !== null) {
         $_SESSION['current_player_index'] = $fallback_idx;
-        $_SESSION['current_question_data'] = null; // Force new question for the new player
-        
-        // Reset timer for the newly selected player/question
+        $_SESSION['current_question_data'] = null;
         $_SESSION['timer_phase'] = 'reading';
         $_SESSION['timer_started_at'] = time();
-
         header('Location: game.php');
         exit;
     } else {
-        // No active players left
         $_SESSION['game_over'] = true;
         $_SESSION['game_over_message'] = "Немає активних гравців для продовження гри.";
         header('Location: game_over.php');
@@ -233,7 +190,6 @@ if (!isset($_SESSION['players'][$current_player_idx]) || !$_SESSION['players'][$
 $current_player_data = &$_SESSION['players'][$current_player_idx];
 
 
-// Process deferred effects for the current player
 $deferred_messages_to_display = [];
 if (!empty($current_player_data['deferred_effects'])) {
     $active_effects = [];
@@ -243,21 +199,19 @@ if (!empty($current_player_data['deferred_effects'])) {
             $text = str_replace('{PLAYER_NAME}', htmlspecialchars($current_player_data['name']), $text);
             $deferred_messages_to_display[] = $text;
 
-            $effect['turns_left']--; // Decrement turns left
+            $effect['turns_left']--;
             if ($effect['turns_left'] > 0) {
-                $active_effects[] = $effect; // Keep effect if still active
+                $active_effects[] = $effect;
             }
         }
     }
-    $current_player_data['deferred_effects'] = $active_effects; // Update deferred effects
+    $current_player_data['deferred_effects'] = $active_effects;
 }
 
-// Prepare question text with dynamic placeholders
 $current_question = $_SESSION['current_question_data'];
 $question_text = $current_question['text'];
 $question_text = str_replace('{PLAYER_NAME}', htmlspecialchars($current_player_data['name']), $question_text);
 
-// Handle {RANDOM_PLAYER_NAME} placeholder
 if (strpos($question_text, '{RANDOM_PLAYER_NAME}') !== false) {
     $other_active_players_names = [];
     foreach ($_SESSION['players'] as $idx => $p_data) {
@@ -269,15 +223,12 @@ if (strpos($question_text, '{RANDOM_PLAYER_NAME}') !== false) {
         $random_name = $other_active_players_names[array_rand($other_active_players_names)];
         $question_text = str_replace('{RANDOM_PLAYER_NAME}', $random_name, $question_text);
     } else {
-        // Fallback if no other active players
         $question_text = str_replace('{RANDOM_PLAYER_NAME}', '(інший гравець)', $question_text);
     }
 }
 
-// Get style info for the current question's category
 $style_info = $category_styles[$current_question['category']] ?? $category_styles['Default'];
 
-// Prepare next player name for button text
 $next_player_for_button_idx = get_next_active_player_index($current_player_idx);
 $next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_SESSION['players'][$next_player_for_button_idx])) ? $_SESSION['players'][$next_player_for_button_idx]['name'] : 'Нікого';
 
@@ -291,16 +242,15 @@ $next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script>
-        // Pass game data to JavaScript for dynamic styling and timer
         window.GAME_DATA = {
             backgroundGradient: <?php echo json_encode($style_info['background']); ?>,
             iconClasses: <?php echo json_encode($style_info['icon_classes'] ?? ['fas fa-question-circle']); ?>,
             iconColor: <?php echo json_encode($style_info['icon_color']); ?>,
             iconOpacity: <?php echo json_encode($style_info['icon_opacity'] ?? 0.1); ?>,
-            currentQuestionTimer: <?php echo json_encode($current_question['timer'] ?? null); ?>, // Pass timer value if exists
-            readingTimerDuration: <?php echo READING_TIMER_DURATION; ?>, // Pass reading timer duration
-            timerPhase: <?php echo json_encode($_SESSION['timer_phase'] ?? 'reading'); ?>, // Current timer phase
-            timerStartedAt: <?php echo json_encode($_SESSION['timer_started_at'] ?? time()); ?> // Timestamp when timer started
+            currentQuestionTimer: <?php echo json_encode($current_question['timer'] ?? null); ?>,
+            readingTimerDuration: <?php echo READING_TIMER_DURATION; ?>,
+            timerPhase: <?php echo json_encode($_SESSION['timer_phase'] ?? 'reading'); ?>,
+            timerStartedAt: <?php echo json_encode($_SESSION['timer_started_at'] ?? time()); ?>
         };
     </script>
 </head>
@@ -337,7 +287,7 @@ $next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_
         <div class="action-buttons">
             <form method="POST" action="game.php" style="width: 100%;">
                 <button type="submit" name="action" value="completed" class="btn-done">
-                    Виконано! (Наступний: <?php echo $next_player_name_for_button; ?>)
+                    Виконано! (Наступний: <?php echo htmlspecialchars($next_player_name_for_button); ?>)
                 </button>
             </form>
             <form method="POST" action="game.php" style="width: 100%;">
