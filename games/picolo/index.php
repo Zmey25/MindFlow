@@ -2,11 +2,19 @@
 session_start();
 
 if ((isset($_GET['new_game']) && $_GET['new_game'] === 'true') || !isset($_SESSION['game_started'])) {
+    // Clear session for a new game
     $_SESSION = [];
-} elseif (isset($_SESSION['game_started']) && $_SESSION['game_started'] === true && $_SESSION['game_over'] === false) {
+    $_SESSION['can_go_back'] = false; // Reset "undo" capability
+    $_SESSION['last_displayed_question_data'] = null; // Reset last question
+    $_SESSION['last_player_index'] = null; // Reset last player index
+    $_SESSION['timer_phase'] = 'reading'; // Initialize timer phase
+    $_SESSION['timer_started_at'] = time(); // Initialize timer start time
+} elseif (isset($_SESSION['game_started']) && $_SESSION['game_started'] === true && (!isset($_SESSION['game_over']) || $_SESSION['game_over'] === false)) {
+    // If game is started and not over, redirect to game page
     header('Location: game.php');
     exit;
 } elseif (isset($_SESSION['game_started']) && $_SESSION['game_over'] === true) {
+    // If game is over, redirect to game over page
     header('Location: game_over.php');
     exit;
 }
@@ -25,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (count($players) < 2) {
         $error = 'Будь ласка, введіть імена щонайменше двох гравців.';
     } else {
-        $_SESSION['initial_player_names'] = $players;
+        $_SESSION['initial_player_names'] = $players; // Store initial player names for 'play again'
 
         $game_players = [];
         foreach ($players as $name) {
@@ -42,6 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['game_started'] = true;
         $_SESSION['game_over'] = false;
         $_SESSION['current_question_data'] = null;
+        $_SESSION['can_go_back'] = false; // Initially, cannot go back
+        $_SESSION['last_displayed_question_data'] = null;
+        $_SESSION['last_player_index'] = null;
+        $_SESSION['timer_phase'] = 'reading'; // Start timer phase
+        $_SESSION['timer_started_at'] = time(); // Start timer time
 
         $all_questions_raw = json_decode(file_get_contents('data/questions.json'), true);
         $category_styles = json_decode(file_get_contents('data/category_styles.json'), true);
@@ -53,9 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $questions_for_sorting = [];
             foreach ($all_questions_raw as $question) {
                 $category = $question['category'];
+                // Ensure category exists in styles to get weight, default to 1 if not found
                 $weight = $category_styles[$category]['weight'] ?? 1;
                 if ($weight > 0) {
-                    // Формула зваженого випадкового сортування (A-Res)
+                    // Weighted random sorting formula (A-Res)
                     $random_score = pow(mt_rand() / mt_getrandmax(), 1.0 / $weight);
                     $questions_for_sorting[] = [
                         'id' => $question['id'],
@@ -64,10 +78,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             
+            // Sort by the generated score in descending order
             usort($questions_for_sorting, function ($a, $b) {
                 return $b['score'] <=> $a['score'];
             });
 
+            // Extract only the IDs for the game question pool
             $_SESSION['game_question_pool'] = array_column($questions_for_sorting, 'id');
 
         } else {
@@ -75,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Помилка завантаження файлів гри (питання/стилі) або файли порожні.";
         }
 
+        // If game started successfully and no error, redirect
         if ($_SESSION['game_started'] && empty($error)) {
             header('Location: game.php');
             exit;
