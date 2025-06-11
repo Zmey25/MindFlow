@@ -37,34 +37,38 @@ document.addEventListener('DOMContentLoaded', function() {
     if (gamePage && window.GAME_DATA) {
         // Background and Icons setup
         const iconsContainer = document.querySelector('.background-icons-container');
-        document.documentElement.style.setProperty('--game-background', window.GAME_DATA.backgroundGradient);
-        const iconClasses = window.GAME_DATA.iconClasses || [];
-        const numIcons = Math.floor(Math.random() * 8) + 8;
-        if (iconClasses.length > 0) {
-            for (let i = 0; i < numIcons; i++) {
-                const iconElement = document.createElement('i');
-                iconElement.className = iconClasses[Math.floor(Math.random() * iconClasses.length)];
-                iconElement.style.setProperty('--icon-color', window.GAME_DATA.iconColor);
-                iconElement.style.setProperty('--icon-opacity', window.GAME_DATA.iconOpacity);
-                iconElement.style.left = (Math.random() * 100) + 'vw';
-                iconElement.style.top = (Math.random() * 100) + 'vh';
-                iconElement.style.fontSize = (Math.random() * 8 + 10) + 'vw';
-                const duration = Math.random() * 15 + 20;
-                const delay = Math.random() * -duration;
-                iconElement.style.animationDuration = duration + 's';
-                iconElement.style.animationDelay = delay + 's';
-                iconsContainer.appendChild(iconElement);
+        if (iconsContainer) {
+            document.documentElement.style.setProperty('--game-background', window.GAME_DATA.backgroundGradient);
+            const iconClasses = window.GAME_DATA.iconClasses || [];
+            const numIcons = Math.floor(Math.random() * 8) + 8;
+            if (iconClasses.length > 0) {
+                for (let i = 0; i < numIcons; i++) {
+                    const iconElement = document.createElement('i');
+                    iconElement.className = iconClasses[Math.floor(Math.random() * iconClasses.length)];
+                    iconElement.style.setProperty('--icon-color', window.GAME_DATA.iconColor);
+                    iconElement.style.setProperty('--icon-opacity', window.GAME_DATA.iconOpacity);
+                    iconElement.style.left = (Math.random() * 100) + 'vw';
+                    iconElement.style.top = (Math.random() * 100) + 'vh';
+                    iconElement.style.fontSize = (Math.random() * 8 + 10) + 'vw';
+                    const duration = Math.random() * 15 + 20;
+                    const delay = Math.random() * -duration;
+                    iconElement.style.animationDuration = duration + 's';
+                    iconElement.style.animationDelay = delay + 's';
+                    iconsContainer.appendChild(iconElement);
+                }
             }
         }
-
-        // --- REWRITTEN TIMER AND SOUND LOGIC ---
+        
+        // --- REWRITTEN TIMER LOGIC ---
         const timerContainer = document.getElementById('timer-container');
-        if (timerContainer && window.GAME_DATA.currentQuestionTimer !== null) {
+        const { mainTimerDuration, initialTimerValue, initialPhase } = window.GAME_DATA;
+
+        if (timerContainer && mainTimerDuration !== null) {
             const timerCircle = document.getElementById('timer-circle');
-            let { currentQuestionTimer, readingTimerDuration, timerPhase, timerStartedAt } = window.GAME_DATA;
+            let secondsLeft = initialTimerValue;
+            let currentPhase = initialPhase;
             let timerInterval;
 
-            // Important: Create audio objects. Modern browsers may require user interaction to play audio.
             const tickSound = new Audio('sounds/tick-tock.wav');
             tickSound.loop = true;
             const dingSound = new Audio('sounds/ding.mp3');
@@ -74,73 +78,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 tickSound.currentTime = 0;
             };
 
-            const updateTimerDisplay = (seconds, phase) => {
+            const updateTimerDisplay = () => {
                 if (timerCircle) {
-                    timerCircle.textContent = seconds;
+                    timerCircle.textContent = Math.max(0, secondsLeft);
                     timerContainer.classList.remove('timer-reading', 'timer-main');
-                    if (phase) {
-                        timerContainer.classList.add(`timer-${phase}`);
-                    }
+                    timerContainer.classList.add(`timer-${currentPhase}`);
                 }
             };
-
-            const handleTimerEnd = () => {
+            
+            const startTimer = () => {
                 clearInterval(timerInterval);
                 stopAllSounds();
-                dingSound.play();
-                updateTimerDisplay(0, 'main');
-            };
+                updateTimerDisplay(); // Initial display
 
-            const runTimer = () => {
-                clearInterval(timerInterval); // Ensure no multiple timers running
-                stopAllSounds();
-
-                // Initial state check
-                let now = Math.floor(Date.now() / 1000);
-                let elapsedTime = now - timerStartedAt;
-
-                if (timerPhase === 'reading' && elapsedTime >= readingTimerDuration) {
-                    const timeOver = elapsedTime - readingTimerDuration;
-                    timerPhase = 'main';
-                    timerStartedAt = now - timeOver;
-                    elapsedTime = timeOver;
-                }
-
-                if (timerPhase === 'main' && elapsedTime >= currentQuestionTimer) {
-                    handleTimerEnd();
-                    return;
+                if (secondsLeft <= 0 && currentPhase === 'main') {
+                    return; // Timer already finished
                 }
                 
-                if (timerPhase === 'main') {
+                if (currentPhase === 'main') {
                     tickSound.play().catch(e => console.error("Audio play failed:", e));
                 }
 
                 timerInterval = setInterval(() => {
-                    now = Math.floor(Date.now() / 1000);
-                    elapsedTime = now - timerStartedAt;
+                    secondsLeft--;
+                    updateTimerDisplay();
 
-                    if (timerPhase === 'reading') {
-                        const remaining = readingTimerDuration - elapsedTime;
-                        if (remaining <= 0) {
-                            timerPhase = 'main';
-                            timerStartedAt = now; // Reset start time for main phase
-                            tickSound.play().catch(e => console.error("Audio play failed:", e));
-                            updateTimerDisplay(currentQuestionTimer, 'main');
-                        } else {
-                            updateTimerDisplay(remaining, 'reading');
-                        }
-                    } else if (timerPhase === 'main') {
-                        const remaining = currentQuestionTimer - elapsedTime;
-                        if (remaining <= 0) {
-                            handleTimerEnd();
-                        } else {
-                            updateTimerDisplay(remaining, 'main');
-                        }
+                    if (currentPhase === 'reading' && secondsLeft <= 0) {
+                        // Switch to main phase
+                        currentPhase = 'main';
+                        secondsLeft = mainTimerDuration;
+                        updateTimerDisplay();
+                        tickSound.play().catch(e => console.error("Audio play failed:", e));
+                    } else if (currentPhase === 'main' && secondsLeft <= 0) {
+                        // Timer ends
+                        clearInterval(timerInterval);
+                        stopAllSounds();
+                        dingSound.play().catch(e => console.error("Audio play failed:", e));
                     }
                 }, 1000);
             };
 
-            runTimer();
+            startTimer();
         }
     }
 
