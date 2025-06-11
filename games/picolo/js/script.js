@@ -1,8 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Logic for index.php ---
+    // --- Logic for index.php (no changes) ---
     const playerInputsContainer = document.getElementById('player-inputs');
     const addPlayerBtn = document.getElementById('add-player');
-    
     if (playerInputsContainer && addPlayerBtn) {
         let playerCount = playerInputsContainer.querySelectorAll('.player-input-group').length;
         addPlayerBtn.addEventListener('click', function() {
@@ -35,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Logic for game.php ---
     const gamePage = document.querySelector('.game-page');
     if (gamePage && window.GAME_DATA) {
-        // Background and Icons setup
+        // --- Background and Icons setup (no changes) ---
         const iconsContainer = document.querySelector('.background-icons-container');
         if (iconsContainer) {
             document.documentElement.style.setProperty('--game-background', window.GAME_DATA.backgroundGradient);
@@ -59,19 +58,39 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // --- REWRITTEN TIMER LOGIC ---
+        // --- Timer and Sound Logic ---
         const timerContainer = document.getElementById('timer-container');
         const { mainTimerDuration, initialTimerValue, initialPhase } = window.GAME_DATA;
+        
+        const tickSound = new Audio('sounds/tick-tock.wav');
+        tickSound.loop = true;
+        const dingSound = new Audio('sounds/ding.mp3');
 
+        // --- NEW: Audio Unlock Logic ---
+        let audioUnlocked = false;
+        const unlockAudio = () => {
+            if (audioUnlocked) return;
+            tickSound.play();
+            tickSound.pause();
+            dingSound.play();
+            dingSound.pause();
+            audioUnlocked = true;
+            // Remove event listener after first successful unlock
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.removeEventListener('click', unlockAudio);
+            });
+            console.log("Audio context unlocked.");
+        };
+        // Add event listener to all action buttons
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', unlockAudio, { once: true });
+        });
+        
         if (timerContainer && mainTimerDuration !== null) {
             const timerCircle = document.getElementById('timer-circle');
             let secondsLeft = initialTimerValue;
             let currentPhase = initialPhase;
             let timerInterval;
-
-            const tickSound = new Audio('sounds/tick-tock.wav');
-            tickSound.loop = true;
-            const dingSound = new Audio('sounds/ding.mp3');
 
             const stopAllSounds = () => {
                 tickSound.pause();
@@ -89,14 +108,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const startTimer = () => {
                 clearInterval(timerInterval);
                 stopAllSounds();
-                updateTimerDisplay(); // Initial display
+                updateTimerDisplay();
 
-                if (secondsLeft <= 0 && currentPhase === 'main') {
-                    return; // Timer already finished
-                }
+                if (secondsLeft <= 0 && currentPhase === 'main') return;
                 
-                if (currentPhase === 'main') {
-                    tickSound.play().catch(e => console.error("Audio play failed:", e));
+                if (currentPhase === 'main' && audioUnlocked) {
+                    tickSound.play().catch(e => console.warn("Tick sound blocked on start:", e));
                 }
 
                 timerInterval = setInterval(() => {
@@ -104,16 +121,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateTimerDisplay();
 
                     if (currentPhase === 'reading' && secondsLeft <= 0) {
-                        // Switch to main phase
                         currentPhase = 'main';
                         secondsLeft = mainTimerDuration;
                         updateTimerDisplay();
-                        tickSound.play().catch(e => console.error("Audio play failed:", e));
+                        if (audioUnlocked) tickSound.play().catch(e => console.warn("Tick sound blocked on phase change:", e));
                     } else if (currentPhase === 'main' && secondsLeft <= 0) {
-                        // Timer ends
                         clearInterval(timerInterval);
                         stopAllSounds();
-                        dingSound.play().catch(e => console.error("Audio play failed:", e));
+                        if (audioUnlocked) dingSound.play().catch(e => console.warn("Ding sound blocked:", e));
                     }
                 }, 1000);
             };
@@ -122,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- Prevent iOS scaling ---
+    // --- Prevent iOS scaling (no changes) ---
     if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
         let lastTouchEnd = 0;
         document.documentElement.addEventListener('touchend', function (event) {
