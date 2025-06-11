@@ -60,18 +60,12 @@ function select_question() {
         return null;
     }
     
-    // Save current state as "last state" before selecting a new question
-    $_SESSION['last_displayed_question_data'] = $_SESSION['current_question_data'] ?? null;
-    $_SESSION['last_player_index'] = $_SESSION['current_player_index'] ?? null;
-
     $question_id = array_shift($_SESSION['game_question_pool']);
     if ($question_id === null || !isset($questions_data_map[$question_id])) {
         return null;
     }
 
     $_SESSION['current_question_data'] = $questions_data_map[$question_id];
-    
-    // Reset timer for the new question
     $_SESSION['timer_phase'] = 'reading';
     $_SESSION['timer_started_at'] = time();
 
@@ -110,11 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $player_data['active'] = false;
         $made_move = true;
     } elseif ($action === 'go_back') {
-        // "Go back" logic
         if (($_SESSION['can_go_back'] ?? false) && isset($_SESSION['last_displayed_question_data']) && isset($_SESSION['last_player_index'])) {
             $_SESSION['current_question_data'] = $_SESSION['last_displayed_question_data'];
             $_SESSION['current_player_index'] = $_SESSION['last_player_index'];
-            $_SESSION['can_go_back'] = false; // Disable after use
+            $_SESSION['can_go_back'] = false;
             
             $_SESSION['timer_phase'] = 'reading';
             $_SESSION['timer_started_at'] = time();
@@ -125,8 +118,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     }
 
     if ($made_move) {
-        $_SESSION['current_question_data'] = null; // Force new question selection
-        $_SESSION['can_go_back'] = true; // Enable "go back" for the next turn
+        // FIXED: Save state for "go back" immediately after a move is made
+        $_SESSION['last_displayed_question_data'] = $_SESSION['current_question_data'];
+        $_SESSION['last_player_index'] = $_SESSION['current_player_index'];
+
+        $_SESSION['current_question_data'] = null;
+        $_SESSION['can_go_back'] = true;
 
         $active_players_count = count(get_active_players_indices());
 
@@ -140,8 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $_SESSION['game_over_message'] = "Помилка: Не вдалося визначити наступного гравця.";
             } else {
                  $active_indices = get_active_players_indices();
-                 $current_is_last_active = ($current_player_idx_on_action == end($active_indices));
-                 $next_is_first_active = ($next_player_idx == $active_indices[0]);
+                 $next_is_first_active = ($next_player_idx == ($active_indices[0] ?? null));
                  
                  if ($next_is_first_active && ($current_player_idx_on_action !== $next_player_idx || count($active_indices) === 1)) {
                      $_SESSION['current_round']++;
@@ -168,6 +164,8 @@ if (!isset($_SESSION['current_question_data']) || $_SESSION['current_question_da
         header('Location: game_over.php');
         exit;
     }
+    // Since a new question is selected, disable go back to prevent going back to a question that wasn't shown yet.
+    $_SESSION['can_go_back'] = false;
 }
 
 $current_player_idx = $_SESSION['current_player_index'];
@@ -228,10 +226,33 @@ if (strpos($question_text, '{RANDOM_PLAYER_NAME}') !== false) {
 }
 
 $style_info = $category_styles[$current_question['category']] ?? $category_styles['Default'];
-
 $next_player_for_button_idx = get_next_active_player_index($current_player_idx);
 $next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_SESSION['players'][$next_player_for_button_idx])) ? $_SESSION['players'][$next_player_for_button_idx]['name'] : 'Нікого';
 
+// --- FIXED: Server-side timer calculation ---
+$initial_timer_value = null;
+$current_phase_for_js = $_SESSION['timer_phase'] ?? 'reading';
+$main_timer_duration = $current_question['timer'] ?? null;
+
+if ($main_timer_duration !== null) {
+    $time_started = $_SESSION['timer_started_at'];
+    $elapsed = time() - $time_started;
+
+    if ($current_phase_for_js === 'reading') {
+        $remaining_reading = READING_TIMER_DURATION - $elapsed;
+        if ($remaining_reading > 0) {
+            $initial_timer_value = $remaining_reading;
+        } else {
+            // Reading time is over, switch to main timer
+            $current_phase_for_js = 'main';
+            $time_into_main = $elapsed - READING_TIMER_DURATION;
+            $initial_timer_value = $main_timer_duration - $time_into_main;
+        }
+    } else { // Phase is 'main'
+        $initial_timer_value = $main_timer_duration - $elapsed;
+    }
+    $initial_timer_value = max(0, $initial_timer_value); // Ensure time is not negative
+}
 ?>
 <!DOCTYPE html>
 <html lang="uk">
@@ -247,10 +268,11 @@ $next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_
             iconClasses: <?php echo json_encode($style_info['icon_classes'] ?? ['fas fa-question-circle']); ?>,
             iconColor: <?php echo json_encode($style_info['icon_color']); ?>,
             iconOpacity: <?php echo json_encode($style_info['icon_opacity'] ?? 0.1); ?>,
-            currentQuestionTimer: <?php echo json_encode($current_question['timer'] ?? null); ?>,
+            // Pass calculated values to JS
+            mainTimerDuration: <?php echo json_encode($main_timer_duration); ?>,
             readingTimerDuration: <?php echo READING_TIMER_DURATION; ?>,
-            timerPhase: <?php echo json_encode($_SESSION['timer_phase'] ?? 'reading'); ?>,
-            timerStartedAt: <?php echo json_encode($_SESSION['timer_started_at'] ?? time()); ?>
+            initialTimerValue: <?php echo json_encode($initial_timer_value); ?>,
+            initialPhase: <?php echo json_encode($current_phase_for_js); ?>
         };
     </script>
 </head>
@@ -266,7 +288,7 @@ $next_player_name_for_button = ($next_player_for_button_idx !== null && isset($_
             Гравців: <?php echo count(get_active_players_indices()); ?>
         </div>
 
-        <?php if (isset($current_question['timer']) && $current_question['timer'] !== null): ?>
+        <?php if ($main_timer_duration !== null): ?>
         <div id="timer-container" class="timer-container">
             <div id="timer-circle" class="timer-circle"></div>
         </div>
