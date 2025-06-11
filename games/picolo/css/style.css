@@ -4,10 +4,10 @@ body, html {
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden; /* Prevent scrolling */
+    overflow: hidden;
     font-family: -apple-system, BlinkMacMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     color: white;
-    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+    -webkit-tap-highlight-color: transparent;
 }
 
 /* Setup and Game Over Pages */
@@ -21,20 +21,15 @@ body, html {
     padding: 20px;
     box-sizing: border-box;
     text-align: center;
-    background: #2c3e50; /* Dark blue background */
+    background: #2c3e50;
 }
 
-.setup-page h1, .gameover-page h1 {
-    margin-bottom: 20px;
-}
-
-.setup-page p, .gameover-page p {
-    margin-bottom: 15px;
-}
+.setup-page h1, .gameover-page h1 { margin-bottom: 20px; }
+.setup-page p, .gameover-page p { margin-bottom: 15px; }
 
 .setup-page form, .gameover-page form {
     width: 100%;
-    max-width: 80vw; /* Max width for forms */
+    max-width: 80vw;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -45,18 +40,15 @@ body, html {
     padding: 12px 18px;
     margin: 8px 0;
     border-radius: 8px;
-    border: 1px solid #4e5d6c;
     font-size: 1em;
     box-sizing: border-box;
     width: 100%;
-    background-color: #34495e; /* Darker input background */
+    background-color: #34495e;
     color: white;
     border: 1px solid #567086;
 }
 
-.setup-page input[type="text"]::placeholder {
-    color: #bdc3c7; /* Lighter placeholder text */
-}
+.setup-page input[type="text"]::placeholder { color: #bdc3c7; }
 
 .setup-page .player-input-group {
     display: flex;
@@ -67,20 +59,20 @@ body, html {
 .setup-page .player-input-group input {
     flex-grow: 1;
     margin-right: 5px;
-    margin-bottom: 0; /* Override default margin */
+    margin-bottom: 0;
 }
 
 .setup-page .remove-player-btn {
-    background-color: #e74c3c; /* Red */
+    background-color: #e74c3c;
     color: white;
     border: none;
     padding: 12px 15px;
     cursor: pointer;
-    flex-shrink: 0; /* Prevent shrinking */
+    flex-shrink: 0;
     border-radius: 8px;
     transition: transform 0.2s ease, filter 0.2s ease;
-    width: 20%; /* Fixed width for remove button */
-    min-width: 50px; /* Minimum width for small screens */
+    width: 20%;
+    min-width: 50px;
 }
 
 .setup-page .remove-player-btn:hover {
@@ -107,99 +99,65 @@ body, html {
     filter: brightness(1.1);
 }
 
-.setup-page .add-player-btn {
-    background-color: #27ae60; /* Green */
-    color: white;
-    margin-bottom: 20px;
-}
-
-.setup-page .start-game-btn, .gameover-page .play-again-btn, .gameover-page .new-game-btn {
-    background-color: #3498db; /* Blue */
-    color: white;
-}
-
-.gameover-page .new-game-btn {
-    background-color: #f39c12; /* Orange */
-}
+.setup-page .add-player-btn { background-color: #27ae60; color: white; margin-bottom: 20px; }
+.setup-page .start-game-btn, .gameover-page .play-again-btn, .gameover-page .new-game-btn { background-color: #3498db; color: white; }
+.gameover-page .new-game-btn { background-color: #f39c12; }
 
 /* Game Page */
 .game-page {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Space out content vertically */
+    justify-content: space-between;
     align-items: center;
     width: 100%;
     height: 100%;
     padding: 15px;
     box-sizing: border-box;
     position: relative;
-    overflow: hidden; /* Ensure background icons don't spill */
+    overflow: hidden;
 }
 
 .game-page::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--game-background, #333); /* Dynamic background from JS */
-    z-index: 1; /* Below content */
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--game-background, #333);
+    z-index: 1;
     transition: background 0.7s ease-in-out;
 }
 
 .background-icons-container {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     overflow: hidden;
-    z-index: 2; /* Below timer, above background */
+    z-index: 2;
 }
 
 .background-icons-container i {
     position: absolute;
-    font-size: 15vw; /* Large icons relative to viewport width */
+    font-size: 15vw;
     animation: floatIcon 30s infinite linear alternate;
-    color: var(--icon-color, rgba(255, 255, 255, 0.1)); /* Dynamic icon color */
-    will-change: transform, opacity; /* Optimize animations */
-    opacity: 0; /* Start hidden */
+    color: var(--icon-color, rgba(255, 255, 255, 0.1));
+    will-change: transform, opacity;
+    opacity: 0;
     user-select: none;
-    pointer-events: none; /* Prevent interaction with icons */
+    pointer-events: none;
 }
 
-/* --- UPDATED, MORE DYNAMIC ANIMATION --- */
 @keyframes floatIcon {
-    0% {
-        transform: translate(0, 0) rotate(0deg) scale(0.8);
-        opacity: 0;
-    }
-    10% {
-        opacity: var(--icon-opacity, 0.1); /* Dynamic icon opacity */
-    }
-    25% {
-        transform: translate(-25vw, 20vh) rotate(90deg) scale(1.1);
-    }
-    50% {
-        transform: translate(20vw, -25vh) rotate(180deg) scale(0.9);
-    }
-    75% {
-        transform: translate(15vw, 15vh) rotate(270deg) scale(1.2);
-    }
-    90% {
-        opacity: var(--icon-opacity, 0.1);
-    }
-    100% {
-        transform: translate(0, 0) rotate(360deg) scale(0.8);
-        opacity: 0;
-    }
+    0% { transform: translate(0, 0) rotate(0deg) scale(0.8); opacity: 0; }
+    10% { opacity: var(--icon-opacity, 0.1); }
+    25% { transform: translate(-25vw, 20vh) rotate(90deg) scale(1.1); }
+    50% { transform: translate(20vw, -25vh) rotate(180deg) scale(0.9); }
+    75% { transform: translate(15vw, 15vh) rotate(270deg) scale(1.2); }
+    90% { opacity: var(--icon-opacity, 0.1); }
+    100% { transform: translate(0, 0) rotate(360deg) scale(0.8); opacity: 0; }
 }
 
 /* Game UI Elements Positioning */
 .category-display, .round-player-info, .question-container, .action-buttons, .timer-container {
-    position: relative; /* Make them stack on top of background */
-    z-index: 5; /* Above background icons */
+    position: relative;
+    z-index: 5;
 }
 
 .category-display, .round-player-info {
@@ -209,17 +167,11 @@ body, html {
     background-color: rgba(0,0,0,0.4);
     padding: 5px 10px;
     border-radius: 5px;
-    white-space: nowrap; /* Keep text on one line */
+    white-space: nowrap;
 }
 
-.category-display {
-    left: 10px;
-}
-
-.round-player-info {
-    right: 10px;
-    text-align: right;
-}
+.category-display { left: 10px; }
+.round-player-info { right: 10px; text-align: right; }
 
 /* Question Container */
 .question-container {
@@ -231,31 +183,31 @@ body, html {
     border-radius: 10px;
     max-width: 90%;
     width: 100%;
-    overflow-y: auto; /* Enable scrolling for long questions */
-    max-height: 55vh; /* Limit height */
+    overflow-y: auto;
+    max-height: 55vh;
     box-sizing: border-box;
-    flex-grow: 1; /* Allow it to grow and fill space */
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center content vertically */
+    justify-content: center;
 }
 
 .current-player-name {
     font-size: clamp(1.5em, 5vw, 2em);
     font-weight: bold;
     margin-bottom: 10px;
-    color: #f1c40f; /* Yellow */
+    color: #f1c40f;
 }
 
 .question-text {
     font-size: clamp(1.1em, 4vw, 1.5em);
     line-height: 1.4;
-    min-height: 80px; /* Minimum height for text area */
+    min-height: 80px;
     margin-bottom: 15px;
-    display: flex; /* Use flexbox for centering */
-    align-items: center; /* Center text vertically */
-    justify-content: center; /* Center text horizontally */
-    flex-grow: 1; /* Allow text to grow */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
 }
 
 .deferred-messages {
@@ -265,14 +217,11 @@ body, html {
     background-color: rgba(255,255,255,0.1);
     padding: 10px;
     border-radius: 5px;
-    border-left: 4px solid #f0ad4e; /* Orange border */
+    border-left: 4px solid #f0ad4e;
     text-align: left;
 }
 
-.deferred-messages strong {
-    display: block;
-    margin-bottom: 5px;
-}
+.deferred-messages strong { display: block; margin-bottom: 5px; }
 
 /* Action Buttons */
 .action-buttons {
@@ -296,55 +245,24 @@ body, html {
     font-weight: 500;
 }
 
-.action-buttons button:active {
-    transform: scale(0.97); /* Little press effect */
-}
-
-.action-buttons button:hover:not(:disabled) {
-    transform: scale(1.02);
-    filter: brightness(1.1);
-}
+.action-buttons button:active { transform: scale(0.97); }
+.action-buttons button:hover:not(:disabled) { transform: scale(1.02); filter: brightness(1.1); }
 
 /* Specific button colors */
-.btn-skip {
-    background-color: #e67e22; /* Orange */
-    color: white;
-}
-
-.btn-skip:disabled {
-    background-color: #7f8c8d; /* Greyed out when disabled */
-    color: #bdc3c7;
-    cursor: not-allowed;
-}
-
-.btn-done {
-    background-color: #2ecc71; /* Green */
-    color: white;
-}
-
-.btn-quit {
-    background-color: #e74c3c; /* Red */
-    color: white;
-}
-
-.btn-go-back {
-    background-color: #9b59b6; /* Purple */
-    color: white;
-}
-
-.btn-go-back:disabled {
-    background-color: #7f8c8d; /* Greyed out when disabled */
-    color: #bdc3c7;
-    cursor: not-allowed;
-}
+.btn-skip { background-color: #e67e22; color: white; }
+.btn-skip:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed; }
+.btn-done { background-color: #2ecc71; color: white; }
+.btn-quit { background-color: #e74c3c; color: white; }
+.btn-go-back { background-color: #9b59b6; color: white; }
+.btn-go-back:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed; }
 
 /* Timer Styles */
 .timer-container {
     position: absolute;
     top: 10px;
     right: 10px;
-    width: clamp(50px, 12vw, 80px); /* Responsive width */
-    height: clamp(50px, 12vw, 80px); /* Responsive height */
+    width: clamp(50px, 12vw, 80px);
+    height: clamp(50px, 12vw, 80px);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -353,7 +271,7 @@ body, html {
     font-size: clamp(1.2em, 5vw, 2em);
     color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    z-index: 10; /* Make sure it's on top */
+    z-index: 10;
 }
 
 .timer-circle {
@@ -363,41 +281,27 @@ body, html {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5); /* Inner background */
-    border: 3px solid transparent; /* Placeholder for border color */
+    background-color: rgba(0, 0, 0, 0.5); /* Default inner background */
+    border: 3px solid transparent;
     box-sizing: border-box;
+    transition: background-color 0.5s ease;
 }
 
+/* ADDED STYLES for timer visibility */
 .timer-reading .timer-circle {
-    background-color: #2ecc71; /* Green for reading phase */
-    border-color: #27ae60; /* Darker green border */
+    background-color: #2ecc71; /* Green for reading */
+    border-color: #27ae60;
 }
 
 .timer-main .timer-circle {
-    background-color: #e74c3c; /* Red for main timer phase */
-    border-color: #c0392b; /* Darker red border */
+    background-color: #e74c3c; /* Red for main timer */
+    border-color: #c0392b;
 }
 
-
-/* Media Queries for smaller screens / landscape */
 @media (max-height: 600px) {
-    .question-container {
-        margin-top: 3vh;
-        max-height: 50vh;
-    }
-    .current-player-name {
-        font-size: clamp(1.3em, 4.5vw, 1.8em);
-    }
-    .question-text {
-        font-size: clamp(1em, 3.5vw, 1.3em);
-        min-height: 60px;
-    }
-    .action-buttons button {
-        padding: 12px;
-    }
-    .timer-container {
-        width: clamp(40px, 10vw, 60px);
-        height: clamp(40px, 10vw, 60px);
-        font-size: clamp(1em, 4vw, 1.5em);
-    }
+    .question-container { margin-top: 3vh; max-height: 50vh; }
+    .current-player-name { font-size: clamp(1.3em, 4.5vw, 1.8em); }
+    .question-text { font-size: clamp(1em, 3.5vw, 1.3em); min-height: 60px; }
+    .action-buttons button { padding: 12px; }
+    .timer-container { width: clamp(40px, 10vw, 60px); height: clamp(40px, 10vw, 60px); font-size: clamp(1em, 4vw, 1.5em); }
 }
