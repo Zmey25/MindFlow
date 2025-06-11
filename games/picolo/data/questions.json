@@ -4244,7 +4244,7 @@
     "category": "тест",
     "text": "{PLAYER_NAME}, цілий круг, коли поруч з вами проходить хтось, хто не грає в цю гру, ти повинен сказати йому фразу 'Русня підараси'. За кожне порушення 5 ковтків.",
     "deferred_text_template": "Можеш не казати незнайомцям нічого зайвого.",
-    "deferred_turns_player": 1,
+    "deferred_turns_player": 5,
     "bonus_skip_on_complete": false,
     "timer": 10
   },
@@ -4253,7 +4253,7 @@
     "category": "тест",
     "text": "{PLAYER_NAME}, цілий круг, коли поруч з вами проходить хтось, хто не грає в цю гру, ти повинен сказати йому фразу 'Русня підараси'. За кожне порушення 5 ковтків.",
     "deferred_text_template": "Можеш не казати незнайомцям нічого зайвого.",
-    "deferred_turns_player": 1,
+    "deferred_turns_player": 5,
     "bonus_skip_on_complete": false,
     "timer": 10
   },
@@ -4262,7 +4262,7 @@
     "category": "тест",
     "text": "{PLAYER_NAME}, цілий круг, коли поруч з вами проходить хтось, хто не грає в цю гру, ти повинен сказати йому фразу 'Русня підараси'. За кожне порушення 5 ковтків.",
     "deferred_text_template": "Можеш не казати незнайомцям нічого зайвого.",
-    "deferred_turns_player": 1,
+    "deferred_turns_player": 5,
     "bonus_skip_on_complete": false,
     "timer": 10
   }
