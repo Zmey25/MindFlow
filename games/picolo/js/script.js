@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // --- NEW: Timer and Sound Logic ---
+        // --- REVISED: Timer and Sound Logic ---
         const timerContainer = document.getElementById('timer-container');
         const { mainTimerDuration, initialTimerValue, initialPhase } = window.GAME_DATA;
         
@@ -59,37 +59,31 @@ document.addEventListener('DOMContentLoaded', function() {
             let currentPhase = initialPhase;
             let timerInterval;
             
+            // Define audio objects
             const tickSound = new Audio('sounds/tick-tock.wav');
             tickSound.loop = true;
             const dingSound = new Audio('sounds/ding.mp3');
             let audioUnlocked = false;
 
+            // Simplified unlock function
+            const unlockAudio = () => {
+                if (audioUnlocked) return;
+                // This is a common trick to unlock audio context in browsers
+                tickSound.play();
+                tickSound.pause();
+                audioUnlocked = true;
+                console.log("Audio context unlocked. Sounds will play on the next timer.");
+            };
+            
+            // Attach unlock function to first user interaction
+            document.querySelectorAll('.action-btn').forEach(btn => {
+                btn.addEventListener('click', unlockAudio, { once: true });
+            });
+
             const stopAllSounds = () => {
                 tickSound.pause();
                 tickSound.currentTime = 0;
             };
-
-            const playTickSoundIfNeeded = () => {
-                if (audioUnlocked && currentPhase === 'main' && secondsLeft > 0) {
-                    tickSound.play().catch(e => console.warn("Tick sound play failed:", e));
-                }
-            };
-            
-            const unlockAudio = () => {
-                if (audioUnlocked) return;
-                const promise = tickSound.play();
-                if (promise !== undefined) {
-                    promise.then(() => {
-                        tickSound.pause();
-                        audioUnlocked = true;
-                        playTickSoundIfNeeded(); // Try to play immediately after unlock
-                        console.log("Audio unlocked.");
-                    }).catch(error => {
-                        console.log("Audio unlock failed, will retry on next interaction.");
-                    });
-                }
-            };
-            document.querySelectorAll('.action-btn').forEach(btn => btn.addEventListener('click', unlockAudio, { once: true }));
 
             const updateTimerDisplay = () => {
                 if (timerCircle) {
@@ -102,23 +96,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearInterval(timerInterval);
                 stopAllSounds();
                 updateTimerDisplay();
-                playTickSoundIfNeeded();
 
-                if (secondsLeft <= 0) return;
+                // If timer already expired, do nothing
+                if (currentPhase === 'main' && secondsLeft <= 0) return;
 
                 timerInterval = setInterval(() => {
                     secondsLeft--;
                     updateTimerDisplay();
 
                     if (currentPhase === 'reading' && secondsLeft <= 0) {
+                        // Switch to main phase
                         currentPhase = 'main';
                         secondsLeft = mainTimerDuration;
                         updateTimerDisplay();
-                        playTickSoundIfNeeded();
+                        
+                        // Try to play sound if unlocked
+                        if (audioUnlocked) {
+                            tickSound.play().catch(e => console.warn("Tick-tock sound was blocked by the browser."));
+                        }
+
                     } else if (currentPhase === 'main' && secondsLeft <= 0) {
+                        // Timer ends
                         clearInterval(timerInterval);
                         stopAllSounds();
-                        if (audioUnlocked) dingSound.play().catch(e => console.warn("Ding sound blocked:", e));
+
+                        // Try to play sound if unlocked
+                        if (audioUnlocked) {
+                            dingSound.play().catch(e => console.warn("Ding sound was blocked by the browser."));
+                        }
                     }
                 }, 1000);
             };
