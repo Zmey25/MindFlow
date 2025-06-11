@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     // --- Logic for index.php (no changes) ---
     const playerInputsContainer = document.getElementById('player-inputs');
-    const addPlayerBtn = document.getElementById('add-player');
-    if (playerInputsContainer && addPlayerBtn) {
-        let playerCount = playerInputsContainer.querySelectorAll('.player-input-group').length;
+    if (playerInputsContainer) {
+        const addPlayerBtn = document.getElementById('add-player');
         addPlayerBtn.addEventListener('click', function() {
-            playerCount++;
+            const playerCount = playerInputsContainer.querySelectorAll('.player-input-group').length + 1;
             const newPlayerGroup = document.createElement('div');
             newPlayerGroup.classList.add('player-input-group');
             const newInput = document.createElement('input');
@@ -17,13 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
             removeBtn.type = 'button';
             removeBtn.classList.add('remove-player-btn');
             removeBtn.textContent = 'X';
-            removeBtn.title = 'Видалити гравця';
-            removeBtn.addEventListener('click', function() {
-                if (playerInputsContainer.querySelectorAll('.player-input-group').length > 2) {
-                    newPlayerGroup.remove();
-                } else {
-                    alert('Мінімум 2 гравці потрібні для гри.');
-                }
+            removeBtn.addEventListener('click', () => {
+                if (playerInputsContainer.querySelectorAll('.player-input-group').length > 2) newPlayerGroup.remove();
+                else alert('Мінімум 2 гравці потрібні для гри.');
             });
             newPlayerGroup.appendChild(newInput);
             newPlayerGroup.appendChild(removeBtn);
@@ -34,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Logic for game.php ---
     const gamePage = document.querySelector('.game-page');
     if (gamePage && window.GAME_DATA) {
-        // --- Background and Icons setup (no changes) ---
+        // --- Background setup (no changes) ---
         const iconsContainer = document.querySelector('.background-icons-container');
         if (iconsContainer) {
             document.documentElement.style.setProperty('--game-background', window.GAME_DATA.backgroundGradient);
@@ -42,66 +37,64 @@ document.addEventListener('DOMContentLoaded', function() {
             const numIcons = Math.floor(Math.random() * 8) + 8;
             if (iconClasses.length > 0) {
                 for (let i = 0; i < numIcons; i++) {
-                    const iconElement = document.createElement('i');
-                    iconElement.className = iconClasses[Math.floor(Math.random() * iconClasses.length)];
-                    iconElement.style.setProperty('--icon-color', window.GAME_DATA.iconColor);
-                    iconElement.style.setProperty('--icon-opacity', window.GAME_DATA.iconOpacity);
-                    iconElement.style.left = (Math.random() * 100) + 'vw';
-                    iconElement.style.top = (Math.random() * 100) + 'vh';
-                    iconElement.style.fontSize = (Math.random() * 8 + 10) + 'vw';
+                    const icon = document.createElement('i');
+                    icon.className = iconClasses[Math.floor(Math.random() * iconClasses.length)];
+                    icon.style.left = `${Math.random() * 100}vw`;
+                    icon.style.top = `${Math.random() * 100}vh`;
+                    icon.style.fontSize = `${Math.random() * 8 + 10}vw`;
                     const duration = Math.random() * 15 + 20;
-                    const delay = Math.random() * -duration;
-                    iconElement.style.animationDuration = duration + 's';
-                    iconElement.style.animationDelay = delay + 's';
-                    iconsContainer.appendChild(iconElement);
+                    icon.style.animation = `floatIcon ${duration}s ${Math.random() * -duration}s infinite linear alternate`;
+                    iconsContainer.appendChild(icon);
                 }
             }
         }
         
-        // --- Timer and Sound Logic ---
+        // --- NEW: Timer and Sound Logic ---
         const timerContainer = document.getElementById('timer-container');
         const { mainTimerDuration, initialTimerValue, initialPhase } = window.GAME_DATA;
-        
-        const tickSound = new Audio('sounds/tick-tock.wav');
-        tickSound.loop = true;
-        const dingSound = new Audio('sounds/ding.mp3');
-
-        // --- NEW: Audio Unlock Logic ---
-        let audioUnlocked = false;
-        const unlockAudio = () => {
-            if (audioUnlocked) return;
-            tickSound.play();
-            tickSound.pause();
-            dingSound.play();
-            dingSound.pause();
-            audioUnlocked = true;
-            // Remove event listener after first successful unlock
-            document.querySelectorAll('.action-btn').forEach(btn => {
-                btn.removeEventListener('click', unlockAudio);
-            });
-            console.log("Audio context unlocked.");
-        };
-        // Add event listener to all action buttons
-        document.querySelectorAll('.action-btn').forEach(btn => {
-            btn.addEventListener('click', unlockAudio, { once: true });
-        });
         
         if (timerContainer && mainTimerDuration !== null) {
             const timerCircle = document.getElementById('timer-circle');
             let secondsLeft = initialTimerValue;
             let currentPhase = initialPhase;
             let timerInterval;
+            
+            const tickSound = new Audio('sounds/tick-tock.wav');
+            tickSound.loop = true;
+            const dingSound = new Audio('sounds/ding.mp3');
+            let audioUnlocked = false;
 
             const stopAllSounds = () => {
                 tickSound.pause();
                 tickSound.currentTime = 0;
             };
 
+            const playTickSoundIfNeeded = () => {
+                if (audioUnlocked && currentPhase === 'main' && secondsLeft > 0) {
+                    tickSound.play().catch(e => console.warn("Tick sound play failed:", e));
+                }
+            };
+            
+            const unlockAudio = () => {
+                if (audioUnlocked) return;
+                const promise = tickSound.play();
+                if (promise !== undefined) {
+                    promise.then(() => {
+                        tickSound.pause();
+                        audioUnlocked = true;
+                        playTickSoundIfNeeded(); // Try to play immediately after unlock
+                        console.log("Audio unlocked.");
+                    }).catch(error => {
+                        console.log("Audio unlock failed, will retry on next interaction.");
+                    });
+                }
+            };
+            document.querySelectorAll('.action-btn').forEach(btn => btn.addEventListener('click', unlockAudio, { once: true }));
+
             const updateTimerDisplay = () => {
                 if (timerCircle) {
-                    timerCircle.textContent = Math.max(0, secondsLeft);
-                    timerContainer.classList.remove('timer-reading', 'timer-main');
-                    timerContainer.classList.add(`timer-${currentPhase}`);
+                    timerCircle.textContent = Math.max(0, Math.floor(secondsLeft));
+                    timerContainer.className = `timer-container timer-${currentPhase}`;
                 }
             };
             
@@ -109,12 +102,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearInterval(timerInterval);
                 stopAllSounds();
                 updateTimerDisplay();
+                playTickSoundIfNeeded();
 
-                if (secondsLeft <= 0 && currentPhase === 'main') return;
-                
-                if (currentPhase === 'main' && audioUnlocked) {
-                    tickSound.play().catch(e => console.warn("Tick sound blocked on start:", e));
-                }
+                if (secondsLeft <= 0) return;
 
                 timerInterval = setInterval(() => {
                     secondsLeft--;
@@ -124,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         currentPhase = 'main';
                         secondsLeft = mainTimerDuration;
                         updateTimerDisplay();
-                        if (audioUnlocked) tickSound.play().catch(e => console.warn("Tick sound blocked on phase change:", e));
+                        playTickSoundIfNeeded();
                     } else if (currentPhase === 'main' && secondsLeft <= 0) {
                         clearInterval(timerInterval);
                         stopAllSounds();
@@ -139,14 +129,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Prevent iOS scaling (no changes) ---
     if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-        let lastTouchEnd = 0;
-        document.documentElement.addEventListener('touchend', function (event) {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) { event.preventDefault(); }
-            lastTouchEnd = now;
+        document.documentElement.addEventListener('touchend', (e) => {
+            if (e.touches.length > 1) e.preventDefault();
         }, { passive: false });
     }
-    document.documentElement.addEventListener('touchstart', function (event) {
-        if (event.touches.length > 1) { event.preventDefault(); }
-    }, { passive: false });
 });
