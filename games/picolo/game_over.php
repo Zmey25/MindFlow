@@ -2,11 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['game_over']) || $_SESSION['game_over'] !== true) {
-    if (isset($_SESSION['game_started']) && $_SESSION['game_started'] === true) {
-        header('Location: game.php');
-    } else {
-        header('Location: index.php?new_game=true');
-    }
+    header('Location: ' . (isset($_SESSION['game_started']) && $_SESSION['game_started'] ? 'game.php' : 'index.php?new_game=true'));
     exit;
 }
 
@@ -25,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
         $_SESSION['game_over'] = false;
         unset($_SESSION['game_over_message']);
         $_SESSION['current_question_data'] = null;
-        $_SESSION['game_history'] = []; // Reset game history
+        $_SESSION['game_history'] = [];
         $_SESSION['timer_phase'] = 'reading';
         $_SESSION['timer_started_at'] = time();
 
@@ -37,16 +33,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
             $_SESSION['category_styles'] = $category_styles;
 
             $questions_for_sorting = [];
+            // Use saved game settings to regenerate the pool
+            $enabled_categories = $_SESSION['game_settings']['categories'] ?? [];
+
             foreach ($all_questions_raw as $question) {
-                $category = $question['category'];
-                $weight = $category_styles[$category]['weight'] ?? 1;
-                if ($weight > 0) {
-                    $random_score = pow(mt_rand() / mt_getrandmax(), 1.0 / $weight);
-                    $questions_for_sorting[] = ['id' => $question['id'], 'score' => $random_score];
+                $category_name = $question['category'];
+                 if (isset($enabled_categories[$category_name]) && $enabled_categories[$category_name]['enabled'] == '1') {
+                    $weight = (int)($enabled_categories[$category_name]['weight'] ?? 1);
+                    if ($weight > 0) {
+                        $random_score = pow(mt_rand() / mt_getrandmax(), 1.0 / $weight);
+                        $questions_for_sorting[] = ['id' => $question['id'], 'score' => $random_score];
+                    }
                 }
             }
             
-            usort($questions_for_sorting, function ($a, $b) { return $b['score'] <=> $a['score']; });
+            usort($questions_for_sorting, fn($a, $b) => $b['score'] <=> $a['score']);
             $_SESSION['game_question_pool'] = array_column($questions_for_sorting, 'id');
 
         } else {
@@ -64,9 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_game_entirely'])) {
-    $_SESSION = [];
     session_destroy();
-    session_start();
     header('Location: index.php?new_game=true');
     exit;
 }
