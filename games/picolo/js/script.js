@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // --- Logic for index.php ---
+    // --- Logic for index.php (no changes from previous advanced settings implementation) ---
     const playerInputsContainer = document.getElementById('player-inputs');
     if (playerInputsContainer) {
         const addPlayerBtn = document.getElementById('add-player');
@@ -28,11 +28,10 @@ document.addEventListener('DOMContentLoaded', function() {
             playerInputsContainer.appendChild(newPlayerGroup);
         });
 
-        // Advanced Settings Toggle
         const advancedSettingsToggleBtn = document.getElementById('advanced-settings-toggle-btn');
         const advancedSettingsContainer = document.getElementById('advanced-settings-container');
         if (advancedSettingsToggleBtn && advancedSettingsContainer) {
-            advancedSettingsContainer.style.display = 'none'; // Initially hidden
+            // advancedSettingsContainer.style.display = 'none'; // Initial state handled by PHP or default CSS
             advancedSettingsToggleBtn.addEventListener('click', function() {
                 const isHidden = advancedSettingsContainer.style.display === 'none';
                 advancedSettingsContainer.style.display = isHidden ? 'block' : 'none';
@@ -40,38 +39,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Presets Logic
         const presets = {
             party: {
                 settings: { reading_timer_duration: 8, max_rounds: 7, initial_skips: 2 },
-                categories: {
-                    "Веселі завдання": { enabled: true, weight: 50 },
-                    "Розкрийся!": { enabled: true, weight: 30 },
-                    "Хардкор": { enabled: false, weight: 5 },
-                    "Рухайся!": { enabled: true, weight: 40 },
-                    "Креатив": { enabled: false, weight: 10 },
-                    "Алкогольні": { enabled: true, weight: 60 },
-                    "Для компанії": { enabled: true, weight: 35 },
-                    "тест": { enabled: false, weight: 0 }
-                }
+                categories: { "Веселі завдання": { enabled: true, weight: 50 }, "Розкрийся!": { enabled: true, weight: 30 }, "Хардкор": { enabled: false, weight: 5 }, "Рухайся!": { enabled: true, weight: 40 }, "Креатив": { enabled: false, weight: 10 }, "Алкогольні": { enabled: true, weight: 60 }, "Для компанії": { enabled: true, weight: 35 }, "тест": { enabled: false, weight: 0 } }
             },
             creative: {
                 settings: { reading_timer_duration: 15, max_rounds: 4, initial_skips: 1 },
-                categories: {
-                    "Веселі завдання": { enabled: true, weight: 20 },
-                    "Розкрийся!": { enabled: true, weight: 50 },
-                    "Хардкор": { enabled: true, weight: 15 },
-                    "Рухайся!": { enabled: false, weight: 5 },
-                    "Креатив": { enabled: true, weight: 60 },
-                    "Алкогольні": { enabled: false, weight: 5 },
-                    "Для компанії": { enabled: true, weight: 30 },
-                    "тест": { enabled: false, weight: 0 }
-                }
+                categories: { "Веселі завдання": { enabled: true, weight: 20 }, "Розкрийся!": { enabled: true, weight: 50 }, "Хардкор": { enabled: true, weight: 15 }, "Рухайся!": { enabled: false, weight: 5 }, "Креатив": { enabled: true, weight: 60 }, "Алкогольні": { enabled: false, weight: 5 }, "Для компанії": { enabled: true, weight: 30 }, "тест": { enabled: false, weight: 0 } }
             },
-            default: { // To reset to defaults if needed, uses placeholder values, actual defaults are from PHP
-                settings: { reading_timer_duration: 10, max_rounds: 5, initial_skips: 1 },
-                categories: {} // JS will try to find original default weights from data-attributes
-            }
+            default: { settings: { reading_timer_duration: 10, max_rounds: 5, initial_skips: 1 }, categories: {} }
         };
 
         document.querySelectorAll('.preset-btn').forEach(button => {
@@ -79,38 +56,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 const presetName = this.dataset.preset;
                 const preset = presets[presetName];
                 if (!preset) return;
-
-                // Apply general settings
                 if (preset.settings) {
                     for (const key in preset.settings) {
                         const inputElement = document.getElementById(key);
                         if (inputElement) inputElement.value = preset.settings[key];
                     }
                 }
-
-                // Apply category settings
                 const categorySettingsContainer = document.getElementById('category-settings-list');
                 if (categorySettingsContainer) {
                     categorySettingsContainer.querySelectorAll('.category-setting').forEach(row => {
                         const categoryName = row.dataset.categoryName;
                         const enableCheckbox = row.querySelector('input[type="checkbox"]');
                         const weightInput = row.querySelector('input[type="number"]');
-
                         if (presetName === 'default') {
-                             if (enableCheckbox) enableCheckbox.checked = true; // Default to enabled
+                             if (enableCheckbox) enableCheckbox.checked = true;
                              if (weightInput) weightInput.value = weightInput.dataset.defaultWeight || 1;
                         } else if (preset.categories && preset.categories[categoryName]) {
                             const catPreset = preset.categories[categoryName];
                             if (enableCheckbox) enableCheckbox.checked = catPreset.enabled;
                             if (weightInput) weightInput.value = catPreset.weight;
-                        } else { // Category not in preset, might revert to default or leave as is
-                             if (enableCheckbox) enableCheckbox.checked = true; // Default to enabled if not specified in preset
-                             if (weightInput) weightInput.value = weightInput.dataset.defaultWeight || 10; // Fallback
+                        } else {
+                             if (enableCheckbox) enableCheckbox.checked = true;
+                             if (weightInput) weightInput.value = weightInput.dataset.defaultWeight || 10;
                         }
                     });
                 }
-                 // Ensure advanced settings are visible after applying a preset
-                if (advancedSettingsContainer && advancedSettingsContainer.style.display === 'none') {
+                if (advancedSettingsContainer && advancedSettingsContainer.style.display === 'none' && advancedSettingsToggleBtn) {
                     advancedSettingsToggleBtn.click();
                 }
             });
@@ -121,7 +92,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Logic for game.php ---
     const gamePage = document.querySelector('.game-page');
     if (gamePage && window.GAME_DATA) {
-        // --- Background setup (no changes) ---
         const iconsContainer = document.querySelector('.background-icons-container');
         if (iconsContainer) {
             document.documentElement.style.setProperty('--game-background', window.GAME_DATA.backgroundGradient);
@@ -143,26 +113,25 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // --- NEW: Add sound to "Done" button ---
         const doneButton = document.querySelector('.btn-done');
         if (doneButton) {
             doneButton.addEventListener('click', function() {
-                const doneSound = new Audio('sounds/ding.mp3');
+                const doneSound = new Audio('sounds/ding.mp3'); // Make sure sounds/ding.mp3 exists
                 doneSound.play().catch(e => console.warn("Done sound was blocked."));
             });
         }
         
-        // --- REVISED: Simplified Timer and Sound Logic ---
         const timerContainer = document.getElementById('timer-container');
-        const { mainTimerDuration, initialTimerValue, initialPhase, readingTimerDuration } = window.GAME_DATA; // Added readingTimerDuration
+        // readingTimerDuration is now the *effective* reading duration for this question
+        const { mainTimerDuration, initialTimerValue, initialPhase, readingTimerDuration } = window.GAME_DATA; 
         
-        if (timerContainer && mainTimerDuration !== null) {
+        if (timerContainer && (readingTimerDuration > 0 || mainTimerDuration > 0)) { // Only proceed if any timer is active
             const timerCircle = document.getElementById('timer-circle');
             let secondsLeft = initialTimerValue;
-            let currentPhase = initialPhase;
+            let currentPhase = initialPhase; // This is correctly set by PHP now
             let timerInterval;
             
-            const tickSound = new Audio('sounds/tick-tock.wav');
+            const tickSound = new Audio('sounds/tick-tock.wav'); // Make sure sounds/tick-tock.wav exists
             tickSound.loop = true;
             const dingSound = new Audio('sounds/ding.mp3');
 
@@ -174,7 +143,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const updateTimerDisplay = () => {
                 if (timerCircle) {
                     timerCircle.textContent = Math.max(0, Math.floor(secondsLeft));
-                    // Class name is set in PHP for initial state, JS will update if phase changes
                     timerContainer.className = `timer-container timer-${currentPhase}`;
                 }
             };
@@ -184,20 +152,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 stopAllSounds();
                 updateTimerDisplay();
 
-                if (currentPhase === 'main' && secondsLeft <= 0 && mainTimerDuration > 0) return; // Don't restart if main timer already ended
-                if (currentPhase === 'reading' && secondsLeft <= 0 && readingTimerDuration > 0) { // If reading timer already ended at page load
-                     currentPhase = 'main';
-                     secondsLeft = mainTimerDuration; // Start main timer directly
-                     updateTimerDisplay();
-                     if (mainTimerDuration > 0) {
-                        tickSound.play().catch(e => console.warn("Timer sound blocked. Interact with the page to enable sound."));
-                     } else { // No main timer, effectively ends here.
-                        return;
-                     }
-                } else if (currentPhase === 'reading' && readingTimerDuration > 0) {
-                    // Reading phase active, no sound yet
-                } else if (currentPhase === 'main' && mainTimerDuration > 0) {
-                    tickSound.play().catch(e => console.warn("Timer sound blocked. Interact with the page to enable sound."));
+                // Initial sound play based on phase determined by PHP
+                if (currentPhase === 'reading' && readingTimerDuration > 0 && secondsLeft > 0) {
+                    // No sound during reading phase initially by default, uncomment to add
+                    // tickSound.play().catch(e => console.warn("Reading timer sound blocked.")); 
+                } else if (currentPhase === 'main' && mainTimerDuration > 0 && secondsLeft > 0) {
+                    tickSound.play().catch(e => console.warn("Main timer sound blocked."));
+                }
+
+                if ((currentPhase === 'main' && secondsLeft <= 0 && mainTimerDuration > 0) ||
+                    (currentPhase === 'reading' && secondsLeft <=0 && readingTimerDuration > 0 && mainTimerDuration <= 0)) { // If reading ended and no main timer
+                     return; // Timer already ended
                 }
 
 
@@ -208,37 +173,32 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (currentPhase === 'reading' && secondsLeft <= 0 && readingTimerDuration > 0) {
                         currentPhase = 'main';
                         secondsLeft = mainTimerDuration; // Switch to main timer duration
-                        updateTimerDisplay(); // Update display for new phase and time
+                        updateTimerDisplay(); 
+                        stopAllSounds(); // Stop reading phase sound if any
                         if (mainTimerDuration > 0) {
-                            tickSound.play().catch(e => console.warn("Timer sound blocked. Interact with the page to enable sound."));
-                        } else { // If main timer is 0, stop interval
+                            tickSound.play().catch(e => console.warn("Timer sound blocked."));
+                        } else { 
                             clearInterval(timerInterval);
-                            stopAllSounds();
-                            // Optionally play ding if main timer is 0 meaning "time's up for reading leads to time's up for task"
-                            // dingSound.play().catch(e => console.warn("Timer sound blocked."));
+                            // dingSound.play().catch(e => console.warn("Timer sound blocked.")); // Optional: ding if reading ends and no main timer
                         }
                     } else if (currentPhase === 'main' && secondsLeft <= 0 && mainTimerDuration > 0) {
                         clearInterval(timerInterval);
                         stopAllSounds();
                         dingSound.play().catch(e => console.warn("Timer sound blocked."));
                     } else if ( (currentPhase === 'reading' && readingTimerDuration <=0) || (currentPhase === 'main' && mainTimerDuration <=0) ) {
-                        // If either timer is disabled (duration 0 or less), clear interval
                         clearInterval(timerInterval);
                         stopAllSounds();
                     }
                 }, 1000);
             };
-
-            // Only start JS timer if there's any timer duration configured
-            if (readingTimerDuration > 0 || mainTimerDuration > 0) {
-                 startTimer();
-            } else {
-                 updateTimerDisplay(); // Show 0 if no timers
-            }
+            startTimer();
+        } else if (timerContainer) { // No timers active for this question, ensure display is 0 or hidden
+            const timerCircle = document.getElementById('timer-circle');
+            if (timerCircle) timerCircle.textContent = '0';
+            // The container itself is hidden by PHP if no timers are active at all.
         }
     }
 
-    // --- Prevent iOS scaling (no changes) ---
     if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
         document.documentElement.addEventListener('touchend', (e) => {
             if (e.touches.length > 1) e.preventDefault();
