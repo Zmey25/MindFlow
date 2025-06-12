@@ -252,18 +252,23 @@ document.addEventListener('DOMContentLoaded', function() {
             questionTextDisplay.innerHTML = qText.replace(/\n/g, '<br>');
             
             const activeDeferredEffects = currentPlayer.deferred_effects ? currentPlayer.deferred_effects.filter(effect => effect.turns_left > 0) : [];
-            if (activeDeferredEffects.length > 0) {
+             if (activeDeferredEffects.length > 0) {
                 let effectsHtml = '';
                 activeDeferredEffects.forEach(effect => {
-                    // Показуємо turns_left - 1, оскільки 1 хід "списується" в кінці поточного ходу.
-                    // Але якщо turns_left вже 1, то показуємо 1.
-                    const displayTurns = Math.max(1, effect.turns_left -1); 
-                    // Якщо оригінальне значення з JSON було 1, то збережено 2.
-                    // Зараз effect.turns_left = 2. Ми показуємо (2-1)=1.
-                    // Якщо оригінальне значення з JSON було N, збережено N+1.
-                    // Зараз effect.turns_left = N+1. Ми показуємо (N+1-1)=N.
-                    // Це правило показує "скільки ще показів попереду"
-                     effectsHtml += `<p>${effect.template.replace('{TURNS_LEFT}', effect.turns_left > 0 ? (allQuestionsDataMap[effect.question_id]?.deferred_turns_player == effect.turns_left -1 ? effect.turns_left -1 : effect.turns_left -1) : 0 ).replace('{PLAYER_NAME}', currentPlayer.name)}</p>`;
+                    const originalTurnsForEffect = parseInt(allQuestionsDataMap[effect.question_id]?.deferred_turns_player || 0);
+                    // Показуємо turns_left "як є" для відображення, бо воно вже скориговане (зменшене)
+                    // або буде зменшене в handlePlayerAction.
+                    // Для коректного відображення "залишилось Х ходів" потрібне саме turns_left - 1,
+                    // якщо тільки ефект не щойно отриманий (тоді turns_left = original_duration + 1).
+                    // Якщо effect.turns_left == originalTurnsForEffect + 1, то показуємо originalTurnsForEffect
+                    // інакше показуємо effect.turns_left - 1 (але не менше 1, якщо ще активний)
+                    let turnsToDisplay = effect.turns_left -1;
+                    if (effect.turns_left === originalTurnsForEffect + 1) {
+                        turnsToDisplay = originalTurnsForEffect;
+                    }
+                    turnsToDisplay = Math.max(1, turnsToDisplay); // Якщо ефект ще активний, показуємо хоча б 1
+
+                    effectsHtml += `<p>${effect.template.replace('{TURNS_LEFT}', turnsToDisplay).replace('{PLAYER_NAME}', currentPlayer.name)}</p>`;
                 });
                 deferredMessagesContent.innerHTML = effectsHtml;
                 deferredMessagesDisplay.style.display = 'block';
@@ -302,15 +307,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
-            if (!isRestoringFromHistory) { // Таймер налаштовується лише для нових питань, не для відновлених
+             if (!isRestoringFromHistory) {
                 setupTimersForCurrentQuestion();
-            } else { // Для відновлених питань, таймер треба зупинити і показати як є
-                clearInterval(timerInterval);
-                stopAllTimerSounds();
-                // Тут можна було б відновити стан таймера, але для простоти поки що просто показуємо його як неактивний
-                // або налаштовуємо заново, якщо потрібно. Поточна логіка - не відновлювати таймер.
-                // Якщо питання має таймер, він почнеться заново. Це може бути бажаною поведінкою.
-                setupTimersForCurrentQuestion(); // Перезапускаємо таймер для відновленого питання
+            } else { 
+                setupTimersForCurrentQuestion(); 
             }
         }
         
@@ -318,87 +318,29 @@ document.addEventListener('DOMContentLoaded', function() {
             if (gameHistoryForUndo.length >= 20) gameHistoryForUndo.shift();
             gameHistoryForUndo.push({
                 question: deepCopy(currentQuestion),
-                playerIndex: currentPlayerIndex,
+                playerIndex: currentPlayerIndex, // Зберігаємо індекс гравця, який щойно діяв
                 round: currentRound,
-                playersSnapshot: deepCopy(players), // Зберігаємо повний стан гравців
-                questionPoolSnapshot: deepCopy(questionPool),
-                playedQuestionIdsSnapshot: new Set(playedQuestionIdsThisSession)
+                playersSnapshot: deepCopy(players), // Зберігаємо стан гравців після дії
+                questionPoolSnapshot: deepCopy(questionPool), // Пул питань до вибору наступного
+                playedQuestionIdsSnapshot: new Set(playedQuestionIdsThisSession) // Зіграні питання
             });
             btnGoBack.disabled = false;
         }
 
-        function selectAndDisplayQuestion(isAfterSkip = false) {
-            if (!isAfterSkip && currentQuestion) { 
-                saveCurrentStateForUndo();
-            }
-
+        function selectAndDisplayQuestion() { // isAfterSkip параметр більше не потрібен тут для історії
             if (questionPool.length === 0) {
                 triggerGameOverJS("Питання закінчились!");
                 return;
             }
             currentQuestion = questionPool.shift();
             playedQuestionIdsThisSession.add(currentQuestion.id);
-            updateDisplay();
+            updateDisplay(); // isRestoringFromHistory = false за замовчуванням
         }
 
         function handlePlayerAction(isCompletedOrQuitAction) {
-            const actingPlayerIndex = currentPlayerIndex; // Гравець, який щойно діяв
+            const actingPlayerIndex = currentPlayerIndex; // Гравець, який щойно завершив хід
 
-            // Спочатку обробляємо можливий вихід гравця або кінець гри
-            if (isCompletedOrQuitAction && players[actingPlayerIndex].active === false) { // Якщо гравець вийшов (active стало false)
-                // Нічого особливого тут, просто перевірка далі
-            }
-            
-            const activePlayerIndicesBeforeAction = getActivePlayerIndices();
-            if (activePlayerIndicesBeforeAction.length < 2 && !(isCompletedOrQuitAction && players[actingPlayerIndex].active === false && activePlayerIndicesBeforeAction.length === 0) ) {
-                 // Додаткова перевірка, щоб не завершити гру, якщо останній гравець виходить
-                if (getActivePlayerIndices().length === 1 && (!isCompletedOrQuitAction || players[actingPlayerIndex].active )) {
-                     triggerGameOverJS("Залишився переможець!");
-                } else if (getActivePlayerIndices().length === 0) {
-                     triggerGameOverJS("Гравців не залишилось!");
-                }
-                return;
-            }
-
-
-            const oldPlayerIndex = currentPlayerIndex;
-            let nextPlayerIdx = getNextActivePlayerIndex(oldPlayerIndex);
-            
-            // Якщо після дії гравця (наприклад, виходу) активних гравців не залишилось або один
-            const activePlayerIndicesAfterPotentialQuit = getActivePlayerIndices();
-            if (activePlayerIndicesAfterPotentialQuit.length === 0) {
-                triggerGameOverJS("Гравців не залишилось!");
-                return;
-            }
-            if (activePlayerIndicesAfterPotentialQuit.length === 1 && nextPlayerIdx === null) {
-                 // Якщо nextPlayerIdx не вдалося знайти (наприклад, останній активний гравець щойно вийшов)
-                 // Але якщо є один активний, він і є переможець
-                triggerGameOverJS("Залишився переможець!");
-                return;
-            }
-            if (nextPlayerIdx === null && activePlayerIndicesAfterPotentialQuit.length > 0) {
-                nextPlayerIdx = activePlayerIndicesAfterPotentialQuit[0]; // Аварійний вибір наступного
-            }
-            if (nextPlayerIdx === null) { // Остаточна перевірка
-                triggerGameOverJS("Не вдалося знайти наступного гравця.");
-                return;
-            }
-
-
-            const firstActivePlayerIndex = activePlayerIndicesAfterPotentialQuit[0];
-            // Перевірка індексу старого гравця в оновленому списку активних
-            const oldPlayerPosInNewActive = activePlayerIndicesAfterPotentialQuit.indexOf(oldPlayerIndex);
-
-            if (nextPlayerIdx === firstActivePlayerIndex && 
-                (oldPlayerPosInNewActive === activePlayerIndicesAfterPotentialQuit.length - 1 || oldPlayerPosInNewActive === -1) ) {
-                 if (oldPlayerIndex !== nextPlayerIdx || activePlayerIndicesAfterPotentialQuit.length > 1) { 
-                    currentRound++;
-                 }
-            }
-            
-            currentPlayerIndex = nextPlayerIdx;
-
-            // Обробка ефектів для гравця, який ЩОЙНО ЗАВЕРШИВ ХІД (players[actingPlayerIndex])
+            // Обробляємо ефекти для гравця, який щойно діяв
             if (isCompletedOrQuitAction) { 
                 const playerWhoActed = players[actingPlayerIndex];
                 if (playerWhoActed.deferred_effects && playerWhoActed.deferred_effects.length > 0) {
@@ -408,6 +350,50 @@ document.addEventListener('DOMContentLoaded', function() {
                     })).filter(effect => effect.turns_left > 0);
                 }
             }
+            // `players` тепер відображає стан після того, як actingPlayerIndex завершив свій хід
+            // `currentQuestion` - це питання, на яке він діяв
+            // `currentPlayerIndex` - це все ще actingPlayerIndex
+            // `currentRound` - це поточний раунд
+            saveCurrentStateForUndo(); // Зберігаємо цей стан
+
+            // Перевіряємо умови завершення гри після збереження, але до переходу до наступного гравця
+            const activePlayerIndices = getActivePlayerIndices();
+            if (activePlayerIndices.length === 0) {
+                triggerGameOverJS("Гравців не залишилось!");
+                return;
+            }
+            if (activePlayerIndices.length === 1 && players[actingPlayerIndex].active) { // Якщо щойно вийшов гравець і залишився один
+                 const lastPlayer = players[activePlayerIndices[0]];
+                 if(lastPlayer.active) { // Переконуємось, що останній гравець активний
+                    triggerGameOverJS("Залишився переможець: " + lastPlayer.name + "!");
+                    return;
+                 }
+            }
+             if (activePlayerIndices.length < 2 && !(activePlayerIndices.length === 1 && players[actingPlayerIndex].active)) { // Загальна перевірка
+                triggerGameOverJS(activePlayerIndices.length === 1 ? "Залишився переможець!" : "Гравців не залишилось!");
+                return;
+            }
+
+
+            let nextPlayerIdx = getNextActivePlayerIndex(actingPlayerIndex);
+            
+            if (nextPlayerIdx === null && activePlayerIndices.length > 0) { // Якщо getNextActivePlayerIndex повернув null, але є активні
+                nextPlayerIdx = activePlayerIndices[0]; // Аварійний вибір
+            }
+
+            if (nextPlayerIdx === null) { 
+                triggerGameOverJS("Не вдалося знайти наступного гравця.");
+                return;
+            }
+            
+            const firstActivePlayerIndex = activePlayerIndices[0]; // Визначаємо першого активного з поточного стану
+            if (nextPlayerIdx === firstActivePlayerIndex && activePlayerIndices.indexOf(actingPlayerIndex) === activePlayerIndices.length -1 ) {
+                 if (actingPlayerIndex !== nextPlayerIdx || activePlayerIndices.length > 1) { 
+                    currentRound++;
+                 }
+            }
+            
+            currentPlayerIndex = nextPlayerIdx; // Оновлюємо currentPlayerIndex для наступного ходу
 
             if (currentRound > gameConfig.general.max_rounds) {
                 triggerGameOverJS(`${gameConfig.general.max_rounds} кіл зіграно. Гра завершена!`);
@@ -419,13 +405,13 @@ document.addEventListener('DOMContentLoaded', function() {
         btnCompleted.addEventListener('click', () => {
             doneSound.play().catch(e => console.warn("Done sound was blocked."));
             const q = currentQuestion;
-            const player = players[currentPlayerIndex];
+            const player = players[currentPlayerIndex]; // Гравець, який виконує дію
             if (q.bonus_skip_on_complete) player.skips_left++;
             if (q.deferred_text_template && q.deferred_turns_player) {
                 player.deferred_effects = player.deferred_effects || [];
                 player.deferred_effects.push({
                     template: q.deferred_text_template,
-                    turns_left: parseInt(q.deferred_turns_player) + 1, // +1 для компенсації зменшення в кінці ходу
+                    turns_left: parseInt(q.deferred_turns_player) + 1, 
                     question_id: q.id
                 });
             }
@@ -435,41 +421,44 @@ document.addEventListener('DOMContentLoaded', function() {
         btnSkip.addEventListener('click', () => {
             const player = players[currentPlayerIndex];
             if (player.skips_left > 0) {
-                // Зберігаємо стан ДО пропуску, щоб можна було скасувати сам пропуск, ЯКЩО НЕ ВИРІШИЛИ ІНАКШЕ
-                // Згідно з завданням, історія має стиратися
                 gameHistoryForUndo = []; 
-                btnGoBack.disabled = true; // Оновлюємо кнопку "Назад" одразу
+                btnGoBack.disabled = true; 
                 
                 player.skips_left--;
-                selectAndDisplayQuestion(true); // true = isAfterSkip, не зберігає історію перед новим питанням
-                // Після пропуску і показу нового питання, новий стан автоматично збережеться при наступній дії (completed/quit/skip)
+                // Після пропуску питання просто показуємо наступне для того ж гравця, не передаючи хід
+                // і не викликаючи handlePlayerAction, щоб не зберігати історію.
+                if (questionPool.length === 0) {
+                    triggerGameOverJS("Питання закінчились після спроби пропуску!");
+                    return;
+                }
+                currentQuestion = questionPool.shift();
+                playedQuestionIdsThisSession.add(currentQuestion.id);
+                updateDisplay(); // Оновлюємо дисплей з новим питанням для поточного гравця
             }
         });
         
         btnQuit.addEventListener('click', () => {
-            saveCurrentStateForUndo(); 
+            // saveCurrentStateForUndo(); // Видалено, бо handlePlayerAction тепер зберігає
             players[currentPlayerIndex].active = false;
-            handlePlayerAction(true); // true = isCompletedOrQuitAction
+            handlePlayerAction(true); 
         });
 
         btnGoBack.addEventListener('click', () => {
             if (gameHistoryForUndo.length > 0) {
                 const prevState = gameHistoryForUndo.pop();
 
-                questionPool = deepCopy(prevState.questionPoolSnapshot); // Відновлюємо пул
-                
-                // Питання, яке було на екрані до скасування, додаємо назад в початок пулу,
-                // якщо воно відрізняється від того, яке ми відновлюємо.
-                // Це потрібно, бо currentQuestion з prevState - це те, що було ДО дії, яку скасовуємо.
+                // Питання, яке було на екрані до скасування, додаємо назад в початок пулу
                 if (currentQuestion && (!prevState.question || currentQuestion.id !== prevState.question.id)) {
                     questionPool.unshift(deepCopy(currentQuestion));
+                } else if (!currentQuestion && prevState.question) {
+                    // Якщо поточного питання немає (наприклад, кінець гри), але в історії є, це не має статися тут
                 }
                 
                 currentQuestion = deepCopy(prevState.question);
-                currentPlayerIndex = prevState.playerIndex;
+                currentPlayerIndex = prevState.playerIndex; // Відновлюємо правильний індекс гравця
                 currentRound = prevState.round;
-                players = deepCopy(prevState.playersSnapshot); // ВІДНОВЛЮЄМО ПОВНИЙ СТАН ГРАВЦІВ
-                playedQuestionIdsThisSession = new Set(prevState.playedQuestionIdsSnapshot);
+                players = deepCopy(prevState.playersSnapshot); // Відновлюємо повний стан гравців
+                playedQuestionIdsThisSession = new Set(prevState.playedQuestionIdsSnapshot); // Відновлюємо зіграні ID
                 
                 updateDisplay(true); // isRestoringFromHistory = true
                 btnGoBack.disabled = gameHistoryForUndo.length === 0;
@@ -525,20 +514,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             secondsLeft = Math.max(0, secondsLeft);
 
-            currentQuestion = questionPool.shift(); // Беремо перше питання
-            if (currentQuestion) { // Перевірка, чи питання існує
+            currentQuestion = questionPool.shift(); 
+            if (currentQuestion) { 
                  playedQuestionIdsThisSession.add(currentQuestion.id);
                  updateDisplay(); 
             } else {
-                triggerGameOverJS("Немає питань для гри на старті."); // Якщо пул порожній
+                triggerGameOverJS("Немає питань для гри на старті."); 
                 return;
             }
-
 
             const currentPlayer = players[currentPlayerIndex];
             skipsLeftDisplay.textContent = currentPlayer.skips_left;
             btnSkip.disabled = currentPlayer.skips_left <= 0;
-            btnGoBack.disabled = gameHistoryForUndo.length === 0; 
+            btnGoBack.disabled = gameHistoryForUndo.length === 0; // На початку гри кнопка "Назад" неактивна
         }
 
         if (questionPool && questionPool.length > 0) {
