@@ -305,3 +305,117 @@ body, html {
     .action-buttons button { padding: 12px; }
     .timer-container { width: clamp(40px, 10vw, 60px); height: clamp(40px, 10vw, 60px); font-size: clamp(1em, 4vw, 1.5em); }
 }
+
+/* ... [All previous CSS styles remain the same] ... */
+
+/* --- NEW: Advanced Settings on index.php (Task 3) --- */
+
+.setup-page .advanced-settings-container {
+    width: 90%;
+    max-width: 400px;
+    margin: 20px 0;
+    border: 1px solid #4a627a;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.setup-page #advanced-settings-toggle {
+    width: 100%;
+    padding: 12px;
+    background-color: #4a627a;
+    color: white;
+    border: none;
+    font-size: 1em;
+    cursor: pointer;
+    text-align: left;
+    font-weight: bold;
+}
+
+.setup-page #advanced-settings-content {
+    padding: 15px;
+    background-color: #34495e;
+    transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+    max-height: 1000px; /* high value for open state */
+    overflow: hidden;
+}
+
+.setup-page #advanced-settings-content.hidden {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.setup-page .presets-container {
+    margin-bottom: 15px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.setup-page .presets-container strong {
+    margin-right: 5px;
+}
+
+.setup-page .preset-btn {
+    padding: 6px 12px;
+    font-size: 0.9em;
+    background-color: #5d9cec;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    flex-grow: 1;
+}
+.setup-page .preset-btn:hover {
+    background-color: #4a89dc;
+}
+
+.setup-page .settings-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.setup-page .settings-group label {
+    flex-basis: 60%;
+    text-align: left;
+    font-size: 0.9em;
+}
+.setup-page .settings-group input[type="number"] {
+    flex-basis: 35%;
+    padding: 8px;
+    margin: 0;
+    width: auto;
+}
+
+.setup-page #advanced-settings-content hr {
+    border: none;
+    border-top: 1px solid #4a627a;
+    margin: 15px 0;
+}
+
+.setup-page .category-setting-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+}
+
+.setup-page .category-setting-item label {
+    flex-grow: 1;
+    margin-left: 8px;
+    text-align: left;
+}
+
+.setup-page .category-setting-item input[type="number"] {
+    width: 60px;
+    padding: 6px;
+    margin: 0;
+}
+
+/* Make start game button more prominent */
+.setup-page .start-game-btn {
+    padding: 18px 25px;
+    font-size: 1.2em;
+    margin-top: 10px;
+}
