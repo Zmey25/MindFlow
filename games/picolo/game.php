@@ -75,11 +75,12 @@ function select_question() {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
     $current_player_idx = $_SESSION['current_player_index'];
-    $current_question_for_action = $_SESSION['current_question_data']; // Capture before it's potentially nulled
+    $current_question_for_action = $_SESSION['current_question_data']; 
 
     if ($action === 'go_back') {
         if (!empty($_SESSION['game_history'])) {
-            if (isset($current_question_for_action['id'])) { // Put current question back
+            // If there's a current question, put its ID back into the pool
+            if (isset($current_question_for_action['id'])) {
                 array_unshift($_SESSION['game_question_pool'], $current_question_for_action['id']);
             }
             $last_state = array_pop($_SESSION['game_history']);
@@ -87,9 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $_SESSION['current_question_data'] = $last_state['question'];
             $_SESSION['current_player_index'] = $last_state['player_index'];
             $_SESSION['current_round'] = $last_state['round'];
-            $_SESSION['players'] = $last_state['players_state'];
+            $_SESSION['players'] = $last_state['players_state']; // This restores deferred_effects as they were
             
-            // Reset timer phase based on the restored question and global settings
             $question_has_main_timer = (($_SESSION['current_question_data']['timer'] ?? 0) > 0);
             if ($question_has_main_timer && $reading_timer_duration_setting > 0) {
                 $_SESSION['timer_phase'] = 'reading';
@@ -99,10 +99,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $_SESSION['timer_started_at'] = time();
         }
     } else {
+        // --- State modification block for non 'go_back' actions ---
+        // We capture the player data by reference to modify it directly in the session
         $player_data_ref = &$_SESSION['players'][$current_player_idx];
 
+        // Actions 'completed' and 'quit' are turn-ending.
+        // Action 'skip' (reroll) is NOT turn-ending.
+        // Deferred effects are processed only on turn-ending actions.
         if ($action === 'completed' || $action === 'quit') {
-            // Decrement deferred effects for turn-ending actions
+            // Store state BEFORE this turn's modifications for 'go_back'
+            // This includes player state BEFORE deferred effects decrement for THIS turn
+             if (count($_SESSION['game_history']) >= 20) array_shift($_SESSION['game_history']);
+             array_push($_SESSION['game_history'], [
+                 'question' => $current_question_for_action, // The question that was just acted upon
+                 'player_index' => $current_player_idx,
+                 'round' => $_SESSION['current_round'],
+                 'players_state' => $_SESSION['players'] // Current state of all players (including their effects)
+             ]);
+
+            // Decrement existing deferred effects for the current player
             if (!empty($player_data_ref['deferred_effects'])) {
                 $active_effects = [];
                 foreach ($player_data_ref['deferred_effects'] as $effect) {
@@ -111,16 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 }
                 $player_data_ref['deferred_effects'] = $active_effects;
             }
-
-            // Push to history for turn-ending actions
-            if (count($_SESSION['game_history']) >= 20) array_shift($_SESSION['game_history']);
-            array_push($_SESSION['game_history'], [
-                'question' => $current_question_for_action,
-                'player_index' => $current_player_idx,
-                'round' => $_SESSION['current_round'],
-                'players_state' => $_SESSION['players'] // State BEFORE applying this action's direct consequences
-            ]);
         }
+        // If action is 'skip', history is NOT pushed here, because 'go_back' should revert to the state *before* the first question of this reroll sequence.
 
         // Apply action consequences
         if ($action === 'completed') {
@@ -129,29 +136,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             if (!empty($q['deferred_text_template']) && !empty($q['deferred_turns_player'])) {
                 $player_data_ref['deferred_effects'][] = ['template' => $q['deferred_text_template'], 'turns_left' => (int)$q['deferred_turns_player'], 'question_id' => $q['id']];
             }
-            $_SESSION['current_question_data'] = null; // Mark question as processed
+            $_SESSION['current_question_data'] = null; // Mark question as processed, next player's turn
         } elseif ($action === 'skip') {
-            $is_special_free_reroll = ($current_question_for_action['id'] === 511 && $current_question_for_action['category'] === 'тест');
-            
-            if ($player_data_ref['skips_left'] > 0 || $is_special_free_reroll) {
-                if (!$is_special_free_reroll) {
-                    $player_data_ref['skips_left']--;
-                }
-                // Current question is "consumed" by the reroll (not put back to pool here)
-                $_SESSION['current_question_data'] = null; 
-                if (select_question() === null) {
+            // No free reroll anymore
+            if ($player_data_ref['skips_left'] > 0) {
+                $player_data_ref['skips_left']--;
+                // The current question (the one being rerolled) is not put back into the pool.
+                // It's considered "used" by the reroll.
+                $_SESSION['current_question_data'] = null; // Nullify to trigger select_question()
+                if (select_question() === null) { // Try to get a new question
                     $_SESSION['game_over'] = true;
                     $_SESSION['game_over_message'] = "Питання закінчились після спроби реролу!";
                 }
-                // Player index, round remain the same. Timer phase/start time reset by select_question().
+                // Player index and round remain the same. Timer phase/start time reset by select_question().
             }
-            // If skip not possible (no skips_left and not free), effectively nothing happens, page reloads with same question.
+            // If no skips left, page just reloads with the same question (button should be disabled by UI).
         } elseif ($action === 'quit') {
             $player_data_ref['active'] = false;
-            $_SESSION['current_question_data'] = null; // Mark question as processed
+            $_SESSION['current_question_data'] = null; // Mark question as processed, next player's turn
         }
         
-        // Logic for moving to next player IF action was 'completed' or 'quit'
+        // --- Move to next player or end game (only if action was 'completed' or 'quit') ---
         if ($action === 'completed' || $action === 'quit') {
             $active_players_count = count(get_active_players_indices());
             if ($active_players_count < 2) {
@@ -159,14 +164,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $_SESSION['game_over_message'] = $active_players_count === 1 ? "Залишився переможець!" : "Гравців не залишилось!";
             } else {
                 $next_player_idx = get_next_active_player_index($current_player_idx);
-                if ($next_player_idx === null) { // Should not happen if active_players_count >= 2
+                if ($next_player_idx === null) {
                     $_SESSION['game_over'] = true; $_SESSION['game_over_message'] = "Не вдалося знайти наступного гравця.";
                 } else {
                     $active_indices = get_active_players_indices();
                     // Increment round if the next player is the first active player in the list
-                    // and it's not the same player continuing (unless they are the only one left).
-                    if (($next_player_idx == ($active_indices[0] ?? null)) && ($current_player_idx != $next_player_idx || count($active_indices) == 1) ) {
-                       if(count($active_indices) > 1 || $_SESSION['current_player_index'] != $next_player_idx) { // Avoid double increment for last player taking multiple turns
+                    // AND it's not the same player continuing (unless they are the only one left and it's their turn again).
+                    if ( ($next_player_idx == ($active_indices[0] ?? null)) && ($current_player_idx != $next_player_idx || count($active_indices) == 1) ) {
+                       // Only increment round if it's genuinely a new round for the group,
+                       // or if a single player is cycling through turns.
+                       if(count($active_indices) > 1 || $_SESSION['current_player_index'] != $next_player_idx ) {
+                            $_SESSION['current_round']++;
+                       } else if (count($active_indices) == 1 && $current_player_idx == $next_player_idx) {
+                           // If only one player is left, round should still increment when their turn comes up again
+                           // This condition might be redundant if the game ends when only 1 player is left
+                           // but kept for robustness if single-player mode could exist.
+                           // Actually, for a single player, their index will always be active_indices[0].
+                           // So the round will increment on each of their turns.
                            $_SESSION['current_round']++;
                        }
                     }
@@ -174,9 +188,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 }
             }
         }
-    }
+    } // End of non-'go_back' action block
 
-    if (!$_SESSION['game_over'] && isset($_SESSION['current_round']) && $_SESSION['current_round'] > $max_rounds_setting) {
+    // Check for max rounds after all actions
+    if (!($_SESSION['game_over'] ?? false) && isset($_SESSION['current_round']) && $_SESSION['current_round'] > $max_rounds_setting) {
         $_SESSION['game_over'] = true;
         $_SESSION['game_over_message'] = $max_rounds_setting . " кіл зіграно. Гра завершена!";
     }
@@ -186,8 +201,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 }
 
 
-if (empty($_SESSION['current_question_data'])) { // If no question (e.g., after action or new game)
-    if (select_question() === null) {
+// --- Page Load Logic (if not a POST request or if POST led here) ---
+
+// If no current question (e.g., after a turn-ending action, or at game start for first player)
+if (empty($_SESSION['current_question_data'])) {
+    // Before selecting a new question for the current player, push the state if it's a new turn for this player
+    // This is crucial for 'go_back' from the very first question of a player's turn.
+    // However, this needs to be nuanced: only push if it's truly a *new* turn state, not after a reroll.
+    // The current logic for 'go_back' already handles putting the *previous* question back.
+    // The history for the *start* of a player's turn (before they see their first question or after they complete one)
+    // is effectively captured when 'completed' or 'quit' is processed for the *previous* player.
+    // So, we might not need an explicit history push here.
+
+    if (select_question() === null) { // This selects a question and sets up timer phase
         $_SESSION['game_over'] = true;
         $_SESSION['game_over_message'] = "Питання закінчились!";
         header('Location: game_over.php');
@@ -196,15 +222,28 @@ if (empty($_SESSION['current_question_data'])) { // If no question (e.g., after 
 }
 
 $current_player_idx = $_SESSION['current_player_index'];
-// Ensure current player is active, if not, try to find next active
+// Ensure current player is active; if not, find next active or end game
 if (!($_SESSION['players'][$current_player_idx]['active'] ?? false)) {
-    $fallback_idx = get_next_active_player_index($current_player_idx -1 < 0 ? count($_SESSION['players']) -1 : $current_player_idx -1 );
+    $original_player_idx_before_skip = $current_player_idx;
+    $fallback_idx = get_next_active_player_index( $current_player_idx -1 < 0 ? count($_SESSION['players']) -1 : $current_player_idx -1 );
+
     if ($fallback_idx !== null) {
+        // If the inactive player was supposed to start a new round, and we skipped them to the next player
+        // who is also the start of the round, the round might have been incremented already by the previous player's turn end.
+        // We need to be careful not to double-increment.
+        // The round increment logic is tied to the *end* of the *previous* player's turn.
+        // If an inactive player's turn is skipped, the round should reflect the state as if that player played.
         $_SESSION['current_player_index'] = $fallback_idx;
-        $_SESSION['current_question_data'] = null; // Force new question selection
+        $_SESSION['current_question_data'] = null; // Force new question selection for this new player
+        
+        // Check if skipping the inactive player crossed a round boundary
+        // This is complex, as the round increments when the *previous* player finishes and points to the *new* first player.
+        // For simplicity, we rely on the round increment logic at the end of a completed turn.
+        // If an inactive player is skipped, the next player starts their turn in the *current* round.
+
         header('Location: game.php'); // Reload to select question for this new player
         exit;
-    } else { // No active players left
+    } else { 
         $_SESSION['game_over'] = true;
         $_SESSION['game_over_message'] = "Немає активних гравців.";
         header('Location: game_over.php');
@@ -213,7 +252,7 @@ if (!($_SESSION['players'][$current_player_idx]['active'] ?? false)) {
 }
 
 $current_player_data = $_SESSION['players'][$current_player_idx];
-$current_question = $_SESSION['current_question_data'];
+$current_question = $_SESSION['current_question_data']; // This is now guaranteed to be set
 
 $deferred_messages_to_display = [];
 if (!empty($current_player_data['deferred_effects'])) {
@@ -240,7 +279,7 @@ if ($next_player_idx_val !== null) $next_player_name_display = $_SESSION['player
 
 // --- Timer data for JS ---
 $main_timer_from_question = (int)($current_question['timer'] ?? 0);
-$js_effective_reading_duration = 0;
+$js_effective_reading_duration = 0; // This will be the actual reading duration for JS timer
 if ($main_timer_from_question > 0 && $reading_timer_duration_setting > 0) {
     $js_effective_reading_duration = $reading_timer_duration_setting;
 }
@@ -248,7 +287,7 @@ if ($main_timer_from_question > 0 && $reading_timer_duration_setting > 0) {
 $initial_timer_value_for_js = 0;
 $current_phase_for_js = $_SESSION['timer_phase']; // Phase already determined by select_question or go_back
 
-if ($js_effective_reading_duration > 0 || $main_timer_from_question > 0) {
+if ($js_effective_reading_duration > 0 || $main_timer_from_question > 0) { // If any timer is active
     $elapsed_time = time() - ($_SESSION['timer_started_at'] ?? time());
 
     if ($current_phase_for_js === 'reading') { // This implies $js_effective_reading_duration > 0
@@ -256,22 +295,20 @@ if ($js_effective_reading_duration > 0 || $main_timer_from_question > 0) {
         if ($remaining_reading_time > 0) {
             $initial_timer_value_for_js = $remaining_reading_time;
         } else { // Reading time expired
-            $current_phase_for_js = 'main'; // Switch to main phase
+            $current_phase_for_js = 'main'; // Switch to main phase for JS
             $initial_timer_value_for_js = $main_timer_from_question + $remaining_reading_time; // remaining_reading_time is negative or 0
         }
-    } else { // Current phase is 'main'
+    } else { // Current phase is 'main' (either by initial selection or because reading expired)
         $initial_timer_value_for_js = $main_timer_from_question - $elapsed_time;
     }
     $initial_timer_value_for_js = max(0, $initial_timer_value_for_js);
 } else { // No timers for this question (neither reading nor main)
-    $current_phase_for_js = 'main'; // Default to main, though timer won't run
+    $current_phase_for_js = 'main'; // Default to main, though timer won't run/display
     $initial_timer_value_for_js = 0;
 }
 // --- End Timer data for JS ---
 
-// For Skip button disabled state
-$can_skip_freely = ($current_question['id'] === 511 && $current_question['category'] === 'тест');
-$disable_skip_button = ($current_player_data['skips_left'] <= 0 && !$can_skip_freely);
+$disable_skip_button = ($current_player_data['skips_left'] <= 0);
 
 ?>
 <!DOCTYPE html>
@@ -287,7 +324,7 @@ $disable_skip_button = ($current_player_data['skips_left'] <= 0 && !$can_skip_fr
             iconClasses: <?php echo json_encode($style_info['icon_classes'] ?? ['fas fa-question-circle']); ?>,
             iconColor: <?php echo json_encode($style_info['icon_color'] ?? 'rgba(255,255,255,0.1)'); ?>,
             iconOpacity: <?php echo json_encode($style_info['icon_opacity'] ?? 0.1); ?>,
-            readingTimerDuration: <?php echo json_encode($js_effective_reading_duration); ?>, // Effective reading duration for this question
+            readingTimerDuration: <?php echo json_encode($js_effective_reading_duration); ?>,
             mainTimerDuration: <?php echo json_encode($main_timer_from_question); ?>,
             initialTimerValue: <?php echo json_encode($initial_timer_value_for_js); ?>,
             initialPhase: <?php echo json_encode($current_phase_for_js); ?>
@@ -296,7 +333,9 @@ $disable_skip_button = ($current_player_data['skips_left'] <= 0 && !$can_skip_fr
 </head><body>
     <div class="game-page">
         <div class="background-icons-container"></div>
-        <div class="category-display">Категорія: <?php echo htmlspecialchars($current_question['category']); ?></div>
+        <div class="category-display">
+            ID: <?php echo htmlspecialchars($current_question['id']); ?> | Категорія: <?php echo htmlspecialchars($current_question['category']); ?>
+        </div>
         <div class="round-player-info">Раунд: <?php echo $_SESSION['current_round']; ?>/<?php echo $max_rounds_setting; ?><br>Гравців: <?php echo count(get_active_players_indices()); ?></div>
         
         <?php if ($js_effective_reading_duration > 0 || $main_timer_from_question > 0): ?>
@@ -312,10 +351,9 @@ $disable_skip_button = ($current_player_data['skips_left'] <= 0 && !$can_skip_fr
         </div>
         <div class="action-buttons">
             <form method="POST" action="game.php" style="width: 100%;"><button type="submit" name="action" value="completed" class="btn-done action-btn">Виконано! (Наст: <?php echo htmlspecialchars($next_player_name_display); ?>)</button></form>
-            <form method="POST" action="game.php" style="width: 100%;"><button type="submit" name="action" value="skip" class="btn-skip action-btn" <?php echo $disable_skip_button ? 'disabled' : ''; ?>>Пропустити (Залишилось: <?php echo $current_player_data['skips_left']; ?><?php if ($can_skip_freely && $current_player_data['skips_left'] <=0) echo '/Безкоштовно'; ?>)</button></form>
+            <form method="POST" action="game.php" style="width: 100%;"><button type="submit" name="action" value="skip" class="btn-skip action-btn" <?php echo $disable_skip_button ? 'disabled' : ''; ?>>Пропустити (Залишилось: <?php echo $current_player_data['skips_left']; ?>)</button></form>
             <form method="POST" action="game.php" style="width: 100%;"><button type="submit" name="action" value="go_back" class="btn-go-back action-btn" <?php echo empty($_SESSION['game_history']) ? 'disabled' : ''; ?>>Попереднє питання</button></form>
             <form method="POST" action="game.php" style="width: 100%;"><button type="submit" name="action" value="quit" class="btn-quit action-btn">Вийти з гри</button></form>
         </div>
     </div>
-    <script src="js/script.js"></script>
-</body></html>
+    <script src="js/script.js"></script></body></html>
