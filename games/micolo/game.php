@@ -6,13 +6,10 @@ if (!isset($_SESSION['game_started']) || $_SESSION['game_started'] !== true) {
     exit;
 }
 if (isset($_SESSION['game_over']) && $_SESSION['game_over'] === true) {
-    // This should ideally not be hit if JS handles game end properly,
-    // but as a fallback.
     header('Location: game_over.php');
     exit;
 }
 
-// Check for essential data prepared by index.php or game_over.php (for "Play Again")
 if (
     !isset($_SESSION['game_config']) || 
     !isset($_SESSION['players']) || 
@@ -21,12 +18,10 @@ if (
     !isset($_SESSION['category_styles_from_json']) ||
     !isset($_SESSION['all_questions_data_map'])
 ) {
-    // Critical data missing, force new game setup
-    $_SESSION['game_over'] = true; // Mark as over to allow redirection
+    $_SESSION['game_over'] = true; 
     $_SESSION['game_over_message'] = "Помилка: Необхідні дані гри відсутні. Почніть нову гру.";
-    // Clean up potentially corrupted session state for game start
     unset($_SESSION['game_started']);
-    header('Location: game_over.php'); // Redirect to game_over to display message and offer new game
+    header('Location: game_over.php'); 
     exit;
 }
 
@@ -34,18 +29,16 @@ $game_config = $_SESSION['game_config'];
 $players_initial_state = $_SESSION['players'];
 $current_player_index_initial = $_SESSION['current_player_index'] ?? 0;
 $current_round_initial = $_SESSION['current_round'] ?? 1;
-$initial_js_question_pool = $_SESSION['initial_js_question_pool']; // Full question objects, sorted
+$initial_js_question_pool = $_SESSION['initial_js_question_pool']; 
 $category_styles = $_SESSION['category_styles_from_json'];
-$all_questions_data_map_for_js = $_SESSION['all_questions_data_map']; // For reference
+$all_questions_data_map_for_js = $_SESSION['all_questions_data_map']; 
 
-// Initial question and timer state for the very first display
-$first_question_to_display = $initial_js_question_pool[0]; // JS will also use this as its first
+$first_question_to_display = $initial_js_question_pool[0]; 
 $current_player_data_for_first_display = $players_initial_state[$current_player_index_initial];
 
 $initial_timer_phase_for_js = $_SESSION['initial_timer_phase'] ?? 'main';
-$initial_timer_started_at_for_js = $_SESSION['initial_timer_started_at'] ?? time(); // Server time
+$initial_timer_started_at_for_js = $_SESSION['initial_timer_started_at'] ?? time(); 
 
-// Calculate effective reading duration and initial timer value for JS for the first question
 $main_timer_from_first_question = (int)($first_question_to_display['timer'] ?? 0);
 $reading_timer_duration_setting = $game_config['general']['reading_timer_duration'] ?? 10;
 $js_effective_reading_duration_first_q = 0;
@@ -63,10 +56,10 @@ if ($js_effective_reading_duration_first_q > 0 || $main_timer_from_first_questio
         if ($remaining_reading_time > 0) {
             $initial_timer_value_for_js_first_q = $remaining_reading_time;
         } else {
-            $current_phase_for_js_first_q = 'main'; // Auto-transition if reading time elapsed server-side
-            $initial_timer_value_for_js_first_q = $main_timer_from_first_question + $remaining_reading_time; // remaining_reading_time is negative here
+            $current_phase_for_js_first_q = 'main'; 
+            $initial_timer_value_for_js_first_q = $main_timer_from_first_question + $remaining_reading_time; 
         }
-    } else { // 'main'
+    } else { 
         $initial_timer_value_for_js_first_q = $main_timer_from_first_question - $elapsed_time;
     }
     $initial_timer_value_for_js_first_q = max(0, $initial_timer_value_for_js_first_q);
@@ -84,10 +77,9 @@ if (strpos($question_text_first_display, '{RANDOM_PLAYER_NAME}') !== false) {
 
 $style_info_first_display = $category_styles[$first_question_to_display['category']] ?? ($category_styles['Default'] ?? ['background' => 'linear-gradient(to right, #74ebd5, #ACB6E5)', 'icon_classes' => ['fas fa-question-circle'], 'icon_color' => 'rgba(255,255,255,0.1)', 'icon_opacity' => 0.1]);
 
-// Determine next player name for initial display only
-$active_indices_initial = array_filter(array_keys($players_initial_state), function($idx) use ($players_initial_state) {
+$active_indices_initial = array_values(array_filter(array_keys($players_initial_state), function($idx) use ($players_initial_state) {
     return $players_initial_state[$idx]['active'];
-});
+}));
 $next_player_name_display_initial = 'Нікого';
 if (!empty($active_indices_initial)) {
     $current_pos_in_active = array_search($current_player_index_initial, $active_indices_initial);
@@ -95,14 +87,23 @@ if (!empty($active_indices_initial)) {
         $next_pos_in_active = ($current_pos_in_active + 1) % count($active_indices_initial);
         $next_player_idx_val_initial = $active_indices_initial[$next_pos_in_active];
         $next_player_name_display_initial = htmlspecialchars($players_initial_state[$next_player_idx_val_initial]['name']);
+    } elseif (count($active_indices_initial) > 0) { // If current player became inactive, pick first active
+        $next_player_name_display_initial = htmlspecialchars($players_initial_state[$active_indices_initial[0]]['name']);
     }
 }
 $max_rounds_setting = $game_config['general']['max_rounds'] ?? 5;
 
-// These session variables are for JS to pick up. They won't be used by PHP game logic anymore.
+$deferred_messages_to_display_first = [];
+if (!empty($current_player_data_for_first_display['deferred_effects'])) {
+    foreach ($current_player_data_for_first_display['deferred_effects'] as $effect) {
+        $text = str_replace(['{TURNS_LEFT}', '{PLAYER_NAME}'], [$effect['turns_left'], htmlspecialchars($current_player_data_for_first_display['name'])], $effect['template']);
+        $deferred_messages_to_display_first[] = $text;
+    }
+}
+
+
 unset($_SESSION['initial_timer_phase']);
 unset($_SESSION['initial_timer_started_at']);
-// initial_js_question_pool, all_questions_data_map, players, current_player_index etc. will be passed to JS
 ?>
 <!DOCTYPE html>
 <html lang="uk"><head>
@@ -120,13 +121,11 @@ unset($_SESSION['initial_timer_started_at']);
             currentRound: <?php echo json_encode($current_round_initial); ?>,
             gameConfig: <?php echo json_encode($game_config); ?>,
             categoryStyles: <?php echo json_encode($category_styles); ?>,
-            
-            // Timer related data for the *first* question, calculated by PHP
             initialEffectiveReadingDuration: <?php echo json_encode($js_effective_reading_duration_first_q); ?>,
             initialMainTimerDuration: <?php echo json_encode($main_timer_from_first_question); ?>,
             initialTimerValue: <?php echo json_encode($initial_timer_value_for_js_first_q); ?>,
             initialPhase: <?php echo json_encode($current_phase_for_js_first_q); ?>,
-            serverTimeAtStart: <?php echo json_encode(time()); ?> // For JS to sync its timer if needed
+            serverTimeAtStart: <?php echo json_encode(time()); ?> 
         };
     </script>
 </head><body>
@@ -146,7 +145,14 @@ unset($_SESSION['initial_timer_started_at']);
         <div class="question-container">
             <div class="current-player-name" id="current-player-name-display"><?php echo htmlspecialchars($current_player_data_for_first_display['name']); ?></div>
             <div class="question-text" id="question-text-display"><?php echo nl2br($question_text_first_display); ?></div>
-            <div class="deferred-messages" id="deferred-messages-display" style="display:none;"><strong>Активні ефекти:</strong><div id="deferred-messages-content"></div></div>
+            <div class="deferred-messages" id="deferred-messages-display" <?php echo empty($deferred_messages_to_display_first) ? 'style="display:none;"' : ''; ?>>
+                <strong>Активні ефекти:</strong>
+                <div id="deferred-messages-content">
+                    <?php foreach($deferred_messages_to_display_first as $msg): ?>
+                        <p><?php echo htmlspecialchars($msg); ?></p>
+                    <?php endforeach; ?>
+                </div>
+            </div>
         </div>
         <div class="action-buttons">
             <button type="button" id="btn-completed" class="btn-done action-btn">Виконано! (Наст: <span id="next-player-btn-info"><?php echo $next_player_name_display_initial; ?></span>)</button>
