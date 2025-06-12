@@ -183,14 +183,6 @@
     "weight": 20,
     "description": "Питання для всіх, щоб ви обрали? Одне чи інше. Відповідайте одночасно, хто в меньшості - п'є 3 ковтки."
   },
-        "тест": {
-    "background": "linear-gradient(to right, #bdc3c7, #2c3e50)",
-    "icon_classes": ["fas fa-user-tag", "fas fa-tshirt", "fas fa-shoe-prints"],
-    "icon_color": "rgba(255, 255, 255, 0.5)",
-    "icon_opacity": 0.09,
-    "weight": 2000,
-    "description": "Питання для всіх, щоб ви обрали? Одне чи інше. Відповідайте одночасно, хто в меньшості - п'є 3 ковтки."
-  },
     "Default": {
     "background": "#333",
     "icon_classes": ["fas fa-question-circle"],
