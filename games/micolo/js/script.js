@@ -222,15 +222,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (activeIndices.length === 0) return null;
             
             const currentPositionInActive = activeIndices.indexOf(currentIdx);
-            if (currentPositionInActive === -1) { // Current player became inactive
-                return activeIndices[0]; // Return first active player
+            if (currentPositionInActive === -1) { 
+                return activeIndices[0]; 
             }
             
             const nextPositionInActive = (currentPositionInActive + 1) % activeIndices.length;
             return activeIndices[nextPositionInActive];
         }
 
-        function updateDisplay() {
+        function updateDisplay(isRestoringFromHistory = false) {
             if (!currentQuestion) return; 
 
             const currentPlayer = players[currentPlayerIndex];
@@ -249,10 +249,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 qText = qText.replace('{RANDOM_PLAYER_NAME}', randomOtherPlayerName);
             }
             questionTextDisplay.innerHTML = qText.replace(/\n/g, '<br>');
-
-            if (currentPlayer.deferred_effects && currentPlayer.deferred_effects.length > 0) {
+            
+            const activeDeferredEffects = currentPlayer.deferred_effects ? currentPlayer.deferred_effects.filter(effect => effect.turns_left > 0) : [];
+            if (activeDeferredEffects.length > 0) {
                 let effectsHtml = '';
-                currentPlayer.deferred_effects.forEach(effect => {
+                activeDeferredEffects.forEach(effect => {
                     effectsHtml += `<p>${effect.template.replace('{TURNS_LEFT}', effect.turns_left).replace('{PLAYER_NAME}', currentPlayer.name)}</p>`;
                 });
                 deferredMessagesContent.innerHTML = effectsHtml;
@@ -275,19 +276,21 @@ document.addEventListener('DOMContentLoaded', function() {
             document.documentElement.style.setProperty('--icon-color', styleInfo.icon_color || 'rgba(255,255,255,0.1)');
             document.documentElement.style.setProperty('--icon-opacity', styleInfo.icon_opacity || 0.1);
             
-            backgroundIconsContainer.innerHTML = ''; 
-            const iconClasses = styleInfo.icon_classes || ['fas fa-question-circle'];
-            const numIcons = Math.floor(Math.random() * 8) + 8;
-             if (iconClasses.length > 0) {
-                for (let i = 0; i < numIcons; i++) {
-                    const icon = document.createElement('i');
-                    icon.className = iconClasses[Math.floor(Math.random() * iconClasses.length)];
-                    icon.style.left = `${Math.random() * 100}vw`;
-                    icon.style.top = `${Math.random() * 100}vh`;
-                    icon.style.fontSize = `${Math.random() * 8 + 10}vw`; 
-                    const duration = Math.random() * 15 + 20;
-                    icon.style.animation = `floatIcon ${duration}s ${Math.random() * -duration}s infinite linear alternate`;
-                    backgroundIconsContainer.appendChild(icon);
+            if (!isRestoringFromHistory) { // Avoid re-creating icons if just updating player name/effects from history restore
+                backgroundIconsContainer.innerHTML = ''; 
+                const iconClasses = styleInfo.icon_classes || ['fas fa-question-circle'];
+                const numIcons = Math.floor(Math.random() * 8) + 8;
+                 if (iconClasses.length > 0) {
+                    for (let i = 0; i < numIcons; i++) {
+                        const icon = document.createElement('i');
+                        icon.className = iconClasses[Math.floor(Math.random() * iconClasses.length)];
+                        icon.style.left = `${Math.random() * 100}vw`;
+                        icon.style.top = `${Math.random() * 100}vh`;
+                        icon.style.fontSize = `${Math.random() * 8 + 10}vw`; 
+                        const duration = Math.random() * 15 + 20;
+                        icon.style.animation = `floatIcon ${duration}s ${Math.random() * -duration}s infinite linear alternate`;
+                        backgroundIconsContainer.appendChild(icon);
+                    }
                 }
             }
             setupTimersForCurrentQuestion();
@@ -295,14 +298,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         function saveCurrentStateForUndo() {
             if (gameHistoryForUndo.length >= 20) gameHistoryForUndo.shift();
-            // Store skips separately to restore them correctly, but don't allow abuse via undo
-            const currentSkips = players.map(p => p.skips_left);
             gameHistoryForUndo.push({
                 question: deepCopy(currentQuestion),
                 playerIndex: currentPlayerIndex,
                 round: currentRound,
-                playersSnapshot: deepCopy(players), // This snapshot includes effects, active status
-                skipsBeforeAction: currentSkips // Skips *before* the action that led to this state
+                playersSnapshot: deepCopy(players)
             });
         }
 
@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function handlePlayerAction(isCompletedOrQuitAction) {
-             const actingPlayer = players[currentPlayerIndex]; // Player who just acted
+             const actingPlayer = players[currentPlayerIndex]; 
 
             if (isCompletedOrQuitAction) { 
                 if (actingPlayer.deferred_effects && actingPlayer.deferred_effects.length > 0) {
@@ -329,6 +329,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         ...effect,
                         turns_left: effect.turns_left - 1
                     })).filter(effect => effect.turns_left > 0);
+                     // Update the master players array directly
+                    players[currentPlayerIndex].deferred_effects = actingPlayer.deferred_effects;
                 }
             }
 
@@ -347,8 +349,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const firstActivePlayerIndex = activePlayerIndices[0];
-            if (nextPlayerIdx === firstActivePlayerIndex && oldPlayerIndex !== nextPlayerIdx && activePlayerIndices.indexOf(oldPlayerIndex) === activePlayerIndices.length -1) {
-                currentRound++;
+            if (nextPlayerIdx === firstActivePlayerIndex && activePlayerIndices.indexOf(oldPlayerIndex) === activePlayerIndices.length -1) {
+                 if (oldPlayerIndex !== nextPlayerIdx || activePlayerIndices.length > 1) { // Avoid increment if only one player is looping
+                    currentRound++;
+                 }
             }
             
             currentPlayerIndex = nextPlayerIdx;
@@ -379,14 +383,14 @@ document.addEventListener('DOMContentLoaded', function() {
         btnSkip.addEventListener('click', () => {
             const player = players[currentPlayerIndex];
             if (player.skips_left > 0) {
-                saveCurrentStateForUndo(); // Save state *before* skip resolves
+                saveCurrentStateForUndo(); 
                 player.skips_left--;
                 selectAndDisplayQuestion(true); 
             }
         });
         
         btnQuit.addEventListener('click', () => {
-            saveCurrentStateForUndo(); // Save state before quit
+            saveCurrentStateForUndo(); 
             players[currentPlayerIndex].active = false;
             handlePlayerAction(true);
         });
@@ -397,27 +401,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 const prevState = gameHistoryForUndo.pop();
 
-                // Restore core game state
                 currentQuestion = deepCopy(prevState.question);
-                currentPlayerIndex = prevState.playerIndex;
+                currentPlayerIndex = prevState.playerIndex; // Restore correct player index
                 currentRound = prevState.round;
                 
-                // Restore player states (active, deferred_effects) but keep current skips
                 const previousPlayersSnapshot = deepCopy(prevState.playersSnapshot);
                 players.forEach((currentPlayerState, index) => {
                     if (previousPlayersSnapshot[index]) {
                         currentPlayerState.active = previousPlayersSnapshot[index].active;
                         currentPlayerState.deferred_effects = deepCopy(previousPlayersSnapshot[index].deferred_effects);
-                        // Skips are NOT restored from snapshot to prevent abuse. They remain as they are.
                     }
                 });
 
                 if (questionToPutBack && questionToPutBack.id !== currentQuestion.id) { 
                     questionPool.unshift(questionToPutBack);
-                    playedQuestionIdsThisSession.delete(questionToPutBack.id); 
+                    if (playedQuestionIdsThisSession.has(questionToPutBack.id)) {
+                        playedQuestionIdsThisSession.delete(questionToPutBack.id); 
+                    }
                 }
                 
-                updateDisplay(); 
+                updateDisplay(true); // Pass true to indicate it's a history restore
                 btnGoBack.disabled = gameHistoryForUndo.length === 0;
             }
         });
@@ -471,13 +474,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             secondsLeft = Math.max(0, secondsLeft);
 
-            currentQuestion = questionPool[0]; // Set currentQuestion to the one displayed by PHP
-                                               // We will shift it AFTER the first explicit action or if initial state changes.
-            updateDisplay(); // This will apply styles and setup timers for the initially displayed question.
-
-            // Now that the first question is properly set up via updateDisplay, shift it.
-            // This ensures that the next call to selectAndDisplayQuestion() gets the *actual* next one.
-            questionPool.shift();
+            currentQuestion = questionPool[0]; 
+            updateDisplay(); 
+            questionPool.shift(); // Now shift, after initial display setup
             playedQuestionIdsThisSession.add(currentQuestion.id);
 
             const currentPlayer = players[currentPlayerIndex];
