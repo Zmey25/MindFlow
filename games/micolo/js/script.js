@@ -1,3 +1,5 @@
+--- START OF FILE script.js.txt ---
+
 document.addEventListener('DOMContentLoaded', function() {
     const playerInputsContainer = document.getElementById('player-inputs');
     if (playerInputsContainer) {
@@ -92,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let currentRound = window.INITIAL_GAME_STATE.currentRound;
         const gameConfig = window.INITIAL_GAME_STATE.gameConfig;
         const categoryStyles = window.INITIAL_GAME_STATE.categoryStyles;
+        const allQuestionsDataMap = window.INITIAL_GAME_STATE.allQuestionsDataMap;
         
         let currentQuestion = null;
         let gameHistoryForUndo = []; 
@@ -192,7 +195,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function setupTimersForCurrentQuestion() {
-            if (!currentQuestion) return;
             mainTimerDurationFromQuestion = parseInt(currentQuestion.timer || 0);
             const readingTimerSetting = parseInt(gameConfig.general.reading_timer_duration || 0);
             
@@ -232,10 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updateDisplay(isRestoringFromHistory = false) {
-            if (!currentQuestion) {
-                console.warn("updateDisplay called without currentQuestion");
-                return;
-            }
+            if (!currentQuestion) return; 
 
             const currentPlayer = players[currentPlayerIndex];
             document.title = `Гра: Хід ${currentPlayer.name}`;
@@ -254,34 +253,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             questionTextDisplay.innerHTML = qText.replace(/\n/g, '<br>');
             
-            console.log(`[DEBUG] UpdateDisplay for ${currentPlayer.name}. Raw deferred_effects BEFORE processing for this turn:`, deepCopy(currentPlayer.deferred_effects));
-            // Обробляємо ефекти для ПОТОЧНОГО гравця НА ПОЧАТКУ його ходу
-            if (currentPlayer.deferred_effects && currentPlayer.deferred_effects.length > 0) {
-                // Зменшуємо turns_left тільки якщо це не відновлення з історії (де turns_left вже правильні)
-                // АБО якщо це перший хід гравця (в такому випадку isRestoringFromHistory буде false)
-                // ВАЖЛИВО: зменшуємо лічильник тільки один раз за хід гравця.
-                // Для цього можна ввести флаг, або, простіше, зменшувати тільки якщо це не "відновлення".
-                // Але, якщо це перший показ питання (не відновлення), і ефекти вже є, вони мають "спрацювати".
-                // Ця логіка стає складною. Простіший підхід: зменшувати завжди, коли updateDisplay викликається не для відновлення.
-                // Однак, якщо гравець "повертається" на свій же хід, ефект не має зменшуватись двічі.
-                // Найбільш надійно - мати окрему функцію для обробки ефектів на початку ходу гравця.
-                // Перенесемо це в selectAndDisplayQuestion перед updateDisplay.
-
-            }
             const activeDeferredEffects = currentPlayer.deferred_effects ? currentPlayer.deferred_effects.filter(effect => effect.turns_left > 0) : [];
-            console.log(`[DEBUG] Active deferred_effects (for display) after filter:`, deepCopy(activeDeferredEffects));
-
-
             if (activeDeferredEffects.length > 0) {
                 let effectsHtml = '';
                 activeDeferredEffects.forEach(effect => {
-                    effectsHtml += `<p>${effect.template.replace('{TURNS_LEFT}', effect.turns_left).replace('{PLAYER_NAME}', currentPlayer.name)}</p>`;
+                    // Показуємо turns_left - 1, оскільки 1 хід "списується" в кінці поточного ходу.
+                    // Але якщо turns_left вже 1, то показуємо 1.
+                    const displayTurns = Math.max(1, effect.turns_left -1); 
+                    // Якщо оригінальне значення з JSON було 1, то збережено 2.
+                    // Зараз effect.turns_left = 2. Ми показуємо (2-1)=1.
+                    // Якщо оригінальне значення з JSON було N, збережено N+1.
+                    // Зараз effect.turns_left = N+1. Ми показуємо (N+1-1)=N.
+                    // Це правило показує "скільки ще показів попереду"
+                     effectsHtml += `<p>${effect.template.replace('{TURNS_LEFT}', effect.turns_left > 0 ? (allQuestionsDataMap[effect.question_id]?.deferred_turns_player == effect.turns_left -1 ? effect.turns_left -1 : effect.turns_left -1) : 0 ).replace('{PLAYER_NAME}', currentPlayer.name)}</p>`;
                 });
                 deferredMessagesContent.innerHTML = effectsHtml;
+                deferredMessagesDisplay.style.display = 'block';
             } else {
-                deferredMessagesContent.innerHTML = '<p style="font-style: italic; color: #aaa;">Немає активних ефектів.</p>';
+                deferredMessagesContent.innerHTML = '';
+                deferredMessagesDisplay.style.display = 'none';
             }
-            deferredMessagesDisplay.style.display = 'block'; 
 
             skipsLeftDisplay.textContent = currentPlayer.skips_left;
             btnSkip.disabled = currentPlayer.skips_left <= 0;
@@ -296,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.documentElement.style.setProperty('--icon-color', styleInfo.icon_color || 'rgba(255,255,255,0.1)');
             document.documentElement.style.setProperty('--icon-opacity', styleInfo.icon_opacity || 0.1);
             
-            if (!isRestoringFromHistory) {
+            if (!isRestoringFromHistory) { 
                 backgroundIconsContainer.innerHTML = ''; 
                 const iconClasses = styleInfo.icon_classes || ['fas fa-question-circle'];
                 const numIcons = Math.floor(Math.random() * 8) + 8;
@@ -313,178 +304,179 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
-            setupTimersForCurrentQuestion();
+            if (!isRestoringFromHistory) { // Таймер налаштовується лише для нових питань, не для відновлених
+                setupTimersForCurrentQuestion();
+            } else { // Для відновлених питань, таймер треба зупинити і показати як є
+                clearInterval(timerInterval);
+                stopAllTimerSounds();
+                // Тут можна було б відновити стан таймера, але для простоти поки що просто показуємо його як неактивний
+                // або налаштовуємо заново, якщо потрібно. Поточна логіка - не відновлювати таймер.
+                // Якщо питання має таймер, він почнеться заново. Це може бути бажаною поведінкою.
+                setupTimersForCurrentQuestion(); // Перезапускаємо таймер для відновленого питання
+            }
         }
         
         function saveCurrentStateForUndo() {
-            if (!currentQuestion) return;
             if (gameHistoryForUndo.length >= 20) gameHistoryForUndo.shift();
             gameHistoryForUndo.push({
                 question: deepCopy(currentQuestion),
                 playerIndex: currentPlayerIndex,
                 round: currentRound,
-                playersSnapshot: deepCopy(players),
-                questionPoolSnapshot: deepCopy(questionPool), 
+                playersSnapshot: deepCopy(players), // Зберігаємо повний стан гравців
+                questionPoolSnapshot: deepCopy(questionPool),
                 playedQuestionIdsSnapshot: new Set(playedQuestionIdsThisSession)
             });
-            console.log("[DEBUG] Saved state. History length:", gameHistoryForUndo.length);
+            btnGoBack.disabled = false;
         }
 
-        // Ця функція тепер викликається ПЕРЕД updateDisplay, коли починається хід гравця
-        function processDeferredEffectsForCurrentPlayer() {
-            const player = players[currentPlayerIndex];
-            if (player.deferred_effects && player.deferred_effects.length > 0) {
-                console.log(`[DEBUG] Processing deferred effects for ${player.name} AT START OF THEIR TURN. Before:`, deepCopy(player.deferred_effects));
-                player.deferred_effects = player.deferred_effects.map(effect => ({
-                    ...effect,
-                    turns_left: effect.turns_left - 1
-                })).filter(effect => effect.turns_left >= 0); // Зберігаємо ефект, якщо turns_left стало 0, щоб він відобразився останній раз
-                players[currentPlayerIndex].deferred_effects = player.deferred_effects; // Оновлюємо основний масив
-                console.log(`[DEBUG] Deferred effects for ${player.name} AFTER processing for this turn:`, deepCopy(player.deferred_effects));
+        function selectAndDisplayQuestion(isAfterSkip = false) {
+            if (!isAfterSkip && currentQuestion) { 
+                saveCurrentStateForUndo();
             }
-        }
 
-
-        function selectAndDisplayQuestion(isUndoOrSkip = false) {
             if (questionPool.length === 0) {
                 triggerGameOverJS("Питання закінчились!");
                 return;
             }
-
-            // Обробляємо ефекти для гравця, чий хід зараз починається,
-            // АЛЕ тільки якщо це не відновлення з історії (бо там ефекти вже мають правильний стан)
-            // і не скіп (бо при скіпі хід не "починається" з точки зору ефектів, гравець просто міняє питання)
-            if (!isUndoOrSkip) { // isUndoOrSkip буде true при btnGoBack і, можливо, при btnSkip
-                 processDeferredEffectsForCurrentPlayer();
-            }
-
-
-            currentQuestion = questionPool.shift();
-            playedQuestionIdsThisSession.add(currentQuestion.id);
-            updateDisplay(); 
-        }
-
-        // Ця функція викликається при першому завантаженні гри
-        function initializeAndDisplayFirstQuestion() {
-            if (questionPool.length === 0) {
-                triggerGameOverJS("Питання закінчились для ініціалізації!");
-                return;
-            }
-            // Для першого гравця обробляємо ефекти, якщо вони вже є (наприклад, з попередньої сесії, хоча це малоймовірно з поточним reset)
-            processDeferredEffectsForCurrentPlayer(); 
-
             currentQuestion = questionPool.shift();
             playedQuestionIdsThisSession.add(currentQuestion.id);
             updateDisplay();
         }
 
+        function handlePlayerAction(isCompletedOrQuitAction) {
+            const actingPlayerIndex = currentPlayerIndex; // Гравець, який щойно діяв
 
-        function handlePlayerAction() {
-            // Більше не обробляємо тут deferred_effects гравця, що закінчив хід
-            const activePlayerIndices = getActivePlayerIndices();
-            if (activePlayerIndices.length < 2) {
-                triggerGameOverJS(activePlayerIndices.length === 1 ? "Залишився переможець!" : "Гравців не залишилось!");
+            // Спочатку обробляємо можливий вихід гравця або кінець гри
+            if (isCompletedOrQuitAction && players[actingPlayerIndex].active === false) { // Якщо гравець вийшов (active стало false)
+                // Нічого особливого тут, просто перевірка далі
+            }
+            
+            const activePlayerIndicesBeforeAction = getActivePlayerIndices();
+            if (activePlayerIndicesBeforeAction.length < 2 && !(isCompletedOrQuitAction && players[actingPlayerIndex].active === false && activePlayerIndicesBeforeAction.length === 0) ) {
+                 // Додаткова перевірка, щоб не завершити гру, якщо останній гравець виходить
+                if (getActivePlayerIndices().length === 1 && (!isCompletedOrQuitAction || players[actingPlayerIndex].active )) {
+                     triggerGameOverJS("Залишився переможець!");
+                } else if (getActivePlayerIndices().length === 0) {
+                     triggerGameOverJS("Гравців не залишилось!");
+                }
                 return;
             }
 
-            const oldPlayerIndex = currentPlayerIndex;
-            const nextPlayerIdx = getNextActivePlayerIndex(oldPlayerIndex);
 
-            if (nextPlayerIdx === null) { 
+            const oldPlayerIndex = currentPlayerIndex;
+            let nextPlayerIdx = getNextActivePlayerIndex(oldPlayerIndex);
+            
+            // Якщо після дії гравця (наприклад, виходу) активних гравців не залишилось або один
+            const activePlayerIndicesAfterPotentialQuit = getActivePlayerIndices();
+            if (activePlayerIndicesAfterPotentialQuit.length === 0) {
+                triggerGameOverJS("Гравців не залишилось!");
+                return;
+            }
+            if (activePlayerIndicesAfterPotentialQuit.length === 1 && nextPlayerIdx === null) {
+                 // Якщо nextPlayerIdx не вдалося знайти (наприклад, останній активний гравець щойно вийшов)
+                 // Але якщо є один активний, він і є переможець
+                triggerGameOverJS("Залишився переможець!");
+                return;
+            }
+            if (nextPlayerIdx === null && activePlayerIndicesAfterPotentialQuit.length > 0) {
+                nextPlayerIdx = activePlayerIndicesAfterPotentialQuit[0]; // Аварійний вибір наступного
+            }
+            if (nextPlayerIdx === null) { // Остаточна перевірка
                 triggerGameOverJS("Не вдалося знайти наступного гравця.");
                 return;
             }
-            
-            const firstActivePlayerIndex = activePlayerIndices[0];
-            if (nextPlayerIdx === firstActivePlayerIndex && activePlayerIndices.indexOf(oldPlayerIndex) === activePlayerIndices.length -1) {
-                 if (oldPlayerIndex !== nextPlayerIdx || activePlayerIndices.length > 1) { 
+
+
+            const firstActivePlayerIndex = activePlayerIndicesAfterPotentialQuit[0];
+            // Перевірка індексу старого гравця в оновленому списку активних
+            const oldPlayerPosInNewActive = activePlayerIndicesAfterPotentialQuit.indexOf(oldPlayerIndex);
+
+            if (nextPlayerIdx === firstActivePlayerIndex && 
+                (oldPlayerPosInNewActive === activePlayerIndicesAfterPotentialQuit.length - 1 || oldPlayerPosInNewActive === -1) ) {
+                 if (oldPlayerIndex !== nextPlayerIdx || activePlayerIndicesAfterPotentialQuit.length > 1) { 
                     currentRound++;
                  }
             }
             
             currentPlayerIndex = nextPlayerIdx;
 
+            // Обробка ефектів для гравця, який ЩОЙНО ЗАВЕРШИВ ХІД (players[actingPlayerIndex])
+            if (isCompletedOrQuitAction) { 
+                const playerWhoActed = players[actingPlayerIndex];
+                if (playerWhoActed.deferred_effects && playerWhoActed.deferred_effects.length > 0) {
+                    playerWhoActed.deferred_effects = playerWhoActed.deferred_effects.map(effect => ({
+                        ...effect,
+                        turns_left: effect.turns_left - 1
+                    })).filter(effect => effect.turns_left > 0);
+                }
+            }
+
             if (currentRound > gameConfig.general.max_rounds) {
                 triggerGameOverJS(`${gameConfig.general.max_rounds} кіл зіграно. Гра завершена!`);
                 return;
             }
-            selectAndDisplayQuestion(false); // isUndoOrSkip = false, бо це звичайний перехід ходу
+            selectAndDisplayQuestion();
         }
 
         btnCompleted.addEventListener('click', () => {
-            saveCurrentStateForUndo();
             doneSound.play().catch(e => console.warn("Done sound was blocked."));
             const q = currentQuestion;
-            const player = players[currentPlayerIndex]; // Гравець, що виконав завдання
+            const player = players[currentPlayerIndex];
             if (q.bonus_skip_on_complete) player.skips_left++;
-            
-            // Якщо питання дає новий ефект
             if (q.deferred_text_template && q.deferred_turns_player) {
                 player.deferred_effects = player.deferred_effects || [];
-                // Додаємо +1 до turns_left, бо поточний хід "не рахується" для нового ефекту,
-                // він почне діяти з НАСТУПНОГО ходу цього гравця.
-                // Або ж, при turns_left:1, він має зникнути ПІСЛЯ наступного ходу цього гравця.
-                // З поточним processDeferredEffectsForCurrentPlayer(), який віднімає 1 на початку ходу,
-                // просто додаємо як є.
-                const turns = parseInt(q.deferred_turns_player);
                 player.deferred_effects.push({
                     template: q.deferred_text_template,
-                    turns_left: turns, // Ефект почне "тікати" з наступного ходу цього гравця
+                    turns_left: parseInt(q.deferred_turns_player) + 1, // +1 для компенсації зменшення в кінці ходу
                     question_id: q.id
                 });
-                console.log(`[DEBUG] Added deferred effect for ${player.name} from QID ${q.id} with ${turns} turns. Current effects:`, deepCopy(player.deferred_effects));
             }
-            handlePlayerAction();
+            handlePlayerAction(true);
         });
 
         btnSkip.addEventListener('click', () => {
-            saveCurrentStateForUndo();
             const player = players[currentPlayerIndex];
             if (player.skips_left > 0) {
+                // Зберігаємо стан ДО пропуску, щоб можна було скасувати сам пропуск, ЯКЩО НЕ ВИРІШИЛИ ІНАКШЕ
+                // Згідно з завданням, історія має стиратися
+                gameHistoryForUndo = []; 
+                btnGoBack.disabled = true; // Оновлюємо кнопку "Назад" одразу
+                
                 player.skips_left--;
-                // При скіпі ефекти поточного гравця НЕ обробляються (хід не "починається")
-                selectAndDisplayQuestion(true); // isUndoOrSkip = true
-            } else {
-                 updateDisplay(); 
+                selectAndDisplayQuestion(true); // true = isAfterSkip, не зберігає історію перед новим питанням
+                // Після пропуску і показу нового питання, новий стан автоматично збережеться при наступній дії (completed/quit/skip)
             }
         });
         
         btnQuit.addEventListener('click', () => {
             saveCurrentStateForUndo(); 
             players[currentPlayerIndex].active = false;
-            // Ефекти гравця, що вийшов, не обробляються, бо він більше не ходить
-            handlePlayerAction();
+            handlePlayerAction(true); // true = isCompletedOrQuitAction
         });
 
         btnGoBack.addEventListener('click', () => {
             if (gameHistoryForUndo.length > 0) {
                 const prevState = gameHistoryForUndo.pop();
-                console.log("[DEBUG] Restoring state. History length now:", gameHistoryForUndo.length, "Restoring to:", deepCopy(prevState));
 
+                questionPool = deepCopy(prevState.questionPoolSnapshot); // Відновлюємо пул
+                
+                // Питання, яке було на екрані до скасування, додаємо назад в початок пулу,
+                // якщо воно відрізняється від того, яке ми відновлюємо.
+                // Це потрібно, бо currentQuestion з prevState - це те, що було ДО дії, яку скасовуємо.
+                if (currentQuestion && (!prevState.question || currentQuestion.id !== prevState.question.id)) {
+                    questionPool.unshift(deepCopy(currentQuestion));
+                }
+                
                 currentQuestion = deepCopy(prevState.question);
                 currentPlayerIndex = prevState.playerIndex;
                 currentRound = prevState.round;
-                
-                const currentSkipsMap = new Map();
-                players.forEach((p, idx) => currentSkipsMap.set(idx, p.skips_left));
-
-                players = deepCopy(prevState.playersSnapshot);
-                
-                players.forEach((p, idx) => {
-                    if (currentSkipsMap.has(idx)) {
-                        p.skips_left = currentSkipsMap.get(idx);
-                    }
-                });
-                
-                questionPool = deepCopy(prevState.questionPoolSnapshot);
+                players = deepCopy(prevState.playersSnapshot); // ВІДНОВЛЮЄМО ПОВНИЙ СТАН ГРАВЦІВ
                 playedQuestionIdsThisSession = new Set(prevState.playedQuestionIdsSnapshot);
                 
-                // При поверненні назад, ми не хочемо, щоб processDeferredEffectsForCurrentPlayer
-                // зменшував лічильники, бо вони вже мають бути правильними зі snapshot'у.
                 updateDisplay(true); // isRestoringFromHistory = true
+                btnGoBack.disabled = gameHistoryForUndo.length === 0;
             }
         });
-
 
         function triggerGameOverJS(message) {
             clearInterval(timerInterval);
@@ -513,7 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        function initializeFirstQuestionDisplayFromPHP() { // Renamed for clarity
+        function initializeFirstQuestionDisplay() {
             effectiveReadingDuration = window.INITIAL_GAME_STATE.initialEffectiveReadingDuration;
             mainTimerDurationFromQuestion = window.INITIAL_GAME_STATE.initialMainTimerDuration;
             secondsLeft = window.INITIAL_GAME_STATE.initialTimerValue;
@@ -535,22 +527,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             secondsLeft = Math.max(0, secondsLeft);
 
-            // Перше питання вже визначене в PHP і передане через INITIAL_GAME_STATE.questionPool[0]
-            // яке ми використовуємо для currentQuestion в initializeAndDisplayFirstQuestion
-            initializeAndDisplayFirstQuestion();
+            currentQuestion = questionPool.shift(); // Беремо перше питання
+            if (currentQuestion) { // Перевірка, чи питання існує
+                 playedQuestionIdsThisSession.add(currentQuestion.id);
+                 updateDisplay(); 
+            } else {
+                triggerGameOverJS("Немає питань для гри на старті."); // Якщо пул порожній
+                return;
+            }
 
 
-            const currentPlayer = players[currentPlayerIndex]; // Уже визначено в INITIAL_GAME_STATE
+            const currentPlayer = players[currentPlayerIndex];
             skipsLeftDisplay.textContent = currentPlayer.skips_left;
             btnSkip.disabled = currentPlayer.skips_left <= 0;
             btnGoBack.disabled = gameHistoryForUndo.length === 0; 
         }
 
         if (questionPool && questionPool.length > 0) {
-            initializeFirstQuestionDisplayFromPHP();
+            initializeFirstQuestionDisplay();
         } else {
-            // Це спрацює, якщо PHP передав порожній questionPool, що вже є проблемою на сервері
-            triggerGameOverJS("Немає питань для гри (помилка ініціалізації).");
+            triggerGameOverJS("Немає питань для гри.");
         }
     }
 
@@ -560,3 +556,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }, { passive: false });
     }
 });
+--- END OF FILE script.js.txt ---
