@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+
     const gamePage = document.querySelector('.game-page');
     if (gamePage && window.INITIAL_GAME_STATE) {
         let questionPool = [...window.INITIAL_GAME_STATE.questionPool];
@@ -163,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  return; 
             }
             if (effectiveReadingDuration <= 0 && mainTimerDurationFromQuestion <= 0) return; 
+
 
             timerInterval = setInterval(() => {
                 secondsLeft--;
@@ -248,9 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             questionTextDisplay.innerHTML = qText.replace(/\n/g, '<br>');
             
-            const deferredEffectsForCurrentPlayer = Array.isArray(currentPlayer.deferred_effects) ? currentPlayer.deferred_effects : [];
-            const activeDeferredEffects = deferredEffectsForCurrentPlayer.filter(effect => effect.turns_left > 0);
-
+            const activeDeferredEffects = currentPlayer.deferred_effects ? currentPlayer.deferred_effects.filter(effect => effect.turns_left > 0) : [];
             if (activeDeferredEffects.length > 0) {
                 let effectsHtml = '';
                 activeDeferredEffects.forEach(effect => {
@@ -259,8 +259,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 deferredMessagesContent.innerHTML = effectsHtml;
                 deferredMessagesDisplay.style.display = 'block';
             } else {
-                deferredMessagesContent.innerHTML = '';
-                deferredMessagesDisplay.style.display = 'none';
+                deferredMessagesContent.innerHTML = '<p style="font-style: italic; color: #aaa;">Немає активних ефектів.</p>';
+                deferredMessagesDisplay.style.display = 'block'; 
             }
 
             skipsLeftDisplay.textContent = currentPlayer.skips_left;
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.documentElement.style.setProperty('--icon-color', styleInfo.icon_color || 'rgba(255,255,255,0.1)');
             document.documentElement.style.setProperty('--icon-opacity', styleInfo.icon_opacity || 0.1);
             
-            if (!isRestoringFromHistory) { 
+            if (!isRestoringFromHistory) {
                 backgroundIconsContainer.innerHTML = ''; 
                 const iconClasses = styleInfo.icon_classes || ['fas fa-question-circle'];
                 const numIcons = Math.floor(Math.random() * 8) + 8;
@@ -293,10 +293,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
-            setupTimersForCurrentQuestion();
+            if(currentQuestion) setupTimersForCurrentQuestion(); // Check if currentQuestion is not null
         }
         
         function saveCurrentStateForUndo() {
+            if (!currentQuestion) return; // Не зберігати, якщо немає поточного питання
             if (gameHistoryForUndo.length >= 20) gameHistoryForUndo.shift();
             gameHistoryForUndo.push({
                 question: deepCopy(currentQuestion),
@@ -306,11 +307,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        function selectAndDisplayQuestion(isAfterSkip = false) {
-            if (!isAfterSkip && currentQuestion) { 
-                saveCurrentStateForUndo();
-            }
-
+        function selectAndDisplayQuestion() {
             if (questionPool.length === 0) {
                 triggerGameOverJS("Питання закінчились!");
                 return;
@@ -324,14 +321,12 @@ document.addEventListener('DOMContentLoaded', function() {
              const actingPlayer = players[currentPlayerIndex]; 
 
             if (isCompletedOrQuitAction) { 
-                if (!Array.isArray(actingPlayer.deferred_effects)) {
-                    actingPlayer.deferred_effects = [];
-                }
-                if (actingPlayer.deferred_effects.length > 0) {
+                if (actingPlayer.deferred_effects && actingPlayer.deferred_effects.length > 0) {
                     actingPlayer.deferred_effects = actingPlayer.deferred_effects.map(effect => ({
                         ...effect,
                         turns_left: effect.turns_left - 1
                     })).filter(effect => effect.turns_left > 0);
+                    players[currentPlayerIndex].deferred_effects = actingPlayer.deferred_effects;
                 }
             }
 
@@ -351,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const firstActivePlayerIndex = activePlayerIndices[0];
             if (nextPlayerIdx === firstActivePlayerIndex && activePlayerIndices.indexOf(oldPlayerIndex) === activePlayerIndices.length -1) {
-                 if (oldPlayerIndex !== nextPlayerIdx || activePlayerIndices.length > 1) { 
+                 if (oldPlayerIndex !== nextPlayerIdx || activePlayerIndices.length > 1) {
                     currentRound++;
                  }
             }
@@ -366,15 +361,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         btnCompleted.addEventListener('click', () => {
+            saveCurrentStateForUndo();
             doneSound.play().catch(e => console.warn("Done sound was blocked."));
             const q = currentQuestion;
             const player = players[currentPlayerIndex];
             if (q.bonus_skip_on_complete) player.skips_left++;
-            
             if (q.deferred_text_template && q.deferred_turns_player) {
-                if (!Array.isArray(player.deferred_effects)) {
-                    player.deferred_effects = [];
-                }
+                player.deferred_effects = player.deferred_effects || [];
                 player.deferred_effects.push({
                     template: q.deferred_text_template,
                     turns_left: parseInt(q.deferred_turns_player),
@@ -385,11 +378,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         btnSkip.addEventListener('click', () => {
+            saveCurrentStateForUndo();
             const player = players[currentPlayerIndex];
             if (player.skips_left > 0) {
-                saveCurrentStateForUndo(); 
                 player.skips_left--;
-                selectAndDisplayQuestion(true); 
+                selectAndDisplayQuestion(); 
+            } else {
+                 // Якщо скіпів 0, але кнопка чомусь активна, просто оновлюємо дисплей
+                 updateDisplay(); // Це відновить правильний стан кнопки skip
             }
         });
         
@@ -402,24 +398,26 @@ document.addEventListener('DOMContentLoaded', function() {
         btnGoBack.addEventListener('click', () => {
             if (gameHistoryForUndo.length > 0) {
                 const questionToPutBack = deepCopy(currentQuestion);
-                const prevState = gameHistoryForUndo.pop();
-                const previousPlayersSnapshot = deepCopy(prevState.playersSnapshot);
-
-                players = players.map((currentPlayerInLoop, index) => {
-                    const snapshotForThisPlayer = previousPlayersSnapshot[index];
-                    if (snapshotForThisPlayer) {
-                        return {
-                            ...deepCopy(snapshotForThisPlayer),
-                            skips_left: currentPlayerInLoop.skips_left 
-                        };
-                    }
-                    return currentPlayerInLoop; 
-                });
                 
+                const prevState = gameHistoryForUndo.pop();
+
                 currentQuestion = deepCopy(prevState.question);
-                currentPlayerIndex = prevState.playerIndex; 
+                currentPlayerIndex = prevState.playerIndex;
                 currentRound = prevState.round;
                 
+                const previousPlayersSnapshot = deepCopy(prevState.playersSnapshot);
+                players.forEach((currentPlayerInstance, index) => {
+                    const snapshotOfPlayer = previousPlayersSnapshot[index];
+                    if (snapshotOfPlayer) {
+                        const currentSkips = currentPlayerInstance.skips_left; 
+                        
+                        Object.assign(currentPlayerInstance, snapshotOfPlayer); 
+                        
+                        currentPlayerInstance.skips_left = currentSkips;
+                        currentPlayerInstance.deferred_effects = deepCopy(snapshotOfPlayer.deferred_effects || []);
+                    }
+                });
+
                 if (questionToPutBack && questionToPutBack.id !== currentQuestion.id) { 
                     questionPool.unshift(questionToPutBack);
                     if (playedQuestionIdsThisSession.has(questionToPutBack.id)) {
@@ -427,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 
-                updateDisplay(true); 
+                updateDisplay(true);
                 btnGoBack.disabled = gameHistoryForUndo.length === 0;
             }
         });
