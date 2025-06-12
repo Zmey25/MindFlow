@@ -53,18 +53,6 @@ function get_next_active_player_index($current_index) {
     return null;
 }
 
-function push_to_history($current_question, $current_player_idx, $current_round, $players_state) {
-    if (count($_SESSION['game_history']) >= 20) array_shift($_SESSION['game_history']);
-    $_SESSION['game_history'][] = [
-        'question' => $current_question,
-        'player_index' => $current_player_idx,
-        'round' => $current_round,
-        'players_state' => $players_state,
-        'skips_snapshot' => array_map(function($p) { return $p['skips_left']; }, $_SESSION['players']) // Snapshot of skips at this point
-    ];
-}
-
-
 function select_question($is_initial_selection_for_turn = true) {
     global $questions_data_map, $reading_timer_duration_setting;
     if (empty($_SESSION['game_question_pool'])) return null;
@@ -83,7 +71,14 @@ function select_question($is_initial_selection_for_turn = true) {
     $_SESSION['timer_started_at'] = time();
 
     if ($is_initial_selection_for_turn) {
-        push_to_history($_SESSION['current_question_data'], $_SESSION['current_player_index'], $_SESSION['current_round'], $_SESSION['players']);
+        if (count($_SESSION['game_history']) >= 20) array_shift($_SESSION['game_history']);
+        array_push($_SESSION['game_history'], [
+            'question' => $_SESSION['current_question_data'],
+            'player_index' => $_SESSION['current_player_index'],
+            'round' => $_SESSION['current_round'],
+            'players_state' => $_SESSION['players'],
+            'is_after_skip' => false
+        ]);
     }
     return $_SESSION['current_question_data'];
 }
@@ -93,35 +88,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
     $player_idx_for_action = $_SESSION['current_player_index'];
     $question_acted_upon = $_SESSION['current_question_data'];
-    $skips_before_action = $_SESSION['players'][$player_idx_for_action]['skips_left'];
-
 
     if ($action === 'go_back') {
         if (!empty($_SESSION['game_history'])) {
-            array_pop($_SESSION['game_history']); 
+            array_pop($_SESSION['game_history']);
 
             if (!empty($_SESSION['game_history'])) {
-                $last_state = end($_SESSION['game_history']); 
+                $previous_history_state = end($_SESSION['game_history']);
 
                 if (isset($question_acted_upon['id'])) {
                      array_unshift($_SESSION['game_question_pool'], $question_acted_upon['id']);
                 }
-
-                $_SESSION['current_question_data'] = $last_state['question'];
-                $_SESSION['current_player_index'] = $last_state['player_index'];
-                $_SESSION['current_round'] = $last_state['round'];
                 
-                $restored_players_state = $last_state['players_state'];
-                // Skips are NOT restored from history, current skips remain.
-                foreach ($restored_players_state as $idx => &$player_in_state) {
-                    if (isset($_SESSION['players'][$idx])) {
-                        $player_in_state['skips_left'] = $_SESSION['players'][$idx]['skips_left'];
+                $current_player_skips = [];
+                foreach ($_SESSION['players'] as $index => $player) {
+                    $current_player_skips[$index] = $player['skips_left'];
+                }
+
+                $_SESSION['players'] = $previous_history_state['players_state'];
+                
+                foreach ($current_player_skips as $index => $skips) {
+                    if (isset($_SESSION['players'][$index])) {
+                        $_SESSION['players'][$index]['skips_left'] = $skips;
                     }
                 }
-                unset($player_in_state); // Break reference
-                $_SESSION['players'] = $restored_players_state;
 
-
+                $_SESSION['current_question_data'] = $previous_history_state['question'];
+                $_SESSION['current_player_index'] = $previous_history_state['player_index'];
+                $_SESSION['current_round'] = $previous_history_state['round'];
+                
                 $question_has_main_timer = (($_SESSION['current_question_data']['timer'] ?? 0) > 0);
                 if ($question_has_main_timer && $reading_timer_duration_setting > 0) {
                     $_SESSION['timer_phase'] = 'reading';
@@ -129,6 +124,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     $_SESSION['timer_phase'] = 'main';
                 }
                 $_SESSION['timer_started_at'] = time();
+            } else {
+                 if (isset($question_acted_upon['id'])) {
+                     array_unshift($_SESSION['game_question_pool'], $question_acted_upon['id']);
+                 }
             }
         }
     } else {
@@ -145,6 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             }
         }
 
+        $is_skip_action = false;
         if ($action === 'completed') {
             $q = $question_acted_upon;
             if ($q['bonus_skip_on_complete'] ?? false) $player_data_ref['skips_left']++;
@@ -154,30 +154,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $_SESSION['current_question_data'] = null; 
         } elseif ($action === 'skip') {
             if ($player_data_ref['skips_left'] > 0) {
-                $player_data_ref['skips_left']--; 
-                
-                // When skipping, we push a new state that reflects the skip action and the new question.
-                // The previous state (before skip) is already in history.
-                $_SESSION['current_question_data'] = null;
-                // select_question(false) will get new question but NOT push to history here.
-                // History push for skip will happen after new question is selected and shown.
+                $player_data_ref['skips_left']--;
+                $is_skip_action = true;
+                if (!empty($_SESSION['game_history'])) array_pop($_SESSION['game_history']);
+                $_SESSION['current_question_data'] = null; 
             }
         } elseif ($action === 'quit') {
             $player_data_ref['active'] = false;
             $_SESSION['current_question_data'] = null; 
         }
         
-        if ($action === 'completed' || $action === 'quit' || ($action === 'skip' && $player_data_ref['skips_left'] < $skips_before_action) ) {
-            // If it was a turn-ending action OR a successful skip, we need to potentially update history for the *next* state display
-            // For completed/quit, the next state is a new player.
-            // For skip, the next state is a new question for the same player.
-            // The initial state of this turn/question was already pushed by select_question or page load.
-            // What we might need here is to ensure the state *after* the action is correctly reflected if needed by a subsequent `go_back`.
-            // However, `select_question` (called on page load or after `completed`/`quit`) will handle pushing the *new* turn's initial state.
-            // For `skip`, `select_question` will be called, and it will push the state with the new question.
-        }
-
-
         if ($action === 'completed' || $action === 'quit') {
             $active_players_count = count(get_active_players_indices());
             if ($active_players_count < 2) {
@@ -196,8 +182,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                            $_SESSION['current_round']++;
                        }
                     }
-                    $_SESSION['current_player_index'] = $next_player_idx; 
+                    $_SESSION['current_player_index'] = $next_player_idx;
                 }
+            }
+        }
+        
+        if ($is_skip_action && !($_SESSION['game_over'] ?? false)) {
+            if (select_question(false) === null) {
+                 $_SESSION['game_over'] = true;
+                 $_SESSION['game_over_message'] = "Питання закінчились після спроби реролу!";
+            } else {
+                 if (count($_SESSION['game_history']) >= 20) array_shift($_SESSION['game_history']);
+                 array_push($_SESSION['game_history'], [
+                     'question' => $_SESSION['current_question_data'],
+                     'player_index' => $_SESSION['current_player_index'],
+                     'round' => $_SESSION['current_round'],
+                     'players_state' => $_SESSION['players'],
+                     'is_after_skip' => true
+                 ]);
             }
         }
     } 
@@ -211,36 +213,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     exit;
 }
 
-
-$is_new_turn_for_player = false;
 if ( empty($_SESSION['current_question_data']) || 
     !(isset($_SESSION['players'][$_SESSION['current_player_index']]['active']) && $_SESSION['players'][$_SESSION['current_player_index']]['active'])
    ) {
     if (!($_SESSION['game_over'] ?? false)) { 
-        
         if (!(isset($_SESSION['players'][$_SESSION['current_player_index']]['active']) && $_SESSION['players'][$_SESSION['current_player_index']]['active'])) {
-            $current_player_idx_before_skip_inactive = $_SESSION['current_player_index'];
-            $fallback_idx = get_next_active_player_index( $current_player_idx_before_skip_inactive -1 < 0 ? count($_SESSION['players']) -1 : $current_player_idx_before_skip_inactive -1 );
+            $current_player_idx_before_skip = $_SESSION['current_player_index'];
+            $fallback_idx = get_next_active_player_index( $current_player_idx_before_skip -1 < 0 ? count($_SESSION['players']) -1 : $current_player_idx_before_skip -1 );
             if ($fallback_idx !== null) {
                 $_SESSION['current_player_index'] = $fallback_idx;
-                $is_new_turn_for_player = true;
             } else {
                 $_SESSION['game_over'] = true;
                 $_SESSION['game_over_message'] = "Немає активних гравців для продовження.";
             }
-        } else {
-             $is_new_turn_for_player = true; // No player change, but new question needed
         }
 
         if (!($_SESSION['game_over'] ?? false)) {
-            if (select_question($is_new_turn_for_player) === null) { 
+            if (select_question() === null) { 
                 $_SESSION['game_over'] = true;
                 $_SESSION['game_over_message'] = "Питання закінчились!";
             }
         }
     }
 }
-
 
 if ($_SESSION['game_over'] ?? false) {
     header('Location: game_over.php');
@@ -271,7 +266,6 @@ $style_info = $category_styles[$current_question['category']] ?? ($category_styl
 $next_player_name_display = 'Нікого';
 $next_player_idx_val = get_next_active_player_index($_SESSION['current_player_index']);
 if ($next_player_idx_val !== null) $next_player_name_display = $_SESSION['players'][$next_player_idx_val]['name'];
-
 
 $main_timer_from_question = (int)($current_question['timer'] ?? 0);
 $js_effective_reading_duration = 0;
