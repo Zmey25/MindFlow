@@ -39,17 +39,194 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        const presets = {
-            party: {
-                settings: { reading_timer_duration: 8, max_rounds: 7, initial_skips: 2 },
-                categories: { "Веселі завдання": { enabled: true, weight: 50 }, "Розкрийся!": { enabled: true, weight: 30 }, "Хардкор": { enabled: false, weight: 5 }, "Рухайся!": { enabled: true, weight: 40 }, "Креатив": { enabled: false, weight: 10 }, "Алкогольні": { enabled: true, weight: 60 }, "Для компанії": { enabled: true, weight: 35 }, "тест": { enabled: false, weight: 0 } }
-            },
-            creative: {
-                settings: { reading_timer_duration: 15, max_rounds: 4, initial_skips: 1 },
-                categories: { "Веселі завдання": { enabled: true, weight: 20 }, "Розкрийся!": { enabled: true, weight: 50 }, "Хардкор": { enabled: true, weight: 15 }, "Рухайся!": { enabled: false, weight: 5 }, "Креатив": { enabled: true, weight: 60 }, "Алкогольні": { enabled: false, weight: 5 }, "Для компанії": { enabled: true, weight: 30 }, "тест": { enabled: false, weight: 0 } }
-            },
-            default: { settings: { reading_timer_duration: 10, max_rounds: 5, initial_skips: 1 }, categories: {} }
-        };
+const presets = {
+    // Пресет для класичної вечірки: сміх, алкоголь, завдання та трохи особистого.
+    party: {
+        settings: { reading_timer_duration: 8, max_rounds: 10, initial_skips: 2 },
+        categories: {
+            "Розкрийся!": { enabled: true, weight: 20 },
+            "Штраф": { enabled: true, weight: 15 },
+            "Подарунок": { enabled: true, weight: 15 },
+            "Виклик": { enabled: true, weight: 35 },
+            "Машина Часу": { enabled: true, weight: 15 },
+            "Погляд у Майбутнє": { enabled: true, weight: 15 },
+            "А що, якби...?": { enabled: true, weight: 25 },
+            "Ти і Я": { enabled: true, weight: 30 },
+            "Сміхопанорама": { enabled: true, weight: 40 },
+            "Етична Дилема": { enabled: true, weight: 10 },
+            "Світ Кіно та Музики": { enabled: true, weight: 25 },
+            "Таємна Скринька": { enabled: true, weight: 15 },
+            "Креативний Куточок": { enabled: true, weight: 15 },
+            "Бліц!": { enabled: true, weight: 20 },
+            "Хто перший?": { enabled: true, weight: 30 },
+            "Ланцюгова Реакція": { enabled: true, weight: 35 },
+            "Ігровий Вірус": { enabled: true, weight: 25 },
+            "Дуель": { enabled: true, weight: 25 },
+            "Спільний Розум": { enabled: true, weight: 30 },
+            "Кривий Художник": { enabled: true, weight: 15 },
+            "Перекличка": { enabled: true, weight: 35 },
+            "Таємно": { enabled: true, weight: 25 },
+            "Обирайте": { enabled: true, weight: 30 },
+            "тест": { enabled: false, weight: 0 },
+            "Default": { enabled: true, weight: 0 }
+        }
+    },
+    // Пресет для глибоких розмов та кращого знайомства. Мінімум активностей.
+    deepTalk: {
+        settings: { reading_timer_duration: 15, max_rounds: 8, initial_skips: 3 },
+        categories: {
+            "Розкрийся!": { enabled: true, weight: 50 },
+            "Штраф": { enabled: false, weight: 10 },
+            "Подарунок": { enabled: false, weight: 10 },
+            "Виклик": { enabled: true, weight: 10 },
+            "Машина Часу": { enabled: true, weight: 45 },
+            "Погляд у Майбутнє": { enabled: true, weight: 45 },
+            "А що, якби...?": { enabled: true, weight: 35 },
+            "Ти і Я": { enabled: true, weight: 30 },
+            "Сміхопанорама": { enabled: true, weight: 20 },
+            "Етична Дилема": { enabled: true, weight: 40 },
+            "Світ Кіно та Музики": { enabled: true, weight: 25 },
+            "Таємна Скринька": { enabled: true, weight: 20 },
+            "Креативний Куточок": { enabled: true, weight: 15 },
+            "Бліц!": { enabled: false, weight: 10 },
+            "Хто перший?": { enabled: false, weight: 10 },
+            "Ланцюгова Реакція": { enabled: true, weight: 10 },
+            "Ігровий Вірус": { enabled: false, weight: 10 },
+            "Дуель": { enabled: false, weight: 10 },
+            "Спільний Розум": { enabled: true, weight: 15 },
+            "Кривий Художник": { enabled: true, weight: 10 },
+            "Перекличка": { enabled: true, weight: 10 },
+            "Таємно": { enabled: true, weight: 15 },
+            "Обирайте": { enabled: true, weight: 20 },
+            "тест": { enabled: false, weight: 0 },
+            "Default": { enabled: true, weight: 0 }
+        }
+    },
+    // Пресет для розкриття творчого потенціалу. Акцент на малюванні, уяві та нестандартних завданнях.
+    creative: {
+        settings: { reading_timer_duration: 12, max_rounds: 8, initial_skips: 2 },
+        categories: {
+            "Розкрийся!": { enabled: true, weight: 20 },
+            "Штраф": { enabled: true, weight: 10 },
+            "Подарунок": { enabled: true, weight: 10 },
+            "Виклик": { enabled: true, weight: 25 },
+            "Машина Часу": { enabled: true, weight: 20 },
+            "Погляд у Майбутнє": { enabled: true, weight: 20 },
+            "А що, якби...?": { enabled: true, weight: 50 },
+            "Ти і Я": { enabled: true, weight: 25 },
+            "Сміхопанорама": { enabled: true, weight: 30 },
+            "Етична Дилема": { enabled: true, weight: 10 },
+            "Світ Кіно та Музики": { enabled: true, weight: 25 },
+            "Таємна Скринька": { enabled: true, weight: 10 },
+            "Креативний Куточок": { enabled: true, weight: 50 },
+            "Бліц!": { enabled: true, weight: 15 },
+            "Хто перший?": { enabled: true, weight: 15 },
+            "Ланцюгова Реакція": { enabled: true, weight: 20 },
+            "Ігровий Вірус": { enabled: true, weight: 20 },
+            "Дуель": { enabled: true, weight: 15 },
+            "Спільний Розум": { enabled: true, weight: 25 },
+            "Кривий Художник": { enabled: true, weight: 50 },
+            "Перекличка": { enabled: true, weight: 15 },
+            "Таємно": { enabled: true, weight: 40 },
+            "Обирайте": { enabled: true, weight: 20 },
+            "тест": { enabled: false, weight: 0 },
+            "Default": { enabled: true, weight: 0 }
+        }
+    },
+    // Пресет для компаній, що люблять змагатися. Багато інтерактивних ігрових механік.
+    gameNight: {
+        settings: { reading_timer_duration: 7, max_rounds: 12, initial_skips: 1 },
+        categories: {
+            "Розкрийся!": { enabled: true, weight: 10 },
+            "Штраф": { enabled: true, weight: 20 },
+            "Подарунок": { enabled: true, weight: 20 },
+            "Виклик": { enabled: true, weight: 30 },
+            "Машина Часу": { enabled: true, weight: 10 },
+            "Погляд у Майбутнє": { enabled: true, weight: 10 },
+            "А що, якби...?": { enabled: true, weight: 15 },
+            "Ти і Я": { enabled: true, weight: 35 },
+            "Сміхопанорама": { enabled: true, weight: 20 },
+            "Етична Дилема": { enabled: true, weight: 10 },
+            "Світ Кіно та Музики": { enabled: true, weight: 20 },
+            "Таємна Скринька": { enabled: true, weight: 15 },
+            "Креативний Куточок": { enabled: true, weight: 15 },
+            "Бліц!": { enabled: true, weight: 35 },
+            "Хто перший?": { enabled: true, weight: 45 },
+            "Ланцюгова Реакція": { enabled: true, weight: 45 },
+            "Ігровий Вірус": { enabled: true, weight: 40 },
+            "Дуель": { enabled: true, weight: 40 },
+            "Спільний Розум": { enabled: true, weight: 40 },
+            "Кривий Художник": { enabled: true, weight: 20 },
+            "Перекличка": { enabled: true, weight: 35 },
+            "Таємно": { enabled: true, weight: 25 },
+            "Обирайте": { enabled: true, weight: 35 },
+            "тест": { enabled: false, weight: 0 },
+            "Default": { enabled: true, weight: 0 }
+        }
+    },
+    // Пікантний пресет для дорослої компанії. Більше провокаційних та особистих питань.
+    adultsOnly: {
+        settings: { reading_timer_duration: 10, max_rounds: 10, initial_skips: 2 },
+        categories: {
+            "Розкрийся!": { enabled: true, weight: 35 },
+            "Штраф": { enabled: true, weight: 30 },
+            "Подарунок": { enabled: true, weight: 20 },
+            "Виклик": { enabled: true, weight: 25 },
+            "Машина Часу": { enabled: true, weight: 20 },
+            "Погляд у Майбутнє": { enabled: true, weight: 20 },
+            "А що, якби...?": { enabled: true, weight: 25 },
+            "Ти і Я": { enabled: true, weight: 30 },
+            "Сміхопанорама": { enabled: true, weight: 25 },
+            "Етична Дилема": { enabled: true, weight: 25 },
+            "Світ Кіно та Музики": { enabled: true, weight: 15 },
+            "Таємна Скринька": { enabled: true, weight: 50 },
+            "Креативний Куточок": { enabled: true, weight: 15 },
+            "Бліц!": { enabled: true, weight: 20 },
+            "Хто перший?": { enabled: true, weight: 20 },
+            "Ланцюгова Реакція": { enabled: true, weight: 20 },
+            "Ігровий Вірус": { enabled: true, weight: 25 },
+            "Дуель": { enabled: true, weight: 25 },
+            "Спільний Розум": { enabled: true, weight: 20 },
+            "Кривий Художник": { enabled: true, weight: 20 },
+            "Перекличка": { enabled: true, weight: 30 },
+            "Таємно": { enabled: true, weight: 35 },
+            "Обирайте": { enabled: true, weight: 30 },
+            "тест": { enabled: false, weight: 0 },
+            "Default": { enabled: true, weight: 0 }
+        }
+    },
+    // Налаштування за замовчуванням: усі категорії увімкнені з рівною вагою.
+    default: {
+        settings: { reading_timer_duration: 10, max_rounds: 10, initial_skips: 2 },
+        categories: {
+            "Розкрийся!": { enabled: true, weight: 25 },
+            "Штраф": { enabled: true, weight: 15 },
+            "Подарунок": { enabled: true, weight: 15 },
+            "Виклик": { enabled: true, weight: 25 },
+            "Машина Часу": { enabled: true, weight: 25 },
+            "Погляд у Майбутнє": { enabled: true, weight: 25 },
+            "А що, якби...?": { enabled: true, weight: 25 },
+            "Ти і Я": { enabled: true, weight: 25 },
+            "Сміхопанорама": { enabled: true, weight: 25 },
+            "Етична Дилема": { enabled: true, weight: 15 },
+            "Світ Кіно та Музики": { enabled: true, weight: 25 },
+            "Таємна Скринька": { enabled: true, weight: 15 },
+            "Креативний Куточок": { enabled: true, weight: 25 },
+            "Бліц!": { enabled: true, weight: 25 },
+            "Хто перший?": { enabled: true, weight: 25 },
+            "Ланцюгова Реакція": { enabled: true, weight: 25 },
+            "Ігровий Вірус": { enabled: true, weight: 25 },
+            "Дуель": { enabled: true, weight: 25 },
+            "Спільний Розум": { enabled: true, weight: 25 },
+            "Кривий Художник": { enabled: true, weight: 25 },
+            "Перекличка": { enabled: true, weight: 25 },
+            "Таємно": { enabled: true, weight: 25 },
+            "Обирайте": { enabled: true, weight: 25 },
+            "тест": { enabled: false, weight: 0 },
+            "Default": { enabled: true, weight: 0 }
+        }
+    }
+};
 
         document.querySelectorAll('.preset-btn').forEach(button => {
             button.addEventListener('click', function() {
