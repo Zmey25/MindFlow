@@ -1,8 +1,6 @@
 <?php
 session_start();
 
-const READING_TIMER_DURATION = 10;
-
 if (!isset($_SESSION['game_started']) || $_SESSION['game_started'] !== true) {
     header('Location: index.php?new_game=true');
     exit;
@@ -11,6 +9,10 @@ if (isset($_SESSION['game_over']) && $_SESSION['game_over'] === true) {
     header('Location: game_over.php');
     exit;
 }
+
+$game_settings = $_SESSION['game_settings'] ?? [];
+$reading_timer_duration = $game_settings['reading_timer'] ?? 10;
+$max_rounds = $game_settings['max_rounds'] ?? 5;
 
 $questions_data_map = $_SESSION['all_questions_data'] ?? [];
 $category_styles = $_SESSION['category_styles'] ?? [];
@@ -64,89 +66,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
     if ($action === 'go_back') {
         if (!empty($_SESSION['game_history'])) {
+            array_pop($_SESSION['questions_used_this_game']);
             if (isset($_SESSION['current_question_data']['id'])) {
                 array_unshift($_SESSION['game_question_pool'], $_SESSION['current_question_data']['id']);
             }
             $last_state = array_pop($_SESSION['game_history']);
-
-            $_SESSION['current_question_data'] = $last_state['question'];
-            $_SESSION['current_player_index'] = $last_state['player_index'];
-            $_SESSION['current_round'] = $last_state['round'];
-            $_SESSION['players'] = $last_state['players_state'];
-
-            $_SESSION['timer_phase'] = 'reading';
-            $_SESSION['timer_started_at'] = time();
+            $_SESSION = array_merge($_SESSION, $last_state);
         }
     } else {
         $current_player_idx = $_SESSION['current_player_index'];
-        
-        // Save state BEFORE any modifications for this turn
+        $player_data = &$_SESSION['players'][$current_player_idx];
+
         array_push($_SESSION['game_history'], [
             'question' => $_SESSION['current_question_data'],
             'player_index' => $current_player_idx,
             'round' => $_SESSION['current_round'],
-            'players_state' => $_SESSION['players']
+            'players_state' => $_SESSION['players'],
+            'timer_phase' => $_SESSION['timer_phase'],
+            'timer_started_at' => $_SESSION['timer_started_at']
         ]);
 
-        // --- NEW: Modify state explicitly here ---
-        $player_data = &$_SESSION['players'][$current_player_idx];
-        
-        // 1. Decrement existing effects for the current player
-        if (!empty($player_data['deferred_effects'])) {
-            $active_effects = [];
-            foreach ($player_data['deferred_effects'] as $effect) {
-                $effect['turns_left']--;
-                if ($effect['turns_left'] > 0) {
-                    $active_effects[] = $effect;
-                }
-            }
-            $player_data['deferred_effects'] = $active_effects;
-        }
+        $_SESSION['questions_used_this_game'][] = $_SESSION['current_question_data']['id'];
 
-        // 2. Apply action consequences
-        if ($action === 'completed') {
-            $q = $_SESSION['current_question_data'];
-            if ($q['bonus_skip_on_complete'] ?? false) $player_data['skips_left']++;
-            if (!empty($q['deferred_text_template']) && !empty($q['deferred_turns_player'])) {
-                $player_data['deferred_effects'][] = ['template' => $q['deferred_text_template'], 'turns_left' => (int)$q['deferred_turns_player'], 'question_id' => $q['id']];
+        if ($action === 'skip') {
+            if ($player_data['skips_left'] > 0) {
+                $player_data['skips_left']--;
+                $_SESSION['current_question_data'] = null;
             }
-        } elseif ($action === 'skip' && $player_data['skips_left'] > 0) {
-            $player_data['skips_left']--;
-        } elseif ($action === 'quit') {
-            $player_data['active'] = false;
-        }
-        
-        // 3. Move to next player
-        $_SESSION['current_question_data'] = null;
-        $active_players_count = count(get_active_players_indices());
-
-        if ($active_players_count < 2) {
-            $_SESSION['game_over'] = true;
-            $_SESSION['game_over_message'] = $active_players_count === 1 ? "Залишився переможець!" : "Гравців не залишилось!";
         } else {
-            $next_player_idx = get_next_active_player_index($current_player_idx);
-            if ($next_player_idx === null) {
-                $_SESSION['game_over'] = true;
-                $_SESSION['game_over_message'] = "Не вдалося знайти наступного гравця.";
-            } else {
-                $active_indices = get_active_players_indices();
-                if (($next_player_idx == ($active_indices[0] ?? null)) && ($current_player_idx !== $next_player_idx || count($active_indices) === 1)) {
-                    $_SESSION['current_round']++;
+            if ($action === 'completed') {
+                if (!empty($player_data['deferred_effects'])) {
+                    $active_effects = [];
+                    foreach ($player_data['deferred_effects'] as $effect) {
+                        $effect['turns_left']--;
+                        if ($effect['turns_left'] > 0) $active_effects[] = $effect;
+                    }
+                    $player_data['deferred_effects'] = $active_effects;
                 }
-                $_SESSION['current_player_index'] = $next_player_idx;
+                $q = $_SESSION['current_question_data'];
+                if ($q['bonus_skip_on_complete'] ?? false) $player_data['skips_left']++;
+                if (!empty($q['deferred_text_template']) && !empty($q['deferred_turns_player'])) {
+                    $player_data['deferred_effects'][] = ['template' => $q['deferred_text_template'], 'turns_left' => (int)$q['deferred_turns_player'], 'question_id' => $q['id']];
+                }
+            } elseif ($action === 'quit') {
+                $player_data['active'] = false;
+            }
+            
+            $active_players_count = count(get_active_players_indices());
+            if ($active_players_count < 2) {
+                $_SESSION['game_over'] = true;
+                $_SESSION['game_over_message'] = $active_players_count === 1 ? "Залишився переможець!" : "Гравців не залишилось!";
+            } else {
+                $next_player_idx = get_next_active_player_index($current_player_idx);
+                if ($next_player_idx === null) {
+                    $_SESSION['game_over'] = true;
+                    $_SESSION['game_over_message'] = "Не вдалося знайти наступного гравця.";
+                } else {
+                    $active_indices = get_active_players_indices();
+                    $is_new_round = ($next_player_idx == ($active_indices[0] ?? null)) && ($current_player_idx !== $next_player_idx || count($active_indices) === 1);
+                    if ($is_new_round) {
+                        $_SESSION['current_round']++;
+                    }
+                    $_SESSION['current_player_index'] = $next_player_idx;
+                    $_SESSION['current_question_data'] = null;
+                }
             }
         }
     }
 
-    if (isset($_SESSION['current_round']) && $_SESSION['current_round'] > 5) {
+    if (isset($_SESSION['current_round']) && $_SESSION['current_round'] > $max_rounds) {
         $_SESSION['game_over'] = true;
-        $_SESSION['game_over_message'] = "5 кіл зіграно. Гра завершена!";
+        $_SESSION['game_over_message'] = "$max_rounds кіл зіграно. Гра завершена!";
     }
 
     header('Location: game.php');
     exit;
 }
-
 
 if (empty($_SESSION['current_question_data'])) {
     if (select_question() === null) {
@@ -175,7 +170,6 @@ if (!($_SESSION['players'][$current_player_idx]['active'] ?? false)) {
 
 $current_player_data = $_SESSION['players'][$current_player_idx];
 $current_question = $_SESSION['current_question_data'];
-
 $deferred_messages_to_display = [];
 if (!empty($current_player_data['deferred_effects'])) {
     foreach ($current_player_data['deferred_effects'] as $effect) {
@@ -202,9 +196,9 @@ $initial_timer_value = null;
 $current_phase_for_js = $_SESSION['timer_phase'] ?? 'reading';
 $main_timer_duration = $current_question['timer'] ?? null;
 if ($main_timer_duration !== null) {
-    $elapsed = time() - $_SESSION['timer_started_at'];
+    $elapsed = time() - ($_SESSION['timer_started_at'] ?? time());
     if ($current_phase_for_js === 'reading') {
-        $remaining = READING_TIMER_DURATION - $elapsed;
+        $remaining = $reading_timer_duration - $elapsed;
         $initial_timer_value = ($remaining > 0) ? $remaining : $main_timer_duration + $remaining;
         if ($remaining <= 0) $current_phase_for_js = 'main';
     } else {
@@ -228,7 +222,8 @@ if ($main_timer_duration !== null) {
             iconOpacity: <?php echo json_encode($style_info['icon_opacity'] ?? 0.1); ?>,
             mainTimerDuration: <?php echo json_encode($main_timer_duration); ?>,
             initialTimerValue: <?php echo json_encode($initial_timer_value); ?>,
-            initialPhase: <?php echo json_encode($current_phase_for_js); ?>
+            initialPhase: <?php echo json_encode($current_phase_for_js); ?>,
+            readingTimerDuration: <?php echo json_encode($reading_timer_duration); ?>
         };
     </script>
 </head><body>
