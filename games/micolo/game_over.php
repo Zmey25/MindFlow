@@ -141,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_game_entirely']))
         <form method="POST" action="game_over.php">
              <button type="submit" name="new_game_entirely" class="new-game-btn">Почати нову гру (нові гравці/налаштування)</button>
         </form>
-        <p style="margin-top: 20px; font-size: 0.9em;">Не забудьте зробити 5-хвилинну перерву!</p>
+        <p style="margin-top: 20px; font-size: 1.5em;">Не забудьте зробити 5-хвилинну перерву!</p>
     </div>
 </body>
 </html>
