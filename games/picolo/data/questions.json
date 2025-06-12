@@ -4241,29 +4241,2246 @@
   },
   {
     "id": 509,
-    "category": "тест",
-    "text": "{PLAYER_NAME}, цілий круг, коли поруч з вами проходить хтось, хто не грає в цю гру, ти повинен сказати йому фразу 'Русня підараси'. За кожне порушення 5 ковтків.",
-    "deferred_text_template": "Можеш не казати незнайомцям нічого зайвого.",
-    "deferred_turns_player": 5,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зніми 15-секундний TikTok-огляд на будь-який предмет на столі, починаючи зі слів 'Розпаковка! Це просто жесть!'. Відмова — 4 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 510,
+    "category": "Розкрийся!",
+    "text": "{PLAYER_NAME}, який 'крінжовий' трек з минулого ти досі таємно слухаєш в навушниках? Якщо відмовляєшся назвати — 2 ковтки і вмикай його для всіх.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 511,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, змішай три будь-які соуси, що є на столі. Вмочи в це шматок хліба (або чипса) і з'їж. Якщо немає соусів, змішай 3 напої. Відмова — 5 ковтків.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 512,
+    "category": "Подарунок",
+    "text": "Володар Часу! {PLAYER_NAME}, ти можеш один раз за наступне коло змусити групу повернутися на одного гравця назад і переграти його хід ще раз.",
+    "deferred_text_template": "{PLAYER_NAME}, у тебе вже немає можливості відмотати час назад :(",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 513,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME} та {RANDOM_PLAYER_NAME}, придумайте разом назву для вашого спільного подкасту, а потім почніть один з епізодів.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true,
+    "timer": null
+  },
+  {
+    "id": 514,
+    "category": "Бліц!",
+    "text": "{PLAYER_NAME}, назви 3 речі, які точно є в сумці у твоєї мами (або бабусі). Час пішов!",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
     "bonus_skip_on_complete": false,
     "timer": 10
   },
   {
-    "id": 510,
-    "category": "тест",
-    "text": "{PLAYER_NAME}, цілий круг, коли поруч з вами проходить хтось, хто не грає в цю гру, ти повинен сказати йому фразу 'Русня підараси'. За кожне порушення 5 ковтків.",
-    "deferred_text_template": "Можеш не казати незнайомцям нічого зайвого.",
+    "id": 515,
+    "category": "Машина Часу",
+    "text": "Згадай найдурнішу річ, через яку ти плакав(ла) у дитинстві. Якщо не можеш згадати — 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 516,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший згадає будь-яку фразу з інтерв'ю Віталія Кличка — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 517,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло всі гравці повинні говорити, ніби вони ведучі програми новин ТСН (з характерними паузами та інтонацією). Порушник п'є штрафний ковток.",
+    "deferred_text_template": "Карантин знято! Можна припинити бути телеведучим.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 518,
+    "category": "Обирайте",
+    "text": "Обирайте! Мати безлімітний тариф на таксі чи безлімітну доставку Glovo/Bolt Food? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 519,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: змусь когось із гравців перевірити свій телефон. Якщо вдасться — цей гравець п'є 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 520,
+    "category": "Етична Дилема",
+    "text": "Ти випадково отримуєш доступ до переписки свого найкращого друга. Бачиш, що він говорить про тебе не дуже приємні речі. Прочитаєш далі, щоб дізнатися все, чи закриєш і зробиш вигляд, що нічого не бачив?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 521,
+    "category": "Кривий Художник",
+    "text": "Малювання! Намалюй за 30 секунд: 'Кентавр'. Покажи малюнок гравцю на вибір. Якщо він вгадує — ти переміг! Якщо ні — п'єш 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true,
+    "timer": 30
+  },
+  {
+    "id": 522,
+    "category": "Погляд у Майбутнє",
+    "text": "Якби ти міг(могла) написати заголовок для новини про себе через 10 років, яким би він був?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 523,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, до кінця наступного кола кожну свою фразу закінчуй словами '...або я чогось не розумію?'. Порушення — додатковий ковток.",
+    "deferred_text_template": "{PLAYER_NAME}, ти вже все розумієш, можна говорити нормально.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 524,
+    "category": "Перекличка",
+    "text": "Всі, хто коли-небудь гуглив симптоми хвороби і вирішив, що вмирає, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": "524.2",
+    "category": "Перекличка",
+    "text": "Всі, хто коли-небудь вбивав у чат жпт симптоми хвороби і вирішив, що вмирає, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 525,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, напиши своєму колишньому/колишній повідомлення: 'Я все ще думаю про твою(твого) [кличка домашнього улюбленця]'. Якщо улюбленця не було, напиши 'про твою шапку'. Відмова — 5 ковтків.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 526,
+    "category": "Сміхопанорама",
+    "text": "Якби твоє життя було мемом, то яким? Покажи його або опиши. Якщо ніхто не зрозуміє — 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 527,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Речі, які НЕ можна знайти в АТБ'. У вас по 10 секунд, щоб назвати якомога більше. У кого менше — той п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": null
+  },
+  {
+    "id": 528,
+    "category": "Подарунок",
+    "text": "{PLAYER_NAME}, ти можеш скасувати будь-який 'Ігровий Вірус', що діє зараз, або запобігти наступному, який випаде в грі.",
+    "deferred_text_template": "{PLAYER_NAME}, у тебе є дипломатичний імунітет від вірусів. Залишилось {TURNS_LEFT} ходів.",
     "deferred_turns_player": 5,
     "bonus_skip_on_complete": false,
-    "timer": 10
+    "timer": null
+  },
+  {
+    "id": 529,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, подзвони в будь-який заклад (доставка, таксі) і перші 15 секунд розмови говори голосом персонажа з мультфільму. Відмова — 4 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 530,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, наступні 3 кола ти повинен починати кожну свою фразу словами 'Доброго вечора, ми з України'. Порушення — штрафний ковток.",
+    "deferred_text_template": "{PLAYER_NAME}, не забувай вітатися правильно! Залишилось {TURNS_LEFT} хід(ходи).",
+    "deferred_turns_player": 3,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 531,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, запропонуй руку і серце будь-якому неживому предмету в кімнаті. Зроби це максимально драматично. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 532,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, дозволь іншим гравцям зробити тобі 'модну' зачіску за допомогою того, що є на столі (серветки, трубочки тощо). Ти маєш проходити так 2 кола.",
+    "deferred_text_template": "{PLAYER_NAME}, твоя зачіска ще тримається? Залишилось {TURNS_LEFT} хід(ходи).",
+    "deferred_turns_player": 2,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 533,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, імітуй звук сповіщення кожного разу, коли хтось робить ковток. Так до твого наступного ходу. Відмова — 3 ковтки.",
+    "deferred_text_template": "{PLAYER_NAME}, можеш більше не імітувати звуки сповіщень.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 534,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зроби максимально пафосний та серйозний огляд на свій напій, ніби ти сомельє світового рівня. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 535,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, наступні 5 хвилин розмовляй виключно римами. Не можеш знайти риму — робиш ковток.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 536,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, станцюй танець з тренду TikTok, який для тебе обере {RANDOM_PLAYER_NAME}. Якщо він не знає, танцюй Макарену чи танець маленьких каченят. Відмова — 4 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 537,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, говори компліменти найближчий рослині протягом 30 секунд. Якщо рослини немає, говори з пляшкою. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false,
+    "timer": 30
+  },
+  {
+    "id": "538.1",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Капібара-Джедай' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": "538.2",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Маленьке кошенятко' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": "538.3",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Загадковий холодець' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": "538.4",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Бойовий гусак' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": "538.5",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Сумний вареник' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": "538.6",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Володар шкарпеток' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": "538.7",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Квантовий банан' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": "538.8",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Король маршрутки' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": "538.9",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Пухнастий грішник' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": "538.10",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Гобіт з Борщагівки' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": "538.11",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Мамин борщик' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": "538.12",
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, зміни своє ім'я в Telegram/Viber на 'Гоґвортський голуб' на 15 хвилин. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 539,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, до кінця кола звертайся до всіх гравців виключно 'Ваша Величносте' або 'Ваша Світлосте'. Помилка — ковток.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 540,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, відправ голосове повідомлення другу, де ти пародіюєш Арестовича, який заспокоює, що все буде добре через 2-3 тижні. Відмова — 5 ковтків.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 541,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, прокоментуй останній допис {RANDOM_PLAYER_NAME} в соцмережах (або відповіддю у загальній групі) фразою 'Це краще, ніж я очікував(ла)!'. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 542,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, ти повинен стояти в позі 'планка' поки кожен з гравців не скаже тобі по одному компліменту. Відмова — 4 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 543,
+    "category": "Штраф",
+    "text": "{PLAYER_NAME}, випий свій напій без допомоги рук. Якщо розіллєш, витирай і роби ще 2 ковтки. Відмова — 5 ковтків.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 544,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, з'їж ложку лимонного соку (або скибку лимона), не скривившись. Якщо скривишся — робиш 3 ковтки. Відмова — 4 ковтки. Немає лемону - 5 ковтків.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 545,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, відкрий галерею на телефоні. {RANDOM_PLAYER_NAME} свайпає 5 разів вліво. Фото, на якому він зупиниться, ти маєш відправити своїй мамі з підписом 'Згадав(ла) цей чудовий день!'. Відмова — 5 ковтків.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 546,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, протягом 60 секунд переконуй групу в тому, що Земля насправді пласка. Будь максимально серйозним. Якщо хтось засміється — ти переміг. Якщо ні — п'єш 4 ковтки.",
+    "timer": 60,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 547,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, зроби 'коктейль невдахи' з трьох будь-яких їстівних інгредієнтів зі столу, які оберуть гравці. Ти маєш випити шот цього 'напою'. Відмова — 5 ковтків.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 548,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, напиши своєму начальнику (або викладачу) повідомлення: 'Я все зрозумів(ла). Наша розмова була дуже повчальною'. Нічого не пояснюй, поки не отримаєш відповідь. Відмова — 5 ковтків.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 549,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, спробуй за 1 хвилину продати гравцю ліворуч від тебе ручку, ніби ти герой Леонардо Ді Капріо з 'Вовка з Волл-стріт'. Відмова — 4 ковтки.",
+    "timer": 60,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 550,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, імпровізуй реп на 30 секунд про те, як ти втомився і хочеш спати. Бітбокс забезпечує {RANDOM_PLAYER_NAME}. Відмова — 4 ковтки.",
+    "timer": 30,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 551,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, дозволь гравцям написати одне слово на стікері чи серветкі та приклеїти тобі на спину. Ти маєш вгадати це слово до кінця гри. Не вгадаєш — п'єш 5 ковтків наприкінці.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 552,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, вимов слово 'паляниця' 5 разів з різними акцентами (напр., грузинський, британський, французький). Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 553,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, проведи 30-секундну 'прес-конференцію', де ти — кіт, і відповідаєш на питання інших гравців. Відмова — 4 ковтки.",
+    "timer": 30,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 554,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, спробуй закинути серветку, згорнуту в кульку, у чийсь келих з трьох кроків. Є 3 спроби. Не влучив — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
   },
     {
-    "id": 511,
-    "category": "тест",
-    "text": "{PLAYER_NAME}, цілий круг, коли поруч з вами проходить хтось, хто не грає в цю гру, ти повинен сказати йому фразу 'Русня підараси'. За кожне порушення 5 ковтків.",
-    "deferred_text_template": "Можеш не казати незнайомцям нічого зайвого.",
-    "deferred_turns_player": 5,
-    "bonus_skip_on_complete": false,
-    "timer": 10
+    "id": "554.2",
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, спробуй закинути серветку, згорнуту в кульку, у чийсь келих до кінця кола. Якщо влучив - ця людина п'є 2 ковтки, а ти переставай кидатись серветками.",
+    "deferred_text_template": "Більше навіть не намагайся кидатись серветками.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 555,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, набери останній номер у вихідних дзвінках і заспівай йому/їй приспів 'Батько наш Бандера'. Відмова — 5 ковтків.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 556,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, вибери будь-якого гравця. Ти маєш змусити його засміятись за 30 секунд, не торкаючись його. Не вдалося — п'єш 3 ковтки.",
+    "timer": 30,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 557,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, зніми TikTok чи просто відео, де ти робиш огляд на будь-який предмет на столі з фразою 'Це просто розрив! Посилання в шапці профілю!'. Відмова — 4 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 558,
+    "category": "Виклик",
+    "text": "{PLAYER_NAME}, відправ у спільний чат (робочий, сімейний) повідомлення: 'Хто останній, той купує піцу'. Першим нічого не пояснюй. Відмова — 5 ковтків.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 559,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, вгадай, яка улюблена лайка у {RANDOM_PLAYER_NAME}. Потім він/вона скаже, чи ти правий. Якщо ні — ви обидва п'єте по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 560,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME} та {RANDOM_PLAYER_NAME}, ви — коментатори. Протягом 30 секунд коментуйте все, що робить гравець навпроти, ніби це фінал чемпіонату світу.",
+    "timer": 30,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 561,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, опиши {RANDOM_PLAYER_NAME} трьома емодзі. Потім він/вона має пояснити, чому ти обрав(ла) саме ці.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 562,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME} та {RANDOM_PLAYER_NAME}, вигадайте один для одного смішні титули (напр., 'Герцогиня Прострочених Дедлайнів', 'Барон Немитого Посуду').",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 563,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, яка пісня, на твою думку, є саундтреком життя {RANDOM_PLAYER_NAME}? Якщо є можливість — увімкни її.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 564,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME} та {RANDOM_PLAYER_NAME}, не змовляючись, покажіть на пальцях число від 1 до 5. Повторюйте, поки не покажете однакове. За кожну невдалу спробу — по ковтку.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 565,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, зроби з {RANDOM_PLAYER_NAME} селфі, на якому ви обоє зображаєте свій улюблений мем. Опублікуйте в сторіс з відміткою.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 566,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, що, на твою думку, {RANDOM_PLAYER_NAME} гуглив(ла) востаннє? Якщо не вгадав — п'єш 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 567,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME} та {RANDOM_PLAYER_NAME}, влаштуйте змагання 'хто довше протримає серйозне обличчя'. Хто перший засміявся — виконує бажання переможця.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 568,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, поміняйся з {RANDOM_PLAYER_NAME} однією річчю з кишені або сумки до кінця гри.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 569,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, дай {RANDOM_PLAYER_NAME} пораду, як пережити зомбі-апокаліпсис.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 570,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME} та {RANDOM_PLAYER_NAME}, розіграйте сценку: ви — два голуби, які не можуть поділити шматок хліба. У вас 30 секунд.",
+    "timer": 30,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 571,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, що ти завжди хотів(ла) запитати у {RANDOM_PLAYER_NAME}, але соромився(лась)? Запитай зараз. Він/вона може відповісти або випити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 572,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME} та {RANDOM_PLAYER_NAME}, вигадайте спільний бойовий клич і прокричіть його.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 573,
+    "category": "Ти і Я",
+    "text": "{PLAYER_NAME}, вгадай три речі, які {RANDOM_PLAYER_NAME} взяв(ла) б з собою на безлюдний острів. За кожну невгадану — п'єш ковток.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 574,
+    "category": "Сміхопанорама",
+    "text": "Розкажи про свій найепічніший провал на кухні. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 575,
+    "category": "Сміхопанорама",
+    "text": "Якби твоє життя було реаліті-шоу, яка була б його назва? Відмова — 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 576,
+    "category": "Сміхопанорама",
+    "text": "Опиши свій типовий ранок понеділка, але так, ніби це трейлер до блокбастера.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 577,
+    "category": "Сміхопанорама",
+    "text": "Яка найдивніша річ лежить у твоїй сумці/рюкзаку прямо зараз? Покажи її. Немає нічого дивного — п'єш 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 578,
+    "category": "Сміхопанорама",
+    "text": "Придумай і розкажи історію, як ти отримав(ла) суперздібність перетворювати воду на розсіл.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 579,
+    "category": "Сміхопанорама",
+    "text": "Яку 'непопулярну думку' ти маєш щодо їжі? (напр., 'піца з ананасами — це топ'). Захисти свою позицію.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 580,
+    "category": "Сміхопанорама",
+    "text": "Розкажи найбезглуздішу причину, через яку ти колись плакав(ла). Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 581,
+    "category": "Сміхопанорама",
+    "text": "Якби ти був(ла) привидом, як би ти найабсурдніше лякав(ла) людей?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 582,
+    "category": "Сміхопанорама",
+    "text": "Зроби вигляд, що ти щойно вперше в житті спробував(ла) свій напій. Опиши свої враження.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 583,
+    "category": "Сміхопанорама",
+    "text": "Розкажи про найкрінжовішу ситуацію, що сталася з тобою на першому побаченні. Відмова — 4 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 584,
+    "category": "Сміхопанорама",
+    "text": "Який твій 'токсичний' талант? (напр., вміння ідеально ігнорувати повідомлення, з'їсти всю піцу самому).",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 585,
+    "category": "Сміхопанорама",
+    "text": "Придумай пояснення, чому коти правлять світом, але приховують це.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 586,
+    "category": "Сміхопанорама",
+    "text": "Прочитай прогноз погоди на завтра, але з інтонацією ведучого програми про кримінал.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 587,
+    "category": "Сміхопанорама",
+    "text": "Назви три речі, які ти б робив(ла), якби був(ла) невидимкою на один день.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 588,
+    "category": "Сміхопанорама",
+    "text": "Якби ти міг(могла) замінити звук свого сміху на будь-який інший звук, що б це було?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 589,
+    "category": "Етична Дилема",
+    "text": "Ти знайшов(ла) телефон свого друга, а на екрані сповіщення з додатку для знайомств, хоча він у стосунках. Що ти зробиш: проігноруєш, поговориш з другом чи розкажеш його партнеру?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 590,
+    "category": "Етична Дилема",
+    "text": "Тобі пропонують роботу мрії з величезною зарплатою, але компанія відома своїм неетичним ставленням до екології. Погодишся?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 591,
+    "category": "Етична Дилема",
+    "text": "Що гірше: ніколи не досягти успіху, але бути щасливим, чи стати дуже успішним, але глибоко нещасним?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 592,
+    "category": "Етична Дилема",
+    "text": "Ти можеш дізнатися одну річ про своє майбутнє. Що ти обереш: коли ти помреш, чи як ти помреш?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 593,
+    "category": "Етична Дилема",
+    "text": "Ти бачиш, як хтось залишає негативний, але несправедливий відгук про маленький бізнес твого знайомого. Втрутишся?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 594,
+    "category": "Етична Дилема",
+    "text": "Якби ти міг(могла) стерти один свій спогад назавжди, щоб це було, і чи зробив(ла) б ти це, знаючи, що він є частиною тебе?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 595,
+    "category": "Етична Дилема",
+    "text": "Чи етично використовувати VPN, щоб дивитися серіали на стрімінгах, недоступних у твоїй країні?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 596,
+    "category": "Етична Дилема",
+    "text": "Ти — єдиний, хто знає пароль від криптогаманця померлого друга, на якому мільйон доларів. У нього немає спадкоємців. Що ти зробиш з грошима?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 597,
+    "category": "Етична Дилема",
+    "text": "Твій найкращий друг просить позичити велику суму грошей на 'стартап', але ти впевнений, що це фінансова піраміда. Позичиш, щоб не псувати дружбу?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 598,
+    "category": "Етична Дилема",
+    "text": "Чи можна сміятися з чорних жартів, якщо вони смішні, але потенційно можуть когось образити?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 599,
+    "category": "Етична Дилема",
+    "text": "У тебе є можливість дізнатися, що про тебе насправді думають усі твої друзі, але після цього ти не зможеш 'розбачити' цю інформацію. Скористаєшся?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 600,
+    "category": "Етична Дилема",
+    "text": "Ти випадково розбив(ла) дуже дорогу річ у гостях. Господарі цього не бачили. Зізнаєшся?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 601,
+    "category": "Етична Дилема",
+    "text": "Що важливіше: особиста свобода чи колективна безпека? Наведи приклад.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 602,
+    "category": "Етична Дилема",
+    "text": "Твій домашній улюбленець і незнайома людина тонуть. Ти можеш врятувати лише одного. Кого ти врятуєш?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 603,
+    "category": "Етична Дилема",
+    "text": "Чи правильно засуджувати історичних постатей за їхні вчинки з точки зору сучасної моралі?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 604,
+    "category": "Світ Кіно та Музики",
+    "text": "Якби ти міг(могла) видалити один фільм з історії кінематографу, щоб це було? Поясни свій вибір.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 605,
+    "category": "Світ Кіно та Музики",
+    "text": "Який саундтрек до фільму чи гри ти вважаєш ідеальним? Назви хоча б одну пісню звідти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 606,
+    "category": "Світ Кіно та Музики",
+    "text": "Опиши свій улюблений фільм так, ніби його зняв дуже поганий режисер. (напр., 'Володар Перснів' — 'Історія про те, як компанія хіпі 9 годин несе прикрасу в ломбард').",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 607,
+    "category": "Світ Кіно та Музики",
+    "text": "Який персонаж серіалу, на твою думку, є твоїм 'тотемним звіром' по життю?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 608,
+    "category": "Світ Кіно та Музики",
+    "text": "Назви пісню, яка гарантовано змусить тебе відчути себе головним героєм/героїнею. Якщо є можливість, увімкни її.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 609,
+    "category": "Світ Кіно та Музики",
+    "text": "Якби ти знімав(ла) українську версію 'Друзів', кого з українських акторів ти б взяв(ла) на головні ролі?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 610,
+    "category": "Світ Кіно та Музики",
+    "text": "Який фільм або серіал ти почав(ла) дивитися з великим скепсисом, але в результаті він тобі дуже сподобався?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 611,
+    "category": "Світ Кіно та Музики",
+    "text": "Твоя 'guilty pleasure' пісня з 2000-х? Заспівай рядок з неї. Відмова — 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 612,
+    "category": "Світ Кіно та Музики",
+    "text": "З яким кіношним лиходієм ти б пішов(ла) на каву, щоб просто поговорити?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 613,
+    "category": "Світ Кіно та Музики",
+    "text": "Наспівай мелодію з будь-якої реклами, яку всі знають. Інші мають вгадати. Не вгадали — п'єш 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 614,
+    "category": "Світ Кіно та Музики",
+    "text": "Який український сучасний фільм або серіал ти вважаєш недооціненим?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 615,
+    "category": "Світ Кіно та Музики",
+    "text": "Якби ти міг(могла) поставити одне питання будь-якому режисеру, хто б це був і що б ти запитав(ла)?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 616,
+    "category": "Світ Кіно та Музики",
+    "text": "Якби ти створював(ла) плейлист для вечірки кінця світу, які перші три треки ти б додав(ла)?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 617,
+    "category": "Світ Кіно та Музики",
+    "text": "Фінал якого серіалу тебе найбільше розлютив? Чому?",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 618,
+    "category": "Світ Кіно та Музики",
+    "text": "Опиши сюжет фільму 'Сам удома', але з точки зору грабіжників.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": true
+  },
+  {
+    "id": 619,
+    "category": "Таємна Скринька",
+    "text": "Яка найдивніша річ, яку ти гуглив(ла) останнім часом? Покажи історію пошуку або випий 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 620,
+    "category": "Таємна Скринька",
+    "text": "Чи крав(ла) ти колись щось, навіть дрібницю? Якщо так, розкажи. Якщо ні — ти свята людина, але п'єш 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 621,
+    "category": "Таємна Скринька",
+    "text": "Назви найменш улюблену рису характеру в людині, яка сидить праворуч від тебе. Або випий 4 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 622,
+    "category": "Таємна Скринька",
+    "text": "Який твій найбільший 'крінж' спогад зі школи? Розкажи або випий 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 623,
+    "category": "Таємна Скринька",
+    "text": "Чи прикидався(лась) ти коли-небудь хворим(ою), щоб не йти на роботу/навчання? Розкажи деталі або випий 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 624,
+    "category": "Таємна Скринька",
+    "text": "З ким із присутніх ти б помінявся(лась) життям на тиждень? Поясни, чому. Або випий 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 625,
+    "category": "Таємна Скринька",
+    "text": "Яка найбезглуздіша покупка в твоєму житті? Розкажи або випий 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 626,
+    "category": "Таємна Скринька",
+    "text": "Ти коли-небудь читав(ла) чужі переписки? Зізнайся або випий 4 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 627,
+    "category": "Таємна Скринька",
+    "text": "Яка твоя думка про когось із присутніх кардинально змінилася з моменту знайомства? Розкажи, про кого і чому. Або випий 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 628,
+    "category": "Таємна Скринька",
+    "text": "Найбільша сума грошей, яку ти програв(ла) або безглуздо витратив(ла)? Або 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 629,
+    "category": "Таємна Скринька",
+    "text": "Що найдивніше ти робив(ла), коли був(ла) закоханий(а)? Або 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 630,
+    "category": "Таємна Скринька",
+    "text": "Про яку свою звичку ти ніколи б не розповів(ла) своїм батькам? Або 4 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 631,
+    "category": "Таємна Скринька",
+    "text": "Якби ти міг(могла) дізнатися одну таємницю будь-кого з присутніх, чию і яку таємницю ти б обрав(ла)? Або випий 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 632,
+    "category": "Таємна Скринька",
+    "text": "Ти коли-небудь використовував(ла) сльози, щоб маніпулювати кимось? Або 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 633,
+    "category": "Таємна Скринька",
+    "text": "Відкрий свій плейлист 'Вподобане' і увімкни першу-ліпшу пісню. Без виправдань. Або випий 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 634,
+    "category": "Бліц!",
+    "text": "(10 секунд) Назви 3 речі, які завжди є в твоєму рюкзаку/сумці. Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 635,
+    "category": "Бліц!",
+    "text": "(10 секунд) Перша асоціація зі словом 'дедлайн'? Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 636,
+    "category": "Бліц!",
+    "text": "(10 секунд) Якби ти був(ла) коктейлем, то яким? Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 637,
+    "category": "Бліц!",
+    "text": "(10 секунд) Назви 3 слова, які римуються зі словом 'ковток'. Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 638,
+    "category": "Бліц!",
+    "text": "(10 секунд) Твоя улюблена страва з дитинства? Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 639,
+    "category": "Бліц!",
+    "text": "(10 секунд) Що б ти зробив(ла), якби виграв(ла) 1000 гривень? Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 640,
+    "category": "Бліц!",
+    "text": "(10 секунд) Скажи комплімент собі. Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 641,
+    "category": "Бліц!",
+    "text": "(10 секунд) Остання книга, яку ти читав(ла)? Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 642,
+    "category": "Бліц!",
+    "text": "(10 секунд) Якби ти міг(могла) мати одну тваринку, яка б це була? Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 643,
+    "category": "Бліц!",
+    "text": "(10 секунд) Назви 3 речі, які тебе дратують. Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 644,
+    "category": "Бліц!",
+    "text": "(10 секунд) Який твій улюблений мем? Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 645,
+    "category": "Бліц!",
+    "text": "(10 секунд) Найкращий спосіб розслабитись після важкого дня? Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 646,
+    "category": "Бліц!",
+    "text": "(10 секунд) Яку суперсилу ти б хотів(ла) мати? Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 647,
+    "category": "Бліц!",
+    "text": "(10 секунд) Куди б ти поїхав(ла) у відпустку прямо зараз? Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 648,
+    "category": "Бліц!",
+    "text": "(10 секунд) Скажи 'триста тридцять три' три рази дуже швидко. Час пішов!",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 649,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший назве будь-яку криптовалюту, крім Біткоїна — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 650,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший торкнеться чогось дерев'яного — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 651,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший назве персонажа з 'Сімпсонів' — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 652,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший згадає будь-який рядок з пісні Jerry Heil — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 653,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший покаже на телефоні фото кота (свого чи з інтернету) — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 654,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший назве будь-який додаток для знайомств — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 655,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший назве щось, що можна знайти в 'Епіцентрі' — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 656,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший назве будь-яку настільну гру — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 657,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший скаже 'Слава Нації!' — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 658,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший назве столицю будь-якої європейської країни — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 659,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший згадає, як звали головного героя 'Breaking Bad' — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 660,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший почне наспівувати 'Червону руту' — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 661,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший назве трьох українських письменників — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 662,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший підніме вгору великий палець — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 663,
+    "category": "Хто перший?",
+    "text": "Питання на швидкість! {PLAYER_NAME} суддя! Хто перший назве будь-який вид пасти — вирішує, кому пити 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 664,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Країни, назви яких починаються на 'А''. Починаючи з вас, кожен по колу називає одну країну. Хто перший замовкне або повториться — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 665,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Бренди одягу'. Починаючи з вас, кожен по колу називає один бренд. Хто перший замовкне або повториться — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 666,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Супергерої (Marvel або DC)'. Починаючи з вас, кожен по колу називає одного героя. Хто перший замовкне або повториться — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 667,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Причини, чому ти досі не мільйонер'. Починаючи з вас, кожен по колу називає одну причину. Хто перший замовкне — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 668,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Фрукти'. Починаючи з вас, кожен по колу називає один фрукт. Хто перший замовкне, повториться або назве овоч — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 669,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Персонажі з 'Гаррі Поттера''. Починаючи з вас, кожен по колу називає одного. Хто перший замовкне або повториться — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 670,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Мобільні ігри'. Починаючи з вас, кожен по колу називає одну гру. Хто перший замовкне або повториться — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 671,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Соуси'. Починаючи з вас, кожен по колу називає один соус. Хто перший замовкне або повториться — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 672,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Речі, які можна знайти в бабусиній квартирі'. Починаючи з вас, кожен по колу називає одну річ. Хто перший замовкне — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 673,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Слова, які закінчуються на '...ізм''. Починаючи з вас, кожен по колу називає одне слово. Хто перший замовкне або повториться — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 674,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Українські телеведучі'. Починаючи з вас, кожен по колу називає одного. Хто перший замовкне або повториться — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 675,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Щось, що бісить у громадському транспорті'. Починаючи з вас, кожен по колу називає одну річ. Хто перший замовкне — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 676,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Породи котів'. Починаючи з вас, кожен по колу називає одну породу. Хто перший замовкне або повториться — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 677,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'Речі, які роблять життя кращим'. Починаючи з вас, кожен по колу називає одну річ. Хто перший замовкне — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 678,
+    "category": "Ланцюгова Реакція",
+    "text": "Для усіх! Тема: 'YouTube-канали'. Починаючи з вас, кожен по колу називає один. Хто перший замовкне або повториться — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 679,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'говорити про себе в третій особі' (напр., 'Марічка хоче пити'). Порушник, якого 'спіймали', п'є штрафний ковток.",
+    "deferred_text_template": "Карантин знято! Можна повернутися до свого 'Я'.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 680,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'заборонено вживати будь-які лайливі слова'. Порушник, якого 'спіймали', п'є 2 штрафні ковтки.",
+    "deferred_text_template": "Карантин знято! Можна знову висловлювати емоції вільно.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 681,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'перед тим, як зробити ковток, треба сказати тост'. Порушник п'є ще один ковток, але без тосту.",
+    "deferred_text_template": "Карантин знято! Можна пити мовчки.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 682,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'не можна дивитися на свій телефон'. Порушник, якого 'спіймали', п'є 2 штрафні ковтки.",
+    "deferred_text_template": "Карантин знято! Повертайтеся в digital.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 683,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'кожне речення закінчувати фразою '...це моя думка''. Порушник, якого 'спіймали', п'є штрафний ковток.",
+    "deferred_text_template": "Карантин знято! Не обов'язково уточнювати.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 684,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'не можна схрещувати руки або ноги'. Порушник, якого 'спіймали', п'є штрафний ковток.",
+    "deferred_text_template": "Карантин знято! Можна знову сидіти зручно.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 685,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'говорити з королівським, величним тоном'. Порушник, якого 'спіймали', п'є штрафний ковток як простолюдин.",
+    "deferred_text_template": "Карантин знято! Можна скинути корону.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 686,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'заборонено вживати слово 'я''. Порушник, якого 'спіймали', п'є штрафний ковток.",
+    "deferred_text_template": "Карантин знято! Его може повернутися.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 687,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'всі п'ють тільки після того, як вип'є гравець, що ходить'. Порушник, якого 'спіймали', п'є подвійну порцію.",
+    "deferred_text_template": "Карантин знято! Анархія відновлена.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 688,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'говорити тільки питаннями'. Порушник, якого 'спіймали', п'є штрафний ковток, чи не так?",
+    "deferred_text_template": "Карантин знято! Можна знову стверджувати.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 689,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'коли хтось сміється, треба плескати в долоні'. Порушник, якого 'спіймали', п'є штрафний ковток.",
+    "deferred_text_template": "Карантин знято! Можна сміятися тихо.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 690,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'не можна вимовляти слова, що містять літеру 'а''. Порушник, якого 'спіймли', п'є 2 ковтки.",
+    "deferred_text_template": "Крнтин знято! Поверніть улюблений звук.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 691,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'тримати один палець на губах, коли говорить хтось інший'. Порушник, якого 'спіймали', п'є штрафний ковток.",
+    "deferred_text_template": "Карантин знято! Тссс... можна вже говорити.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 692,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'після кожної фрази треба робити 'круть''. Порушник, якого 'спіймали', п'є штрафний ковток.",
+    "deferred_text_template": "Карантин знято! Вже не так круто.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 693,
+    "category": "Ігровий Вірус",
+    "text": "Епідемія! На одне коло для всіх гравців вводиться правило: 'при звертанні до іншого гравця треба робити реверанс або уклін'. Порушник, якого 'спіймали', п'є штрафний ковток.",
+    "deferred_text_template": "Карантин знято! Можна розслабити спини.",
+    "deferred_turns_player": 1,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 694,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Речі, які можна намазати на хліб'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 695,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Виправдання, чому ти не помив(ла) посуд'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 696,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Назви соцмереж (існуючих та колишніх)'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 697,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Способи розізлити кота'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 698,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Фільми Квентіна Тарантіно'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 699,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Речі, на які вічно не вистачає грошей'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 700,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Щось кругле'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 701,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Імена для собаки'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 702,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Українські слова, які важко вимовити іноземцю'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 703,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Щось, що можна робити в ліжку, крім сну'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 704,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Прикметники для опису русні'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 705,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Телешоу з 90-х та 2000-х'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 706,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Види кави'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 707,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Персонажі з мультфільму 'Шрек''. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 708,
+    "category": "Дуель",
+    "text": "Змагання! {PLAYER_NAME} та {RANDOM_PLAYER_NAME}. Тема: 'Відомі картини'. По черзі, 10 секунд кожному. У кого менше — той п'є 3 ковтки.",
+    "timer": 10,
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 709,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'П'ятниця'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 710,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Море'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 711,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Ранок'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 712,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Соцмережі'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 713,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Зима'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 714,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Техніка'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 715,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Свято'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 716,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Дорога'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 717,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Відпочинок'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 718,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Сміх'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 719,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Природа'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 720,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Школа'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 721,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Дружба'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 722,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Український політик'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 723,
+    "category": "Спільний Розум",
+    "text": "Асоціації! Тема: 'Ідеальний вечір'. На рахунок 'три' всі вигукують асоціацію. Гравці в меншості (або з унікальними відповідями) п'ють 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 724,
+    "category": "Перекличка",
+    "text": "Всі, хто коли-небудь губив свій телефон, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 725,
+    "category": "Перекличка",
+    "text": "Всі, хто єдина дитина в сім'ї, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 726,
+    "category": "Перекличка",
+    "text": "Всі, хто любить піцу з ананасами, роблять по 2 ковтки. Решта п'ють за здравіє смаку.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 727,
+    "category": "Перекличка",
+    "text": "Всі, хто сьогодні робив фізичні вправи (навіть зарядку), роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 728,
+    "category": "Перекличка",
+    "text": "Всі, хто має права водія, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 729,
+    "category": "Перекличка",
+    "text": "Всі, хто коли-небудь засинав на вечірці, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 730,
+    "category": "Перекличка",
+    "text": "Всі, хто дивився всі сезони 'Гри Престолів', роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 731,
+    "category": "Перекличка",
+    "text": "Всі, хто коли-небудь падав на рівному місці, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 732,
+    "category": "Перекличка",
+    "text": "Всі, хто народився восени або взимку, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 733,
+    "category": "Перекличка",
+    "text": "Всі, хто вважає себе інтровертом, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 734,
+    "category": "Перекличка",
+    "text": "Всі, хто коли-небудь їв шаурму після опівночі, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 735,
+    "category": "Перекличка",
+    "text": "Всі, у кого ім'я починається на голосну літеру, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 736,
+    "category": "Перекличка",
+    "text": "Всі, хто коли-небудь підспівував у навушниках в громадському транспорті, роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 737,
+    "category": "Перекличка",
+    "text": "Всі, хто сьогодні ще не дзвонив мамі, роблять по 2 ковтки і думають над своєю поведінкою.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 738,
+    "category": "Перекличка",
+    "text": "Всі, хто вірить в астрологію (навіть трішечки), роблять по 2 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 739,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: змусь когось сказати слово 'гроші', не використовуючи однокореневі слова. Якщо вдасться — цей гравець п'є 3 ковтки. Якщо ні — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 740,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: непомітно поклади серветку на голову гравця ліворуч від тебе. Якщо він не помітить протягом 30 секунд — він п'є 3 ковтки. Якщо помітить — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 741,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: змусь когось із гравців перевірити свій телефон. Перший, хто це зробить, п'є 2 ковтки. Якщо ніхто не зробить протягом хвилини — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 742,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: почни розмову про теорії змови. Перший, хто тебе підтримає і додасть свою, п'є 2 ковтки. Якщо всі проігнорують — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 743,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: змусь когось сказати 'дякую'. Той, хто скаже, п'є 2 ковтки. Якщо ніхто не подякує тобі протягом хвилини — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 744,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: встав у свою розмову слово 'трактор' так, щоб це було максимально недоречно. Якщо ніхто не здивується — всі п'ють по ковтку. Якщо хтось запитає 'до чого тут трактор?' — п'є тільки він.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 745,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: змусь гравця навпроти тебе поправити зачіску. Якщо вдасться — він п'є 2 ковтки. Якщо ні — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 746,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: змусь когось запитати 'котра година?'. Якщо вдасться — він п'є 2 ковтки. Якщо ні — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 747,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: почни тихо наспівувати дуже відому пісню. Перший, хто підспіває або назве її, п'є 2 ковтки. Якщо ніхто не реагує — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 748,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: змусь когось запитати 'чому?'. Той, хто запитає, п'є 2 ковтки. Якщо ні — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 749,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: змусь когось погодитися з твоєю абсурдною тезою (напр., 'шкарпетки треба одягати перед білизною'). Той, хто погодиться, п'є 3 ковтки. Якщо всі будуть сперечатися — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 750,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: змусь когось подивитися на стелю. Перший, хто подивиться, п'є 2 ковтки. Якщо ні — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 751,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: змусь когось передати тобі сіль (навіть якщо її немає на столі). Той, хто спробує це зробити, п'є 2 ковтки. Якщо ніхто не поведеться — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 752,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: почни розмову і непомітно вживи в неї ім'я будь-якого гравця тричі. Якщо він не помітить — він п'є 3 ковтки. Якщо помітить — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 753,
+    "category": "Таємно",
+    "text": "Не читай це вголос! Твоє завдання: змусь когось запитати тебе 'ти в порядку?'. Той, хто це зробить, п'є 2 ковтки. Якщо всім байдуже — п'єш ти.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 754,
+    "category": "Обирайте",
+    "text": "Обирайте! Мати можливість розуміти мову тварин чи розмовляти всіма людськими мовами? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 755,
+    "category": "Обирайте",
+    "text": "Обирайте! Назавжди відмовитися від солодкого чи від солоного? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 756,
+    "category": "Обирайте",
+    "text": "Обирайте! Жити у світі 'Гаррі Поттера' чи у світі 'Володаря Перснів'? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 757,
+    "category": "Обирайте",
+    "text": "Обирайте! Мати можливість зупиняти час чи повертатися в минуле? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 758,
+    "category": "Обирайте",
+    "text": "Обирайте! Ніколи більше не користуватися соцмережами чи ніколи більше не дивитися серіали? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 759,
+    "category": "Обирайте",
+    "text": "Обирайте! Щоб у вас завжди була повна зарядка на телефоні чи повний бак бензину в машині (навіть якщо її немає)? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 760,
+    "category": "Обирайте",
+    "text": "Обирайте! Бути неймовірно розумним, але дуже некрасивим, чи неймовірно красивим, але дуже дурним? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 761,
+    "category": "Обирайте",
+    "text": "Обирайте! Все життя їсти тільки борщ чи все життя їсти тільки піцу? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 762,
+    "category": "Обирайте",
+    "text": "Обирайте! Знати точну дату своєї смерті чи точну причину своєї смерті? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 763,
+    "category": "Обирайте",
+    "text": "Обирайте! Щоб усі ваші думки були чутні іншим, чи щоб ви чули думки всіх навколо? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 764,
+    "category": "Обирайте",
+    "text": "Обирайте! Жити без інтернету чи жити без друзів? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 765,
+    "category": "Обирайте",
+    "text": "Обирайте! Мати можливість їсти все, що хочеш, і не товстіти, чи потребувати лише 2 години сну на добу? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 766,
+    "category": "Обирайте",
+    "text": "Обирайте! Ніколи більше не слухати улюбленого виконавця чи ніколи більше не дивитися улюбленого режисера? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 767,
+    "category": "Обирайте",
+    "text": "Обирайте! Мати роботу, яку ти ненавидиш, але заробляти багато грошей, чи мати роботу, яку ти обожнюєш, але ледь зводити кінці з кінцями? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
+  },
+  {
+    "id": 768,
+    "category": "Обирайте",
+    "text": "Обирайте! Щоб у вашому житті завжди грав саундтрек, який чують всі, чи щоб ви бачили світ як у чорно-білому кіно? На рахунок три скажіть одночасно. Хто в меншості — п'є 3 ковтки.",
+    "deferred_text_template": null,
+    "deferred_turns_player": 0,
+    "bonus_skip_on_complete": false
   }
+]
 ]
