@@ -192,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function setupTimersForCurrentQuestion() {
+            if (!currentQuestion) return;
             mainTimerDurationFromQuestion = parseInt(currentQuestion.timer || 0);
             const readingTimerSetting = parseInt(gameConfig.general.reading_timer_duration || 0);
             
@@ -231,7 +232,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updateDisplay(isRestoringFromHistory = false) {
-            if (!currentQuestion) return; 
+            if (!currentQuestion) {
+                console.warn("updateDisplay called without currentQuestion");
+                return;
+            }
 
             const currentPlayer = players[currentPlayerIndex];
             document.title = `Гра: Хід ${currentPlayer.name}`;
@@ -250,18 +254,20 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             questionTextDisplay.innerHTML = qText.replace(/\n/g, '<br>');
             
+            console.log(`[DEBUG] UpdateDisplay for ${currentPlayer.name}. Raw deferred_effects:`, deepCopy(currentPlayer.deferred_effects));
             const activeDeferredEffects = currentPlayer.deferred_effects ? currentPlayer.deferred_effects.filter(effect => effect.turns_left > 0) : [];
+            console.log(`[DEBUG] Active deferred_effects after filter:`, deepCopy(activeDeferredEffects));
+
             if (activeDeferredEffects.length > 0) {
                 let effectsHtml = '';
                 activeDeferredEffects.forEach(effect => {
                     effectsHtml += `<p>${effect.template.replace('{TURNS_LEFT}', effect.turns_left).replace('{PLAYER_NAME}', currentPlayer.name)}</p>`;
                 });
                 deferredMessagesContent.innerHTML = effectsHtml;
-                deferredMessagesDisplay.style.display = 'block';
             } else {
                 deferredMessagesContent.innerHTML = '<p style="font-style: italic; color: #aaa;">Немає активних ефектів.</p>';
-                deferredMessagesDisplay.style.display = 'block'; 
             }
+            deferredMessagesDisplay.style.display = 'block'; 
 
             skipsLeftDisplay.textContent = currentPlayer.skips_left;
             btnSkip.disabled = currentPlayer.skips_left <= 0;
@@ -293,18 +299,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
-            if(currentQuestion) setupTimersForCurrentQuestion(); // Check if currentQuestion is not null
+            setupTimersForCurrentQuestion();
         }
         
         function saveCurrentStateForUndo() {
-            if (!currentQuestion) return; // Не зберігати, якщо немає поточного питання
-            if (gameHistoryForUndo.length >= 20) gameHistoryForUndo.shift();
+            if (!currentQuestion) return;
+            if (gameHistoryForUndo.length >= 20) gameHistoryForUndo.shift(); // Keep history size manageable
             gameHistoryForUndo.push({
                 question: deepCopy(currentQuestion),
                 playerIndex: currentPlayerIndex,
                 round: currentRound,
-                playersSnapshot: deepCopy(players)
+                playersSnapshot: deepCopy(players),
+                // Зберігаємо копії, щоб уникнути проблем з посиланнями
+                questionPoolSnapshot: deepCopy(questionPool), 
+                playedQuestionIdsSnapshot: new Set(playedQuestionIdsThisSession)
             });
+            console.log("[DEBUG] Saved state. History length:", gameHistoryForUndo.length);
         }
 
         function selectAndDisplayQuestion() {
@@ -314,11 +324,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             currentQuestion = questionPool.shift();
             playedQuestionIdsThisSession.add(currentQuestion.id);
-            updateDisplay();
+            updateDisplay(); // isRestoringFromHistory = false by default
         }
 
         function handlePlayerAction(isCompletedOrQuitAction) {
              const actingPlayer = players[currentPlayerIndex]; 
+             console.log(`[DEBUG] Player ${actingPlayer.name} action. Deferred effects before processing:`, deepCopy(actingPlayer.deferred_effects));
 
             if (isCompletedOrQuitAction) { 
                 if (actingPlayer.deferred_effects && actingPlayer.deferred_effects.length > 0) {
@@ -329,6 +340,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     players[currentPlayerIndex].deferred_effects = actingPlayer.deferred_effects;
                 }
             }
+            console.log(`[DEBUG] Player ${actingPlayer.name} action. Deferred effects AFTER processing:`, deepCopy(actingPlayer.deferred_effects));
+
 
             const activePlayerIndices = getActivePlayerIndices();
             if (activePlayerIndices.length < 2) {
@@ -345,8 +358,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const firstActivePlayerIndex = activePlayerIndices[0];
+            // Increment round if the turn is passing to the first player in the active list,
+            // AND the current player was the last in the active list.
             if (nextPlayerIdx === firstActivePlayerIndex && activePlayerIndices.indexOf(oldPlayerIndex) === activePlayerIndices.length -1) {
-                 if (oldPlayerIndex !== nextPlayerIdx || activePlayerIndices.length > 1) {
+                 if (oldPlayerIndex !== nextPlayerIdx || activePlayerIndices.length > 1) { // Avoid increment if only one player is looping
                     currentRound++;
                  }
             }
@@ -373,6 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     turns_left: parseInt(q.deferred_turns_player),
                     question_id: q.id
                 });
+                console.log(`[DEBUG] Added deferred effect for ${player.name} from QID ${q.id}:`, deepCopy(player.deferred_effects));
             }
             handlePlayerAction(true);
         });
@@ -382,10 +398,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const player = players[currentPlayerIndex];
             if (player.skips_left > 0) {
                 player.skips_left--;
+                // Питання, яке скіпається (currentQuestion), вже додано до playedQuestionIdsThisSession
+                // у попередньому виклику selectAndDisplayQuestion або initializeFirstQuestionDisplay.
+                // Тому тут просто беремо нове.
                 selectAndDisplayQuestion(); 
             } else {
-                 // Якщо скіпів 0, але кнопка чомусь активна, просто оновлюємо дисплей
-                 updateDisplay(); // Це відновить правильний стан кнопки skip
+                 updateDisplay(); 
             }
         });
         
@@ -397,38 +415,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
         btnGoBack.addEventListener('click', () => {
             if (gameHistoryForUndo.length > 0) {
-                const questionToPutBack = deepCopy(currentQuestion);
-                
                 const prevState = gameHistoryForUndo.pop();
+                console.log("[DEBUG] Restoring state. History length now:", gameHistoryForUndo.length, "Restoring to:", deepCopy(prevState));
 
                 currentQuestion = deepCopy(prevState.question);
                 currentPlayerIndex = prevState.playerIndex;
                 currentRound = prevState.round;
                 
-                const previousPlayersSnapshot = deepCopy(prevState.playersSnapshot);
-                players.forEach((currentPlayerInstance, index) => {
-                    const snapshotOfPlayer = previousPlayersSnapshot[index];
-                    if (snapshotOfPlayer) {
-                        const currentSkips = currentPlayerInstance.skips_left; 
-                        
-                        Object.assign(currentPlayerInstance, snapshotOfPlayer); 
-                        
-                        currentPlayerInstance.skips_left = currentSkips;
-                        currentPlayerInstance.deferred_effects = deepCopy(snapshotOfPlayer.deferred_effects || []);
+                // Зберігаємо поточні скіпи перед відновленням playersSnapshot
+                const currentSkipsMap = new Map();
+                players.forEach((p, idx) => currentSkipsMap.set(idx, p.skips_left));
+
+                players = deepCopy(prevState.playersSnapshot);
+                
+                // Відновлюємо збережені скіпи
+                players.forEach((p, idx) => {
+                    if (currentSkipsMap.has(idx)) {
+                        p.skips_left = currentSkipsMap.get(idx);
                     }
                 });
-
-                if (questionToPutBack && questionToPutBack.id !== currentQuestion.id) { 
-                    questionPool.unshift(questionToPutBack);
-                    if (playedQuestionIdsThisSession.has(questionToPutBack.id)) {
-                        playedQuestionIdsThisSession.delete(questionToPutBack.id); 
-                    }
-                }
                 
-                updateDisplay(true);
-                btnGoBack.disabled = gameHistoryForUndo.length === 0;
+                // Відновлюємо стан пулу питань та зіграних ID
+                questionPool = deepCopy(prevState.questionPoolSnapshot);
+                playedQuestionIdsThisSession = new Set(prevState.playedQuestionIdsSnapshot);
+                
+                updateDisplay(true); // isRestoringFromHistory = true
             }
         });
+
 
         function triggerGameOverJS(message) {
             clearInterval(timerInterval);
@@ -479,10 +493,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             secondsLeft = Math.max(0, secondsLeft);
 
-            currentQuestion = questionPool[0]; 
-            updateDisplay(); 
-            questionPool.shift(); 
-            playedQuestionIdsThisSession.add(currentQuestion.id);
+            if (questionPool.length > 0) {
+                currentQuestion = questionPool.shift(); // Беремо перше питання
+                playedQuestionIdsThisSession.add(currentQuestion.id);
+                updateDisplay(); // isRestoringFromHistory = false (бо це ініціалізація)
+            } else {
+                 triggerGameOverJS("Немає питань для ініціалізації гри.");
+                 return;
+            }
+
 
             const currentPlayer = players[currentPlayerIndex];
             skipsLeftDisplay.textContent = currentPlayer.skips_left;
