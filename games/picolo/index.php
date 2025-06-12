@@ -208,7 +208,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h4>Налаштування категорій</h4>
                     <div class="preset-buttons">
                         <button type="button" class="preset-btn" data-preset="party">Пресет: Вечірка</button>
+                        <button type="button" class="preset-btn" data-preset="deepTalk">Пресет: Розкрийся!</button>
                         <button type="button" class="preset-btn" data-preset="creative">Пресет: Креатив</button>
+                        <button type="button" class="preset-btn" data-preset="gameNight">Пресет: Ігровий Вибух</button>
+                        <button type="button" class="preset-btn" data-preset="adultsOnly">Пресет: Для Дорослих 18+</button>
                         <button type="button" class="preset-btn" data-preset="default">Скинути до замовчувань</button>
                     </div>
                     <div id="category-settings-list">
