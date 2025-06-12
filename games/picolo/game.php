@@ -58,14 +58,13 @@ function select_question() {
     global $questions_data_map, $reading_timer_duration_setting;
     if (empty($_SESSION['game_question_pool'])) return null;
     
-    unset($_SESSION['current_question_bonus_pending']); // Clear pending bonus for previous question
+    unset($_SESSION['current_question_bonus_pending']); 
 
     $question_id = array_shift($_SESSION['game_question_pool']);
     if ($question_id === null || !isset($questions_data_map[$question_id])) return null;
     
     $_SESSION['current_question_data'] = $questions_data_map[$question_id];
     
-    // Set pending bonus if applicable for the new question
     if ($_SESSION['current_question_data']['bonus_skip_on_complete'] ?? false) {
         $_SESSION['current_question_bonus_pending'] = true;
     }
@@ -80,14 +79,13 @@ function select_question() {
 
     if (count($_SESSION['game_history']) >= 20) array_shift($_SESSION['game_history']);
     
-    // Snapshot players for history. Skips_left here is correct for "start of question" view.
-    $players_snapshot_for_history = $_SESSION['players']; 
+    $players_snapshot_for_history = unserialize(serialize($_SESSION['players'])); // Deep copy for history
     array_push($_SESSION['game_history'], [
         'question' => $_SESSION['current_question_data'],
         'player_index' => $_SESSION['current_player_index'],
         'round' => $_SESSION['current_round'],
         'players_state' => $players_snapshot_for_history,
-        'bonus_pending_state' => $_SESSION['current_question_bonus_pending'] ?? null // Save bonus pending state
+        'bonus_pending_state' => $_SESSION['current_question_bonus_pending'] ?? null 
     ]);
 
     return $_SESSION['current_question_data'];
@@ -99,12 +97,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $player_idx_for_action = $_SESSION['current_player_index'];
     $question_acted_upon = $_SESSION['current_question_data'];
     
-    $current_skips_left_for_active_player = $_SESSION['players'][$player_idx_for_action]['skips_left'];
+    // Store current skips_left of all players *before* any action is taken.
+    // This is used to ensure skips are not "refunded" by go_back if used after the history point.
+    $skips_state_before_action = array_map(function($p) { return $p['skips_left']; }, $_SESSION['players']);
 
 
     if ($action === 'go_back') {
         if (!empty($_SESSION['game_history'])) {
-            array_pop($_SESSION['game_history']); // Remove current state from history
+            array_pop($_SESSION['game_history']); 
 
             if (!empty($_SESSION['game_history'])) {
                 $last_history_entry = end($_SESSION['game_history']); 
@@ -114,22 +114,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 }
 
                 $_SESSION['current_question_data'] = $last_history_entry['question'];
-                $_SESSION['current_player_index'] = $last_history_entry['player_index']; // Player whose turn it was
+                $_SESSION['current_player_index'] = $last_history_entry['player_index']; 
                 $_SESSION['current_round'] = $last_history_entry['round'];
                 
-                $restored_players_state = $last_history_entry['players_state'];
+                $restored_players_state_from_history = $last_history_entry['players_state'];
                 
-                // ** CRUCIAL FOR SKIPS **
-                // Restore skips_left for the player whose turn it's becoming from the main session,
-                // not from the history record of that player's state.
-                // This makes skips used/gained persistent.
-                if (isset($restored_players_state[$_SESSION['current_player_index']])) {
-                     // We need the skips_left that was current *before* this go_back operation
-                     // $current_skips_left_for_active_player holds the value from before any 'go_back' logic
-                     $restored_players_state[$_SESSION['current_player_index']]['skips_left'] = $current_skips_left_for_active_player;
+                // For each player, take the skips_left from the current session state (skips_state_before_action)
+                // UNLESS the historical state had FEWER skips (meaning a bonus was awarded *after* this history point).
+                // This ensures used skips stay used, and awarded skips (after this history point) are not prematurely given.
+                // It's a bit of a dance: we want to preserve "used" skips, but not "pre-award" bonus skips.
+                
+                // Let's simplify: restore historical player state entirely first.
+                $_SESSION['players'] = $restored_players_state_from_history;
+
+                // Now, if a skip was *used* for the player whose turn it's becoming, AFTER this historical point,
+                // reflect that usage.
+                // The $skips_state_before_action reflects the state just before "go_back" was pressed.
+                // $restored_players_state_from_history[$_SESSION['current_player_index']]['skips_left'] is skips at history point.
+                if (isset($skips_state_before_action[$_SESSION['current_player_index']]) &&
+                    isset($_SESSION['players'][$_SESSION['current_player_index']])) {
+                    // If current skips (before go_back) is less than historical, it means a skip was used. Keep the lower value.
+                    if ($skips_state_before_action[$_SESSION['current_player_index']] < $_SESSION['players'][$_SESSION['current_player_index']]['skips_left']) {
+                        $_SESSION['players'][$_SESSION['current_player_index']]['skips_left'] = $skips_state_before_action[$_SESSION['current_player_index']];
+                    }
+                    // If a bonus was awarded making current skips > historical, the restored historical value is correct.
                 }
-                
-                $_SESSION['players'] = $restored_players_state;
+
                 $_SESSION['current_question_bonus_pending'] = $last_history_entry['bonus_pending_state'] ?? null;
                 
                 $question_has_main_timer = (($_SESSION['current_question_data']['timer'] ?? 0) > 0);
@@ -159,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $q = $question_acted_upon;
             if (($q['bonus_skip_on_complete'] ?? false) && ($_SESSION['current_question_bonus_pending'] ?? false) === true) {
                 $player_data_ref['skips_left']++;
-                $_SESSION['current_question_bonus_pending'] = false; // Bonus awarded for this instance
+                $_SESSION['current_question_bonus_pending'] = false; 
             }
             if (!empty($q['deferred_text_template']) && !empty($q['deferred_turns_player'])) {
                 $player_data_ref['deferred_effects'][] = ['template' => $q['deferred_text_template'], 'turns_left' => (int)$q['deferred_turns_player'], 'question_id' => $q['id']];
@@ -173,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     array_pop($_SESSION['game_history']);
                 }
                 $_SESSION['current_question_data'] = null; 
-                unset($_SESSION['current_question_bonus_pending']); // Clear pending bonus as question is skipped
+                unset($_SESSION['current_question_bonus_pending']); 
             }
         } elseif ($action === 'quit') {
             $player_data_ref['active'] = false;
@@ -182,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         }
         
         if ($action === 'completed' || $action === 'quit') {
-            unset($_SESSION['current_question_bonus_pending']); // Clear pending bonus when turn ends
+            unset($_SESSION['current_question_bonus_pending']); 
             $active_players_count = count(get_active_players_indices());
             if ($active_players_count < 2) {
                 $_SESSION['game_over'] = true;
@@ -214,9 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     header('Location: game.php');
     exit;
 }
-
-// ... (решта коду для Page Load Logic, відображення, таймерів, HTML - без змін з попередньої версії) ...
-// Ensure the rest of the file from the previous correct version is here.
+// ... (решта коду для Page Load Logic, відображення, таймерів, HTML - без змін) ...
 
 if ( empty($_SESSION['current_question_data']) || 
     !(isset($_SESSION['players'][$_SESSION['current_player_index']]['active']) && $_SESSION['players'][$_SESSION['current_player_index']]['active'])
