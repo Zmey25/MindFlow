@@ -21,8 +21,7 @@ foreach ($raw_category_styles_data as $cat_name => $style) {
 $played_questions_log_path = 'data/played_questions_log.json';
 
 if ((isset($_GET['new_game']) && $_GET['new_game'] === 'true') || !isset($_SESSION['game_started'])) {
-    // Note: Logging of previous game's questions is now handled by ajax_game_actions.php on game end.
-    $_SESSION = []; // Clear session for a new game
+    $_SESSION = []; 
     $_SESSION['game_config'] = $default_game_config;
     $_SESSION['category_styles_from_json'] = $raw_category_styles_data;
 } elseif (isset($_SESSION['game_started']) && $_SESSION['game_started'] === true && (!isset($_SESSION['game_over']) || $_SESSION['game_over'] === false)) {
@@ -98,8 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['current_round'] = 1;
         $_SESSION['game_started'] = true;
         $_SESSION['game_over'] = false;
-        // Game history for undo will be managed by JS primarily.
-        // We'll prepare the initial state for JS.
 
         $all_questions_raw = json_decode(file_get_contents('data/questions.json'), true);
         $_SESSION['all_questions_data_map'] = is_array($all_questions_raw) ? array_column($all_questions_raw, null, 'id') : [];
@@ -108,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!empty($_SESSION['all_questions_data_map']) && !empty($_SESSION['category_styles_from_json'])) {
             $questions_for_sorting = [];
-            $historical_k_factor = 0.3; // Tunable: higher value means history has more impact
+            $historical_k_factor = 0.3; 
 
             foreach ($_SESSION['all_questions_data_map'] as $q_id => $question) {
                 $category = $question['category'];
@@ -120,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     $historical_weight_modifier = 1.0 / ( ($play_count * $historical_k_factor) + 1.0);
                     $final_weight_for_random_score = $category_weight * $historical_weight_modifier;
-                    if ($final_weight_for_random_score <= 0) $final_weight_for_random_score = 0.001; // Avoid division by zero or log(0) issues
+                    if ($final_weight_for_random_score <= 0) $final_weight_for_random_score = 0.001; 
 
                     $random_score = pow(mt_rand() / mt_getrandmax(), 1.0 / $final_weight_for_random_score);
                     $questions_for_sorting[] = ['id' => $q_id, 'score' => $random_score];
@@ -132,9 +129,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  $error = "Не знайдено жодного питання для обраних категорій. Увімкніть більше категорій або перевірте їх вагу.";
             } else {
                 usort($questions_for_sorting, function ($a, $b) {
-                    return $b['score'] <=> $a['score']; // Higher score first
+                    return $b['score'] <=> $a['score']; 
                 });
-                // Store the full sorted pool of question objects for JS
                 $_SESSION['initial_js_question_pool'] = [];
                 foreach ($questions_for_sorting as $item) {
                     $_SESSION['initial_js_question_pool'][] = $_SESSION['all_questions_data_map'][$item['id']];
@@ -146,7 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($_SESSION['game_started'] && empty($error)) {
-            // Set up initial timer state for the first question for JS
             $first_question_for_js = $_SESSION['initial_js_question_pool'][0] ?? null;
             if ($first_question_for_js) {
                 $q_has_main_timer = (($first_question_for_js['timer'] ?? 0) > 0);
@@ -157,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['initial_timer_phase'] = 'main';
                 }
                 $_SESSION['initial_timer_started_at'] = time();
-            } else { // Should not happen if pool is not empty
+            } else { 
                  $_SESSION['initial_timer_phase'] = 'main';
                  $_SESSION['initial_timer_started_at'] = time();
             }
