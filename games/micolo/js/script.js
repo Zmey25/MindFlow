@@ -71,8 +71,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (enableCheckbox) enableCheckbox.checked = catPreset.enabled;
                             if (weightInput) weightInput.value = catPreset.weight;
                         } else {
-                             if (enableCheckbox) enableCheckbox.checked = true; // Default to enabled if not in preset
-                             if (weightInput) weightInput.value = weightInput.dataset.defaultWeight || 10; // Default weight
+                             if (enableCheckbox) enableCheckbox.checked = true; 
+                             if (weightInput) weightInput.value = weightInput.dataset.defaultWeight || 10; 
                         }
                     });
                 }
@@ -87,21 +87,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const gamePage = document.querySelector('.game-page');
     if (gamePage && window.INITIAL_GAME_STATE) {
         let questionPool = [...window.INITIAL_GAME_STATE.questionPool];
-        let players = JSON.parse(JSON.stringify(window.INITIAL_GAME_STATE.players)); // Deep copy
+        let players = JSON.parse(JSON.stringify(window.INITIAL_GAME_STATE.players)); 
         let currentPlayerIndex = window.INITIAL_GAME_STATE.currentPlayerIndex;
         let currentRound = window.INITIAL_GAME_STATE.currentRound;
         const gameConfig = window.INITIAL_GAME_STATE.gameConfig;
         const categoryStyles = window.INITIAL_GAME_STATE.categoryStyles;
-        const allQuestionsDataMap = window.INITIAL_GAME_STATE.allQuestionsDataMap; // For reference if needed
-
+        
         let currentQuestion = null;
-        let gameHistoryForUndo = []; // Stores { question, playerIndex, round, playersSnapshot, questionPoolSnapshot }
-        let playedQuestionIdsThisSession = new Set(); // To log unique questions at game end
+        let gameHistoryForUndo = []; 
+        let playedQuestionIdsThisSession = new Set(); 
 
-        // Timer variables
         let timerInterval;
         let secondsLeft;
-        let currentTimerPhase; // 'reading' or 'main'
+        let currentTimerPhase; 
         let effectiveReadingDuration;
         let mainTimerDurationFromQuestion;
         const tickSound = new Audio('sounds/tick-tock.wav');
@@ -109,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const dingSound = new Audio('sounds/ding.mp3');
         const doneSound = new Audio('sounds/ding.mp3');
 
-        // DOM Elements
         const qIdDisplay = document.getElementById('q-id');
         const qCategoryDisplay = document.getElementById('q-category');
         const roundNumDisplay = document.getElementById('round-num');
@@ -157,16 +154,16 @@ document.addEventListener('DOMContentLoaded', function() {
             updateTimerDisplayOnly();
 
             if (currentTimerPhase === 'reading' && effectiveReadingDuration > 0 && secondsLeft > 0) {
-                // No sound for reading phase by default
+                // No sound
             } else if (currentTimerPhase === 'main' && mainTimerDurationFromQuestion > 0 && secondsLeft > 0) {
                 tickSound.play().catch(e => console.warn("Main timer sound blocked."));
             }
 
              if ( (currentTimerPhase === 'main' && secondsLeft <= 0 && mainTimerDurationFromQuestion > 0) ||
                   (currentTimerPhase === 'reading' && secondsLeft <= 0 && effectiveReadingDuration > 0 && mainTimerDurationFromQuestion <= 0) ) {
-                 return; // Timer already ended or no main timer after reading
+                 return; 
             }
-            if (effectiveReadingDuration <= 0 && mainTimerDurationFromQuestion <= 0) return; // No timers active
+            if (effectiveReadingDuration <= 0 && mainTimerDurationFromQuestion <= 0) return; 
 
 
             timerInterval = setInterval(() => {
@@ -175,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (currentTimerPhase === 'reading' && secondsLeft <= 0 && effectiveReadingDuration > 0) {
                     currentTimerPhase = 'main';
-                    secondsLeft = mainTimerDurationFromQuestion; // Switch to main timer duration
+                    secondsLeft = mainTimerDurationFromQuestion; 
                     updateTimerDisplayOnly();
                     stopAllTimerSounds();
                     if (mainTimerDurationFromQuestion > 0) {
@@ -210,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentTimerPhase = 'main';
                 secondsLeft = mainTimerDurationFromQuestion;
             } else {
-                currentTimerPhase = 'main'; // Default if no timers
+                currentTimerPhase = 'main'; 
                 secondsLeft = 0;
             }
             startTimerLogic();
@@ -220,19 +217,21 @@ document.addEventListener('DOMContentLoaded', function() {
             return players.map((p, i) => p.active ? i : -1).filter(i => i !== -1);
         }
         
-        function getNextActivePlayerIndex(currentIndex) {
-            const numTotalPlayers = players.length;
-            if (numTotalPlayers === 0) return null;
-            let nextIdx = (currentIndex + 1) % numTotalPlayers;
-            for (let i = 0; i < numTotalPlayers; i++) {
-                if (players[nextIdx].active) return nextIdx;
-                nextIdx = (nextIdx + 1) % numTotalPlayers;
+        function getNextActivePlayerIndex(currentIdx) {
+            const activeIndices = getActivePlayerIndices();
+            if (activeIndices.length === 0) return null;
+            
+            const currentPositionInActive = activeIndices.indexOf(currentIdx);
+            if (currentPositionInActive === -1) { // Current player became inactive
+                return activeIndices[0]; // Return first active player
             }
-            return null; // Should not happen if there's at least one active player
+            
+            const nextPositionInActive = (currentPositionInActive + 1) % activeIndices.length;
+            return activeIndices[nextPositionInActive];
         }
 
         function updateDisplay() {
-            if (!currentQuestion) return; // Should not happen if pool has questions
+            if (!currentQuestion) return; 
 
             const currentPlayer = players[currentPlayerIndex];
             document.title = `Гра: Хід ${currentPlayer.name}`;
@@ -251,7 +250,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             questionTextDisplay.innerHTML = qText.replace(/\n/g, '<br>');
 
-            // Deferred effects
             if (currentPlayer.deferred_effects && currentPlayer.deferred_effects.length > 0) {
                 let effectsHtml = '';
                 currentPlayer.deferred_effects.forEach(effect => {
@@ -260,27 +258,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 deferredMessagesContent.innerHTML = effectsHtml;
                 deferredMessagesDisplay.style.display = 'block';
             } else {
+                deferredMessagesContent.innerHTML = '';
                 deferredMessagesDisplay.style.display = 'none';
             }
 
-            // Skips
             skipsLeftDisplay.textContent = currentPlayer.skips_left;
             btnSkip.disabled = currentPlayer.skips_left <= 0;
 
-            // Next player info for button
             const nextPlayerIdx = getNextActivePlayerIndex(currentPlayerIndex);
             nextPlayerBtnInfo.textContent = nextPlayerIdx !== null ? players[nextPlayerIdx].name : 'Нікого';
             
-            // "Go Back" button
             btnGoBack.disabled = gameHistoryForUndo.length === 0;
 
-            // Background and Icons
             const styleInfo = categoryStyles[currentQuestion.category] || categoryStyles['Default'] || {background: 'linear-gradient(to right, #74ebd5, #ACB6E5)', icon_classes:['fas fa-question-circle'], icon_color:'rgba(255,255,255,0.1)', icon_opacity:0.1};
             document.documentElement.style.setProperty('--game-background', styleInfo.background);
             document.documentElement.style.setProperty('--icon-color', styleInfo.icon_color || 'rgba(255,255,255,0.1)');
             document.documentElement.style.setProperty('--icon-opacity', styleInfo.icon_opacity || 0.1);
             
-            backgroundIconsContainer.innerHTML = ''; // Clear previous icons
+            backgroundIconsContainer.innerHTML = ''; 
             const iconClasses = styleInfo.icon_classes || ['fas fa-question-circle'];
             const numIcons = Math.floor(Math.random() * 8) + 8;
              if (iconClasses.length > 0) {
@@ -289,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     icon.className = iconClasses[Math.floor(Math.random() * iconClasses.length)];
                     icon.style.left = `${Math.random() * 100}vw`;
                     icon.style.top = `${Math.random() * 100}vh`;
-                    icon.style.fontSize = `${Math.random() * 8 + 10}vw`; // Adjusted from 10vw to 10vmin for better scaling
+                    icon.style.fontSize = `${Math.random() * 8 + 10}vw`; 
                     const duration = Math.random() * 15 + 20;
                     icon.style.animation = `floatIcon ${duration}s ${Math.random() * -duration}s infinite linear alternate`;
                     backgroundIconsContainer.appendChild(icon);
@@ -298,16 +293,22 @@ document.addEventListener('DOMContentLoaded', function() {
             setupTimersForCurrentQuestion();
         }
         
+        function saveCurrentStateForUndo() {
+            if (gameHistoryForUndo.length >= 20) gameHistoryForUndo.shift();
+            // Store skips separately to restore them correctly, but don't allow abuse via undo
+            const currentSkips = players.map(p => p.skips_left);
+            gameHistoryForUndo.push({
+                question: deepCopy(currentQuestion),
+                playerIndex: currentPlayerIndex,
+                round: currentRound,
+                playersSnapshot: deepCopy(players), // This snapshot includes effects, active status
+                skipsBeforeAction: currentSkips // Skips *before* the action that led to this state
+            });
+        }
+
         function selectAndDisplayQuestion(isAfterSkip = false) {
-            if (!isAfterSkip && currentQuestion) { // Don't save state if it's an immediate re-roll (skip) or initial load
-                 if (gameHistoryForUndo.length >= 20) gameHistoryForUndo.shift(); // Limit history size
-                 gameHistoryForUndo.push({
-                    question: deepCopy(currentQuestion),
-                    playerIndex: currentPlayerIndex,
-                    round: currentRound,
-                    playersSnapshot: deepCopy(players),
-                    // questionPoolSnapshot: deepCopy(questionPool) // For more robust undo if needed
-                });
+            if (!isAfterSkip && currentQuestion) { 
+                saveCurrentStateForUndo();
             }
 
             if (questionPool.length === 0) {
@@ -319,11 +320,12 @@ document.addEventListener('DOMContentLoaded', function() {
             updateDisplay();
         }
 
-        function handlePlayerAction(isCompletedOrQuit) {
-            if (isCompletedOrQuit) { // Process deferred effects only on turn end
-                const player = players[currentPlayerIndex];
-                if (player.deferred_effects && player.deferred_effects.length > 0) {
-                    player.deferred_effects = player.deferred_effects.map(effect => ({
+        function handlePlayerAction(isCompletedOrQuitAction) {
+             const actingPlayer = players[currentPlayerIndex]; // Player who just acted
+
+            if (isCompletedOrQuitAction) { 
+                if (actingPlayer.deferred_effects && actingPlayer.deferred_effects.length > 0) {
+                    actingPlayer.deferred_effects = actingPlayer.deferred_effects.map(effect => ({
                         ...effect,
                         turns_left: effect.turns_left - 1
                     })).filter(effect => effect.turns_left > 0);
@@ -336,19 +338,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            const nextPlayerIdx = getNextActivePlayerIndex(currentPlayerIndex);
-            if (nextPlayerIdx === null) { // Should be caught by activePlayerIndices.length check
+            const oldPlayerIndex = currentPlayerIndex;
+            const nextPlayerIdx = getNextActivePlayerIndex(oldPlayerIndex);
+
+            if (nextPlayerIdx === null) { 
                 triggerGameOverJS("Не вдалося знайти наступного гравця.");
                 return;
             }
             
-            // Check for round increment
-            // Increments if the next player is the first active player in the list AND it's not the same player continuing (unless they are the only one left, which is game over)
             const firstActivePlayerIndex = activePlayerIndices[0];
-            if (nextPlayerIdx === firstActivePlayerIndex && (currentPlayerIndex !== nextPlayerIdx || activePlayerIndices.length === 1 )) {
-                 if (activePlayerIndices.length > 1 || currentPlayerIndex !== nextPlayerIdx) { // Don't increment if single player is looping (already game over)
-                    currentRound++;
-                 }
+            if (nextPlayerIdx === firstActivePlayerIndex && oldPlayerIndex !== nextPlayerIdx && activePlayerIndices.indexOf(oldPlayerIndex) === activePlayerIndices.length -1) {
+                currentRound++;
             }
             
             currentPlayerIndex = nextPlayerIdx;
@@ -379,14 +379,14 @@ document.addEventListener('DOMContentLoaded', function() {
         btnSkip.addEventListener('click', () => {
             const player = players[currentPlayerIndex];
             if (player.skips_left > 0) {
+                saveCurrentStateForUndo(); // Save state *before* skip resolves
                 player.skips_left--;
-                // Skipped question doesn't end turn for deferred effects or count for round progression in the same way.
-                // Select new question for the same player.
-                selectAndDisplayQuestion(true); // Pass true to indicate it's a skip action
+                selectAndDisplayQuestion(true); 
             }
         });
         
         btnQuit.addEventListener('click', () => {
+            saveCurrentStateForUndo(); // Save state before quit
             players[currentPlayerIndex].active = false;
             handlePlayerAction(true);
         });
@@ -394,20 +394,30 @@ document.addEventListener('DOMContentLoaded', function() {
         btnGoBack.addEventListener('click', () => {
             if (gameHistoryForUndo.length > 0) {
                 const questionToPutBack = deepCopy(currentQuestion);
+                
                 const prevState = gameHistoryForUndo.pop();
 
-                currentQuestion = deepCopy(prevState.question); // Restore the question we are going back to
-                players = deepCopy(prevState.playersSnapshot);
+                // Restore core game state
+                currentQuestion = deepCopy(prevState.question);
                 currentPlayerIndex = prevState.playerIndex;
                 currentRound = prevState.round;
-                // questionPool = deepCopy(prevState.questionPoolSnapshot); // If full pool snapshot was saved
+                
+                // Restore player states (active, deferred_effects) but keep current skips
+                const previousPlayersSnapshot = deepCopy(prevState.playersSnapshot);
+                players.forEach((currentPlayerState, index) => {
+                    if (previousPlayersSnapshot[index]) {
+                        currentPlayerState.active = previousPlayersSnapshot[index].active;
+                        currentPlayerState.deferred_effects = deepCopy(previousPlayersSnapshot[index].deferred_effects);
+                        // Skips are NOT restored from snapshot to prevent abuse. They remain as they are.
+                    }
+                });
 
-                if (questionToPutBack) { // Add the question we were just on back to the front of the pool
+                if (questionToPutBack && questionToPutBack.id !== currentQuestion.id) { 
                     questionPool.unshift(questionToPutBack);
-                    playedQuestionIdsThisSession.delete(questionToPutBack.id); // It wasn't "completed"
+                    playedQuestionIdsThisSession.delete(questionToPutBack.id); 
                 }
                 
-                updateDisplay(); // Update display with restored state
+                updateDisplay(); 
                 btnGoBack.disabled = gameHistoryForUndo.length === 0;
             }
         });
@@ -440,20 +450,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         function initializeFirstQuestionDisplay() {
-            // Initial state for timers is passed from PHP
             effectiveReadingDuration = window.INITIAL_GAME_STATE.initialEffectiveReadingDuration;
             mainTimerDurationFromQuestion = window.INITIAL_GAME_STATE.initialMainTimerDuration;
             secondsLeft = window.INITIAL_GAME_STATE.initialTimerValue;
             currentTimerPhase = window.INITIAL_GAME_STATE.initialPhase;
             
-            // Adjust secondsLeft based on time passed since page load if serverTimeAtStart is available
             const serverTimeNow = Math.floor(Date.now() / 1000);
             const serverTimeAtPageLoad = window.INITIAL_GAME_STATE.serverTimeAtStart || serverTimeNow;
             const timeElapsedOnClientSinceLoad = serverTimeNow - serverTimeAtPageLoad;
 
             if (currentTimerPhase === 'reading' && effectiveReadingDuration > 0) {
                  secondsLeft -= timeElapsedOnClientSinceLoad;
-                 if(secondsLeft <=0) { // If reading time already passed
+                 if(secondsLeft <=0) { 
                     const deficit = Math.abs(secondsLeft);
                     currentTimerPhase = 'main';
                     secondsLeft = mainTimerDurationFromQuestion - deficit;
@@ -463,28 +471,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             secondsLeft = Math.max(0, secondsLeft);
 
+            currentQuestion = questionPool[0]; // Set currentQuestion to the one displayed by PHP
+                                               // We will shift it AFTER the first explicit action or if initial state changes.
+            updateDisplay(); // This will apply styles and setup timers for the initially displayed question.
 
-            startTimerLogic(); // Start timer based on PHP's initial calculation
-            
-            // The rest of the first question display is handled by PHP's initial render.
-            // We just need to ensure JS state matches.
-            currentQuestion = questionPool.shift(); // The first question is already displayed by PHP.
-                                                   // We shift it so next call to selectAndDisplayQuestion gets the *next* one.
+            // Now that the first question is properly set up via updateDisplay, shift it.
+            // This ensures that the next call to selectAndDisplayQuestion() gets the *actual* next one.
+            questionPool.shift();
             playedQuestionIdsThisSession.add(currentQuestion.id);
 
-            // Update dynamic parts that PHP might not have set for JS or that need JS bindings
-             const currentPlayer = players[currentPlayerIndex];
-             skipsLeftDisplay.textContent = currentPlayer.skips_left;
-             btnSkip.disabled = currentPlayer.skips_left <= 0;
-             btnGoBack.disabled = gameHistoryForUndo.length === 0; // Should be disabled initially
+            const currentPlayer = players[currentPlayerIndex];
+            skipsLeftDisplay.textContent = currentPlayer.skips_left;
+            btnSkip.disabled = currentPlayer.skips_left <= 0;
+            btnGoBack.disabled = gameHistoryForUndo.length === 0; 
         }
 
-        // --- Init Game ---
         if (questionPool && questionPool.length > 0) {
             initializeFirstQuestionDisplay();
         } else {
-            // This case should be handled by PHP redirecting if pool is empty.
-            // As a fallback:
             triggerGameOverJS("Немає питань для гри.");
         }
     }
