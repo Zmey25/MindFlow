@@ -87,7 +87,7 @@ if (!empty($active_indices_initial)) {
         $next_pos_in_active = ($current_pos_in_active + 1) % count($active_indices_initial);
         $next_player_idx_val_initial = $active_indices_initial[$next_pos_in_active];
         $next_player_name_display_initial = htmlspecialchars($players_initial_state[$next_player_idx_val_initial]['name']);
-    } elseif (count($active_indices_initial) > 0) { // If current player became inactive, pick first active
+    } elseif (count($active_indices_initial) > 0) { 
         $next_player_name_display_initial = htmlspecialchars($players_initial_state[$active_indices_initial[0]]['name']);
     }
 }
@@ -96,8 +96,11 @@ $max_rounds_setting = $game_config['general']['max_rounds'] ?? 5;
 $deferred_messages_to_display_first = [];
 if (!empty($current_player_data_for_first_display['deferred_effects'])) {
     foreach ($current_player_data_for_first_display['deferred_effects'] as $effect) {
-        $text = str_replace(['{TURNS_LEFT}', '{PLAYER_NAME}'], [$effect['turns_left'], htmlspecialchars($current_player_data_for_first_display['name'])], $effect['template']);
-        $deferred_messages_to_display_first[] = $text;
+        // Ensure turns_left is positive before displaying
+        if (isset($effect['turns_left']) && $effect['turns_left'] > 0) {
+            $text = str_replace(['{TURNS_LEFT}', '{PLAYER_NAME}'], [$effect['turns_left'], htmlspecialchars($current_player_data_for_first_display['name'])], $effect['template']);
+            $deferred_messages_to_display_first[] = $text;
+        }
     }
 }
 
