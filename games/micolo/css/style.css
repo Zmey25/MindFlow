@@ -306,7 +306,7 @@ body, html {
 }
 
 .question-text {
-    font-size: clamp(1.1em, 4vw, 1.5em);
+    font-size: clamp(2em, 4vw, 2em);
     line-height: 1.4;
     min-height: 80px;
     margin-bottom: 15px;
@@ -401,7 +401,7 @@ body, html {
 @media (max-height: 650px) { /* More aggressive scaling for shorter screens */
     .question-container { margin-top: 2vh; max-height: 48vh; }
     .current-player-name { font-size: clamp(1.3em, 4.5vw, 1.8em); margin-bottom: 5px; }
-    .question-text { font-size: clamp(1em, 3.5vw, 1.3em); min-height: 60px; margin-bottom: 10px;}
+    .question-text { font-size: clamp(1.9em, 3.5vw, 1.9em); min-height: 60px; margin-bottom: 10px;}
     .action-buttons button { padding: 12px; font-size: clamp(1em, 3.8vw, 1.2em); margin: 5px 0; }
     .action-buttons { gap: 5px; }
     .timer-container { width: clamp(40px, 10vw, 60px); height: clamp(40px, 10vw, 60px); font-size: clamp(1em, 4vw, 1.5em); top: 55px; }
