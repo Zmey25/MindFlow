@@ -1,22 +1,8 @@
 <?php
 session_start();
 
-$category_styles = json_decode(file_get_contents('data/category_styles.json'), true) ?? [];
-$question_usage_counts = json_decode(@file_get_contents('data/question_usage.json'), true) ?? [];
-
-if (isset($_POST['new_game_entirely']) || (isset($_GET['new_game']) && $_GET['new_game'] === 'true') || !isset($_SESSION['game_started'])) {
-    // Важливо: переконайтеся, що веб-сервер має права на запис у файл 'data/question_usage.json'
-    if (isset($_SESSION['questions_used_this_game']) && !empty($_SESSION['questions_used_this_game'])) {
-        $counts_from_last_game = array_count_values($_SESSION['questions_used_this_game']);
-        foreach ($counts_from_last_game as $id => $count) {
-            $question_usage_counts[$id] = ($question_usage_counts[$id] ?? 0) + $count;
-        }
-        @file_put_contents('data/question_usage.json', json_encode($question_usage_counts, JSON_PRETTY_PRINT));
-    }
-
+if ((isset($_GET['new_game']) && $_GET['new_game'] === 'true') || !isset($_SESSION['game_started'])) {
     $_SESSION = [];
-    $question_usage_counts = json_decode(@file_get_contents('data/question_usage.json'), true) ?? [];
-
 } elseif (isset($_SESSION['game_started']) && $_SESSION['game_started'] === true && (!isset($_SESSION['game_over']) || $_SESSION['game_over'] === false)) {
     header('Location: game.php');
     exit;
@@ -25,76 +11,78 @@ if (isset($_POST['new_game_entirely']) || (isset($_GET['new_game']) && $_GET['ne
     exit;
 }
 
+$category_styles = json_decode(file_get_contents('data/category_styles.json'), true) ?: [];
+
 $error = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['start_game'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $players_input = isset($_POST['players']) ? (array)$_POST['players'] : [];
     $players = [];
     foreach ($players_input as $name) {
-        $trimmed_name = trim($name);
-        if (!empty($trimmed_name)) {
-            $players[] = htmlspecialchars($trimmed_name);
-        }
+        if (!empty(trim($name))) $players[] = htmlspecialchars(trim($name));
     }
 
     if (count($players) < 2) {
         $error = 'Будь ласка, введіть імена щонайменше двох гравців.';
     } else {
         $_SESSION['initial_player_names'] = $players;
-        $_SESSION['game_history'] = [];
-        $_SESSION['questions_used_this_game'] = [];
-        $_SESSION['current_round'] = 1;
-        $_SESSION['current_player_index'] = 0;
         
+        $game_settings = $_POST['settings'] ?? [];
+        $_SESSION['game_settings'] = [
+            'max_rounds' => (int)($game_settings['max_rounds'] ?? 5),
+            'reading_timer' => (int)($game_settings['reading_timer'] ?? 10),
+            'categories' => $game_settings['categories'] ?? []
+        ];
+
         $game_players = [];
         foreach ($players as $name) {
             $game_players[] = ['name' => $name, 'skips_left' => 1, 'active' => true, 'deferred_effects' => []];
         }
         $_SESSION['players'] = $game_players;
+        $_SESSION['current_player_index'] = 0;
+        $_SESSION['current_round'] = 1;
+        $_SESSION['game_started'] = true;
+        $_SESSION['game_over'] = false;
+        $_SESSION['current_question_data'] = null;
+        $_SESSION['game_history'] = [];
+        $_SESSION['timer_phase'] = 'reading';
+        $_SESSION['timer_started_at'] = time();
 
-        $game_settings = $_POST['game_settings'] ?? [];
-        $_SESSION['game_settings'] = [
-            'reading_timer' => (int)($game_settings['reading_timer'] ?? 10),
-            'max_rounds' => (int)($game_settings['max_rounds'] ?? 5),
-            'enabled_categories' => $game_settings['enabled_categories'] ?? array_keys($category_styles),
-            'category_weights' => $game_settings['category_weights'] ?? array_column($category_styles, 'weight', 'name')
-        ];
-        
         $all_questions_raw = json_decode(file_get_contents('data/questions.json'), true);
-
+        
         if (is_array($all_questions_raw) && !empty($all_questions_raw) && is_array($category_styles) && !empty($category_styles)) {
             $_SESSION['all_questions_data'] = array_column($all_questions_raw, null, 'id');
             $_SESSION['category_styles'] = $category_styles;
 
             $questions_for_sorting = [];
-            $enabled_categories = $_SESSION['game_settings']['enabled_categories'];
-            $custom_weights = $_SESSION['game_settings']['category_weights'];
+            $enabled_categories = $_SESSION['game_settings']['categories'] ?? [];
 
             foreach ($all_questions_raw as $question) {
-                $category = $question['category'];
-                if (!in_array($category, $enabled_categories)) continue;
-                
-                $weight = (float)($custom_weights[$category] ?? ($category_styles[$category]['weight'] ?? 1));
-                if ($weight <= 0) continue;
-
-                $usage_count = $question_usage_counts[$question['id']] ?? 0;
-                $random_score = (pow(mt_rand() / mt_getrandmax(), 1.0 / $weight)) / ($usage_count + 1);
-                
-                $questions_for_sorting[] = ['id' => $question['id'], 'score' => $random_score];
+                $category_name = $question['category'];
+                if (isset($enabled_categories[$category_name]) && $enabled_categories[$category_name]['enabled'] == '1') {
+                    $weight = (int)($enabled_categories[$category_name]['weight'] ?? 1);
+                    if ($weight > 0) {
+                        $random_score = pow(mt_rand() / mt_getrandmax(), 1.0 / $weight);
+                        $questions_for_sorting[] = ['id' => $question['id'], 'score' => $random_score];
+                    }
+                }
             }
             
-            usort($questions_for_sorting, function ($a, $b) { return $b['score'] <=> $a['score']; });
+            usort($questions_for_sorting, fn($a, $b) => $b['score'] <=> $a['score']);
             $_SESSION['game_question_pool'] = array_column($questions_for_sorting, 'id');
-            
-            $_SESSION['game_started'] = true;
-            $_SESSION['game_over'] = false;
-            $_SESSION['current_question_data'] = null;
-            $_SESSION['timer_phase'] = 'reading';
-            $_SESSION['timer_started_at'] = time();
 
+            if (empty($_SESSION['game_question_pool'])) {
+                $error = "Немає доступних питань. Будь ласка, увімкніть хоча б одну категорію з вагою більше 0.";
+                $_SESSION['game_started'] = false;
+            }
+
+        } else {
+            $_SESSION['game_started'] = false;
+            $error = "Помилка завантаження файлів гри (питання/стилі) або файли порожні.";
+        }
+
+        if ($_SESSION['game_started'] && empty($error)) {
             header('Location: game.php');
             exit;
-        } else {
-            $error = "Помилка завантаження файлів гри (питання/стилі) або файли порожні.";
         }
     }
 }
@@ -109,47 +97,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['start_game'])) {
 </head>
 <body>
     <div class="setup-page">
-        <h1>Налаштування гри</h1>
-        <?php if ($error): ?>
-            <p style="color: red;"><?php echo $error; ?></p>
-        <?php endif; ?>
-        <form method="POST" action="index.php">
+        <form method="POST" action="index.php" class="setup-form">
+            <h1>Налаштування гри</h1>
+            <?php if ($error): ?><p class="error-message"><?php echo $error; ?></p><?php endif; ?>
+            
             <p>Введіть імена гравців (мінімум 2):</p>
             <div id="player-inputs">
                 <div class="player-input-group"><input type="text" name="players[]" placeholder="Ім'я гравця 1" required></div>
                 <div class="player-input-group"><input type="text" name="players[]" placeholder="Ім'я гравця 2" required></div>
             </div>
             <button type="button" id="add-player" class="add-player-btn">Додати гравця</button>
-            <div class="advanced-settings-container">
-                <button type="button" id="advanced-settings-toggle">Розширені налаштування ▾</button>
-                <div id="advanced-settings-content" class="hidden">
-                    <div class="presets-container">
-                        <strong>Пресети:</strong>
-                        <button type="button" class="preset-btn" data-preset="party">Для вечірки</button>
-                        <button type="button" class="preset-btn" data-preset="creative">Для креативу</button>
+
+            <details id="advanced-settings">
+                <summary>Розширені налаштування</summary>
+                <div class="settings-container">
+                    
+                    <div class="general-settings">
+                        <div class="setting-item">
+                            <label for="max_rounds">Кількість кіл для гри:</label>
+                            <input type="number" id="max_rounds" name="settings[max_rounds]" value="5" min="1" max="20">
+                        </div>
+                         <div class="setting-item">
+                            <label for="reading_timer">Час на читання (сек):</label>
+                            <input type="number" id="reading_timer" name="settings[reading_timer]" value="10" min="3" max="60">
+                        </div>
                     </div>
-                    <div class="settings-group">
-                        <label for="reading-timer">Час на читання (сек):</label>
-                        <input type="number" id="reading-timer" name="game_settings[reading_timer]" value="10" min="3" max="60">
+
+                    <h3>Категорії та їх вага</h3>
+                    <div class="preset-btn-group">
+                        <button type="button" class="preset-btn" data-preset="party">Пресет: Для вечірки</button>
+                        <button type="button" class="preset-btn" data-preset="creative">Пресет: Для креативу</button>
                     </div>
-                    <div class="settings-group">
-                        <label for="max-rounds">Кількість кіл:</label>
-                        <input type="number" id="max-rounds" name="game_settings[max_rounds]" value="5" min="1" max="50">
-                    </div>
-                    <hr>
-                    <strong>Категорії та їх вага:</strong>
+
                     <div id="category-settings">
                         <?php foreach ($category_styles as $name => $details): ?>
-                        <div class="category-setting-item" data-category-name="<?php echo htmlspecialchars($name); ?>">
-                            <input type="checkbox" name="game_settings[enabled_categories][]" value="<?php echo htmlspecialchars($name); ?>" id="cat_<?php echo md5($name); ?>" checked>
-                            <label for="cat_<?php echo md5($name); ?>"><?php echo htmlspecialchars($name); ?></label>
-                            <input type="number" name="game_settings[category_weights][<?php echo htmlspecialchars($name); ?>]" value="<?php echo $details['weight'] ?? 1; ?>" min="0" max="1000">
+                        <div class="category-setting" data-category-name="<?php echo htmlspecialchars($name); ?>">
+                            <div class="category-title">
+                                <input type="checkbox" name="settings[categories][<?php echo htmlspecialchars($name); ?>][enabled]" value="1" id="cat_<?php echo md5($name); ?>" checked>
+                                <label for="cat_<?php echo md5($name); ?>"><?php echo htmlspecialchars($name); ?></label>
+                            </div>
+                            <div class="category-weight">
+                                <label for="weight_<?php echo md5($name); ?>">Вага:</label>
+                                <input type="number" name="settings[categories][<?php echo htmlspecialchars($name); ?>][weight]" value="<?php echo (int)($details['weight'] ?? 10); ?>" min="0" max="100" id="weight_<?php echo md5($name); ?>">
+                            </div>
                         </div>
                         <?php endforeach; ?>
                     </div>
                 </div>
-            </div>
-            <button type="submit" name="start_game" class="start-game-btn">Почати гру!</button>
+            </details>
+
+            <button type="submit" class="start-game-btn">Почати гру!</button>
         </form>
     </div>
     <script src="js/script.js"></script>
