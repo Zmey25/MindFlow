@@ -1,5 +1,3 @@
---- START OF FILE script.js.txt ---
-
 document.addEventListener('DOMContentLoaded', function() {
     const playerInputsContainer = document.getElementById('player-inputs');
     if (playerInputsContainer) {
@@ -556,4 +554,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }, { passive: false });
     }
 });
---- END OF FILE script.js.txt ---
