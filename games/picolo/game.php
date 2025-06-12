@@ -1,9 +1,7 @@
 <?php
 session_start();
 
-// Reading timer duration is now controlled by session settings
-$reading_timer_duration = $_SESSION['game_settings']['reading_timer'] ?? 10;
-$max_rounds = $_SESSION['game_settings']['max_rounds'] ?? 5;
+// const READING_TIMER_DURATION = 10; // Removed
 
 if (!isset($_SESSION['game_started']) || $_SESSION['game_started'] !== true) {
     header('Location: index.php?new_game=true');
@@ -14,8 +12,20 @@ if (isset($_SESSION['game_over']) && $_SESSION['game_over'] === true) {
     exit;
 }
 
-$questions_data_map = $_SESSION['all_questions_data'] ?? [];
-$category_styles = $_SESSION['category_styles'] ?? [];
+// Ensure game config is loaded
+if (!isset($_SESSION['game_config']) || !isset($_SESSION['all_questions_data']) || !isset($_SESSION['category_styles_from_json'])) {
+    $_SESSION['game_over'] = true;
+    $_SESSION['game_over_message'] = "Помилка: Конфігурація гри не завантажена. Почніть нову гру.";
+    header('Location: game_over.php');
+    exit;
+}
+
+$game_config = $_SESSION['game_config'];
+$reading_timer_duration_setting = $game_config['general']['reading_timer_duration'] ?? 10;
+$max_rounds_setting = $game_config['general']['max_rounds'] ?? 5;
+
+$questions_data_map = $_SESSION['all_questions_data'];
+$category_styles = $_SESSION['category_styles_from_json']; // For display
 
 if (empty($questions_data_map) || empty($category_styles) || !isset($_SESSION['game_question_pool'])) {
     $_SESSION['game_over'] = true;
@@ -28,7 +38,9 @@ function get_active_players_indices() {
     $active_indices = [];
     if (isset($_SESSION['players']) && is_array($_SESSION['players'])) {
         foreach ($_SESSION['players'] as $index => $player) {
-            if ($player['active'] ?? false) $active_indices[] = $index;
+            if ($player['active'] ?? false) {
+                $active_indices[] = $index;
+            }
         }
     }
     return $active_indices;
@@ -40,19 +52,26 @@ function get_next_active_player_index($current_index) {
     $num_players = count($all_players);
     $next_idx = ($current_index + 1) % $num_players;
     for ($i = 0; $i < $num_players; $i++) {
-        if ($all_players[$next_idx]['active'] ?? false) return $next_idx;
+        if ($all_players[$next_idx]['active'] ?? false) {
+            return $next_idx;
+        }
         $next_idx = ($next_idx + 1) % $num_players;
     }
     return null;
 }
 
 function select_question() {
-    global $questions_data_map;
+    global $questions_data_map, $reading_timer_duration_setting;
     if (empty($_SESSION['game_question_pool'])) return null;
     $question_id = array_shift($_SESSION['game_question_pool']);
     if ($question_id === null || !isset($questions_data_map[$question_id])) return null;
     $_SESSION['current_question_data'] = $questions_data_map[$question_id];
-    $_SESSION['timer_phase'] = 'reading';
+    
+    if ($reading_timer_duration_setting > 0) {
+        $_SESSION['timer_phase'] = 'reading';
+    } else {
+        $_SESSION['timer_phase'] = 'main'; // Skip reading phase if duration is 0
+    }
     $_SESSION['timer_started_at'] = time();
     return $_SESSION['current_question_data'];
 }
@@ -66,23 +85,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 array_unshift($_SESSION['game_question_pool'], $_SESSION['current_question_data']['id']);
             }
             $last_state = array_pop($_SESSION['game_history']);
+
             $_SESSION['current_question_data'] = $last_state['question'];
             $_SESSION['current_player_index'] = $last_state['player_index'];
             $_SESSION['current_round'] = $last_state['round'];
             $_SESSION['players'] = $last_state['players_state'];
-            $_SESSION['timer_phase'] = 'reading';
+            
+            if ($reading_timer_duration_setting > 0) {
+                $_SESSION['timer_phase'] = 'reading';
+            } else {
+                $_SESSION['timer_phase'] = 'main';
+            }
             $_SESSION['timer_started_at'] = time();
         }
     } else {
         $current_player_idx = $_SESSION['current_player_index'];
-        array_push($_SESSION['game_history'], ['question' => $_SESSION['current_question_data'], 'player_index' => $current_player_idx, 'round' => $_SESSION['current_round'], 'players_state' => $_SESSION['players']]);
         
+        if (count($_SESSION['game_history']) >= 20) { // Limit history size
+            array_shift($_SESSION['game_history']);
+        }
+        array_push($_SESSION['game_history'], [
+            'question' => $_SESSION['current_question_data'],
+            'player_index' => $current_player_idx,
+            'round' => $_SESSION['current_round'],
+            'players_state' => $_SESSION['players']
+        ]);
+
         $player_data = &$_SESSION['players'][$current_player_idx];
+        
         if (!empty($player_data['deferred_effects'])) {
             $active_effects = [];
             foreach ($player_data['deferred_effects'] as $effect) {
                 $effect['turns_left']--;
-                if ($effect['turns_left'] > 0) $active_effects[] = $effect;
+                if ($effect['turns_left'] > 0) {
+                    $active_effects[] = $effect;
+                }
             }
             $player_data['deferred_effects'] = $active_effects;
         }
@@ -112,22 +149,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $_SESSION['game_over_message'] = "Не вдалося знайти наступного гравця.";
             } else {
                 $active_indices = get_active_players_indices();
-                if (($next_player_idx == ($active_indices[0] ?? null)) && ($current_player_idx !== $next_player_idx || count($active_indices) === 1)) {
-                    $_SESSION['current_round']++;
+                 if (($next_player_idx == ($active_indices[0] ?? null)) && ($current_player_idx !== $next_player_idx || count($active_indices) === 1)) {
+                     if ($_SESSION['current_player_index'] != $next_player_idx || count($active_indices) > 1) { // Avoid double increment if only one player left and they take a turn
+                        $_SESSION['current_round']++;
+                     } else if (count($active_indices) == 1 && $current_player_idx == $next_player_idx) {
+                        // Single player scenario, round increments if they are the start of effective new round
+                        // This logic might need refinement for single player, but usually game ends.
+                     }
                 }
                 $_SESSION['current_player_index'] = $next_player_idx;
             }
         }
     }
 
-    if (isset($_SESSION['current_round']) && $_SESSION['current_round'] > $max_rounds) {
+    if (isset($_SESSION['current_round']) && $_SESSION['current_round'] > $max_rounds_setting) {
         $_SESSION['game_over'] = true;
-        $_SESSION['game_over_message'] = "$max_rounds кіл зіграно. Гра завершена!";
+        $_SESSION['game_over_message'] = $max_rounds_setting . " кіл зіграно. Гра завершена!";
     }
 
     header('Location: game.php');
     exit;
 }
+
 
 if (empty($_SESSION['current_question_data'])) {
     if (select_question() === null) {
@@ -140,10 +183,10 @@ if (empty($_SESSION['current_question_data'])) {
 
 $current_player_idx = $_SESSION['current_player_index'];
 if (!($_SESSION['players'][$current_player_idx]['active'] ?? false)) {
-    $fallback_idx = get_next_active_player_index($current_player_idx - 1);
+    $fallback_idx = get_next_active_player_index($current_player_idx -1 < 0 ? count($_SESSION['players']) -1 : $current_player_idx -1 );
     if ($fallback_idx !== null) {
         $_SESSION['current_player_index'] = $fallback_idx;
-        $_SESSION['current_question_data'] = null;
+        $_SESSION['current_question_data'] = null; // Force new question selection for new player
         header('Location: game.php');
         exit;
     } else {
@@ -174,25 +217,38 @@ if (strpos($question_text, '{RANDOM_PLAYER_NAME}') !== false) {
     $question_text = str_replace('{RANDOM_PLAYER_NAME}', !empty($other_names) ? $other_names[array_rand($other_names)] : '(інший гравець)', $question_text);
 }
 
-$style_info = $category_styles[$current_question['category']] ?? $category_styles['Default'];
+$style_info = $category_styles[$current_question['category']] ?? ($category_styles['Default'] ?? ['background' => 'linear-gradient(to right, #74ebd5, #ACB6E5)', 'icon_classes' => ['fas fa-question-circle'], 'icon_color' => 'rgba(255,255,255,0.1)', 'icon_opacity' => 0.1]);
 $next_player_name = 'Нікого';
-$next_player_idx = get_next_active_player_index($current_player_idx);
-if ($next_player_idx !== null) $next_player_name = $_SESSION['players'][$next_player_idx]['name'];
+$next_player_idx_val = get_next_active_player_index($current_player_idx);
+if ($next_player_idx_val !== null) $next_player_name = $_SESSION['players'][$next_player_idx_val]['name'];
 
-$initial_timer_value = null;
-$current_phase_for_js = $_SESSION['timer_phase'] ?? 'reading';
-$main_timer_duration = $current_question['timer'] ?? null;
-if ($main_timer_duration !== null) {
-    $elapsed = time() - $_SESSION['timer_started_at'];
-    if ($current_phase_for_js === 'reading') {
-        $remaining = $reading_timer_duration - $elapsed;
-        $initial_timer_value = ($remaining > 0) ? $remaining : $main_timer_duration + $remaining;
-        if ($remaining <= 0) $current_phase_for_js = 'main';
-    } else {
-        $initial_timer_value = $main_timer_duration - $elapsed;
+$initial_timer_value = 0; // Default to 0 if no timer
+$current_phase_for_js = $_SESSION['timer_phase'] ?? 'main'; // Default to main if not set
+$main_timer_duration_for_js = (int)($current_question['timer'] ?? 0); // Can be 0 if no timer for question
+
+
+if ($reading_timer_duration_setting > 0 || $main_timer_duration_for_js > 0) {
+    $elapsed = time() - ($_SESSION['timer_started_at'] ?? time());
+
+    if ($current_phase_for_js === 'reading' && $reading_timer_duration_setting > 0) {
+        $remaining_reading = $reading_timer_duration_setting - $elapsed;
+        if ($remaining_reading > 0) {
+            $initial_timer_value = $remaining_reading;
+        } else { // Reading time ended
+            $current_phase_for_js = 'main';
+            // Calculate how much main timer is left, considering time passed beyond reading time
+            $initial_timer_value = $main_timer_duration_for_js + $remaining_reading; // remaining_reading is negative here
+        }
+    } else { // Current phase is main, or reading timer is 0
+        $current_phase_for_js = 'main'; // Ensure phase is main
+        $initial_timer_value = $main_timer_duration_for_js - $elapsed;
     }
     $initial_timer_value = max(0, $initial_timer_value);
+} else { // Both timers are 0 or less
+    $current_phase_for_js = 'main'; // Or any neutral state
+    $initial_timer_value = 0;
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="uk"><head>
@@ -205,21 +261,21 @@ if ($main_timer_duration !== null) {
         window.GAME_DATA = {
             backgroundGradient: <?php echo json_encode($style_info['background']); ?>,
             iconClasses: <?php echo json_encode($style_info['icon_classes'] ?? ['fas fa-question-circle']); ?>,
-            iconColor: <?php echo json_encode($style_info['icon_color']); ?>,
+            iconColor: <?php echo json_encode($style_info['icon_color'] ?? 'rgba(255,255,255,0.1)'); ?>,
             iconOpacity: <?php echo json_encode($style_info['icon_opacity'] ?? 0.1); ?>,
-            mainTimerDuration: <?php echo json_encode($main_timer_duration); ?>,
+            readingTimerDuration: <?php echo json_encode($reading_timer_duration_setting); ?>, // Pass reading timer setting
+            mainTimerDuration: <?php echo json_encode($main_timer_duration_for_js); ?>, // Actual main timer for this question
             initialTimerValue: <?php echo json_encode($initial_timer_value); ?>,
-            initialPhase: <?php echo json_encode($current_phase_for_js); ?>,
-            readingTimerDuration: <?php echo json_encode($reading_timer_duration); ?>
+            initialPhase: <?php echo json_encode($current_phase_for_js); ?>
         };
     </script>
 </head><body>
     <div class="game-page">
         <div class="background-icons-container"></div>
         <div class="category-display">Категорія: <?php echo htmlspecialchars($current_question['category']); ?></div>
-        <div class="round-player-info">Раунд: <?php echo $_SESSION['current_round']; ?><br>Гравців: <?php echo count(get_active_players_indices()); ?></div>
-        <?php if ($main_timer_duration !== null): ?>
-        <div id="timer-container" class="timer-container"><div id="timer-circle" class="timer-circle"></div></div>
+        <div class="round-player-info">Раунд: <?php echo $_SESSION['current_round']; ?>/<?php echo $max_rounds_setting; ?><br>Гравців: <?php echo count(get_active_players_indices()); ?></div>
+        <?php if ($reading_timer_duration_setting > 0 || $main_timer_duration_for_js > 0): ?>
+        <div id="timer-container" class="timer-container timer-<?php echo $current_phase_for_js; ?>"><div id="timer-circle" class="timer-circle"></div></div>
         <?php endif; ?>
         <div class="question-container">
             <div class="current-player-name"><?php echo htmlspecialchars($current_player_data['name']); ?></div>
