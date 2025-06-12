@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $current_log = json_decode(@file_get_contents($log_file), true) ?: [];
 
             foreach ($played_question_ids as $qid) {
-                if (!empty($qid)) { // Ensure qid is not empty
+                if (!empty($qid)) { 
                     $current_log[$qid] = ($current_log[$qid] ?? 0) + 1;
                 }
             }
@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $_SESSION['game_over'] = true;
             $_SESSION['game_over_message'] = htmlspecialchars($game_over_message);
 
-            // Store config and player names for "Play Again" functionality on game_over.php
             if (isset($_SESSION['game_config'])) {
                 $_SESSION['game_config_at_end'] = $_SESSION['game_config'];
             }
@@ -40,14 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $_SESSION['initial_player_names_at_end'] = $_SESSION['initial_player_names'];
             }
             
-            // Clean up game-specific session variables that are no longer needed
             unset($_SESSION['game_started']);
             unset($_SESSION['current_player_index']);
             unset($_SESSION['current_round']);
             unset($_SESSION['players']);
             unset($_SESSION['initial_js_question_pool']);
             unset($_SESSION['all_questions_data_map']);
-            // category_styles_from_json might be kept for index page if user goes back
 
             $response = ['success' => true, 'message' => 'Гра завершена, історію записано.'];
         } else {
