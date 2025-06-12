@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// ... (весь код до блоку обробки POST) ...
 if (!isset($_SESSION['game_started']) || $_SESSION['game_started'] !== true) {
     header('Location: index.php?new_game=true');
     exit;
