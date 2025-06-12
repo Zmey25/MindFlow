@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['game_over']) || $_SESSION['game_over'] !== true) {
     if (isset($_SESSION['game_started']) && $_SESSION['game_started'] === true) {
-        header('Location: game.php'); // Should not happen if game is active, JS handles game end
+        header('Location: game.php'); 
     } else {
         header('Location: index.php?new_game=true');
     }
@@ -19,8 +19,7 @@ $played_questions_log_path = 'data/played_questions_log.json';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
     if ($initial_players_for_play_again && $game_config_for_play_again) {
-        // Reset essential game state variables for a new round with same settings/players
-        $_SESSION['game_config'] = $game_config_for_play_again; // Use the config from the game that just ended
+        $_SESSION['game_config'] = $game_config_for_play_again; 
         $_SESSION['initial_player_names'] = $initial_players_for_play_again;
 
         $players = [];
@@ -36,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
         unset($_SESSION['game_config_at_end']);
         unset($_SESSION['initial_player_names_at_end']);
 
-        // Reload questions and styles (styles should ideally be in session, but to be safe)
         $all_questions_raw = json_decode(file_get_contents('data/questions.json'), true);
         $_SESSION['all_questions_data_map'] = is_array($all_questions_raw) ? array_column($all_questions_raw, null, 'id') : [];
         $_SESSION['category_styles_from_json'] = json_decode(file_get_contents('data/category_styles.json'), true) ?: [];
@@ -49,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
 
             foreach ($_SESSION['all_questions_data_map'] as $q_id => $question) {
                 $category = $question['category'];
-                // Use the game_config_for_play_again for category settings
                 $category_config_item = $game_config_for_play_again['categories'][$category] ?? null;
 
                 if ($category_config_item && $category_config_item['enabled'] && $category_config_item['weight'] > 0) {
@@ -76,7 +73,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
                     $_SESSION['initial_js_question_pool'][] = $_SESSION['all_questions_data_map'][$item['id']];
                 }
 
-                // Set up initial timer state for the first question for JS
                 $first_question_for_js = $_SESSION['initial_js_question_pool'][0] ?? null;
                  if ($first_question_for_js) {
                     $q_has_main_timer = (($first_question_for_js['timer'] ?? 0) > 0);
@@ -101,22 +97,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['play_again'])) {
             $_SESSION['game_over_message'] = "Помилка перезавантаження файлів гри. Спробуйте почати нову гру.";
         }
         
-        // Refresh game_over.php to show any new error message from play again logic
         if ($_SESSION['game_over'] === true && isset($_SESSION['game_over_message'])) {
              header('Location: game_over.php');
              exit;
         }
 
     } else {
-        // Fallback if essential data for "Play Again" is missing
         header('Location: index.php?new_game=true&error=session_expired_for_play_again');
         exit;
     }
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_game_entirely'])) {
-    // Logging of played questions is handled by ajax_game_actions.php when a game session ends.
-    // index.php with new_game=true will clear the session.
     header('Location: index.php?new_game=true');
     exit;
 }
@@ -141,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['new_game_entirely']))
         <form method="POST" action="game_over.php">
              <button type="submit" name="new_game_entirely" class="new-game-btn">Почати нову гру (нові гравці/налаштування)</button>
         </form>
-        <p style="margin-top: 20px; font-size: 1.5em;">Не забудьте зробити 5-хвилинну перерву!</p>
+        <p style="margin-top: 20px; font-size: 0.9em;">Не забудьте зробити 5-хвилинну перерву!</p>
     </div>
 </body>
 </html>
