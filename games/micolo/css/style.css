@@ -336,7 +336,7 @@ body, html {
     gap: 10px;
     width: 100%;
     max-width: 90vw; 
-    margin: 0 auto 10px auto;
+    margin: 0 auto 30px auto;
     padding-bottom: 10px; /* Space for home bar on iOS */
 }
 
