@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!empty($_SESSION['all_questions_data_map']) && !empty($_SESSION['category_styles_from_json'])) {
             $questions_for_sorting = [];
-            $historical_k_factor = 0.3; 
+            $historical_k_factor = 0.4; 
 
             foreach ($_SESSION['all_questions_data_map'] as $q_id => $question) {
                 $category = $question['category'];
