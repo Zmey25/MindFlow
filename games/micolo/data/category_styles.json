@@ -4,7 +4,7 @@
     "icon_classes": ["fas fa-comments", "far fa-comment-dots", "fas fa-brain", "fas fa-heart"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.08,
-    "weight": 30,
+    "weight": 50,
     "description": "Категорія для глибоких та особистих розмов. Питання, що змушують замислитися про життя, цінності та мрії."
   },
   "Штраф": {
@@ -12,7 +12,7 @@
     "icon_classes": ["fas fa-skull-crossbones", "fas fa-bomb", "fas fa-biohazard", "fas fa-exclamation-circle"],
     "icon_color": "rgba(0, 0, 0, 0.5)",
     "icon_opacity": 0.1,
-    "weight": 10,
+    "weight": 30,
     "description": "Неприємний сюрприз! Виконайте завдання, яке може бути смішним, незручним або просто дивним. Відмова може призвести до ігрового покарання."
   },
   "Подарунок": {
@@ -20,7 +20,7 @@
     "icon_classes": ["fas fa-gift", "fas fa-star", "fas fa-magic", "fas fa-crown"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.15,
-    "weight": 10,
+    "weight": 20,
     "description": "Приємний бонус! Отримайте перевагу в грі, змусьте іншого гравця щось зробити для вас або просто насолоджуйтесь моментом слави."
   },
   "Виклик": {
@@ -28,7 +28,7 @@
     "icon_classes": ["fas fa-bolt", "fas fa-running", "fas fa-microphone-alt", "fas fa-bullseye"],
     "icon_color": "rgba(0, 0, 0, 0.5)",
     "icon_opacity": 0.1,
-    "weight": 20,
+    "weight": 50,
     "description": "Час діяти! Ця картка вимагає від вас виконати певне завдання, продемонструвати талант або перевірити свою кмітливість."
   },
   "Машина Часу": {
@@ -36,7 +36,7 @@
     "icon_classes": ["fas fa-history", "fas fa-hourglass-half", "fas fa-camera-retro", "fas fa-book-open"],
     "icon_color": "rgba(0, 0, 0, 0.5)",
     "icon_opacity": 0.08,
-    "weight": 30,
+    "weight": 40,
     "description": "Поверніться у минуле. Поділіться спогадами з дитинства, юності або просто згадайте яскраві моменти свого життя."
   },
   "Погляд у Майбутнє": {
@@ -44,7 +44,7 @@
     "icon_classes": ["fas fa-rocket", "fas fa-user-astronaut", "fas fa-chart-line", "fas fa-seedling"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.07,
-    "weight": 30,
+    "weight": 40,
     "description": "Зазирніть у кришталеву кулю. Питання про ваші мрії, плани, сподівання та бачення майбутнього."
   },
   "А що, якби...?": {
@@ -52,7 +52,7 @@
     "icon_classes": ["fas fa-cloud", "fas fa-lightbulb", "fas fa-random", "fas fa-hat-wizard"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.1,
-    "weight": 25,
+    "weight": 40,
     "description": "Категорія для гіпотетичних сценаріїв та фантазій. Дайте волю своїй уяві та поміркуйте над неможливим."
   },
   "Ти і Я": {
@@ -60,7 +60,7 @@
     "icon_classes": ["fas fa-user-friends", "fas fa-handshake", "fas fa-users", "fas fa-people-arrows"],
     "icon_color": "rgba(255, 255, 255, 0.4)",
     "icon_opacity": 0.09,
-    "weight": 20,
+    "weight": 40,
     "description": "Питання, що стосуються інших гравців. Зверніться до когось, зробіть комплімент або дізнайтесь, що про вас думають інші. **Правило:** Виконайте завдання разом з гравцем на ваш вибір."
   },
   "Сміхопанорама": {
@@ -68,7 +68,7 @@
     "icon_classes": ["far fa-laugh-beam", "fas fa-theater-masks", "fas fa-poo", "fas fa-grin-squint-tears"],
     "icon_color": "rgba(0, 0, 0, 0.5)",
     "icon_opacity": 0.08,
-    "weight": 30,
+    "weight": 40,
     "description": "Час для веселощів! Розкажіть смішну історію, дайте безглузду відповідь або просто посмійтесь від душі."
   },
   "Етична Дилема": {
@@ -76,7 +76,7 @@
     "icon_classes": ["fas fa-balance-scale-left", "fas fa-gavel", "fas fa-exclamation-triangle", "fas fa-compass"],
     "icon_color": "rgba(255, 255, 255, 0.4)",
     "icon_opacity": 0.06,
-    "weight": 10,
+    "weight": 30,
     "description": "Складний вибір. Немає правильних чи неправильних відповідей, лише ваш моральний компас. Поясніть свою позицію."
   },
   "Світ Кіно та Музики": {
@@ -84,7 +84,7 @@
     "icon_classes": ["fas fa-film", "fas fa-music", "fas fa-ticket-alt", "fas fa-book-reader"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.12,
-    "weight": 25,
+    "weight": 50,
     "description": "Для поціновувачів поп-культури. Питання про улюблені фільми, серіали, пісні, книги та ігри."
   },
   "Таємна Скринька": {
@@ -92,7 +92,7 @@
     "icon_classes": ["fas fa-key", "fas fa-lock", "fas fa-user-secret", "fas fa-mask"],
     "icon_color": "rgba(255, 255, 255, 0.3)",
     "icon_opacity": 0.05,
-    "weight": 10,
+    "weight": 20,
     "description": "Дуже особисті або провокативні питання. На цих питаннях завжди є вибір: відповідати чи пити замість відповіді."
   },
   "Креативний Куточок": {
@@ -100,7 +100,7 @@
     "icon_classes": ["fas fa-paint-brush", "fas fa-palette", "fas fa-lightbulb", "fas fa-pencil-alt"],
     "icon_color": "rgba(0, 0, 0, 0.5)",
     "icon_opacity": 0.1,
-    "weight": 15,
+    "weight": 20,
     "description": "Проявіть свою творчість. Придумайте, намалюйте або опишіть щось унікальне. Головне — процес, а не результат."
   },
   "Бліц!": {
@@ -108,7 +108,7 @@
     "icon_classes": ["fas fa-fighter-jet", "fas fa-stopwatch-20", "fas fa-bolt", "fas fa-fire"],
     "icon_color": "rgba(255, 255, 255, 0.6)",
     "icon_opacity": 0.15,
-    "weight": 15,
+    "weight": 40,
     "description": "Думайте швидко! **Правило:** Ви повинні дати відповідь на питання протягом 10 секунд. Відповідь не має бути ідеальною, головне — встигнути!"
   },
   "Хто перший?": {
@@ -116,7 +116,7 @@
     "icon_classes": ["fas fa-fist-raised", "fas fa-trophy", "fas fa-brain", "fas fa-flag-checkered"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.1,
-    "weight": 20,
+    "weight": 50,
     "description": "Питання на швидкість. Хто першим вигукне правильну відповідь, отримує право 'нагородити' трьома ковтками будь-якого гравця на свій вибір. Готуйте свої рефлекси!"
   },
   "Ланцюгова Реакція": {
@@ -124,7 +124,7 @@
     "icon_classes": ["fas fa-sync-alt", "fas fa-users", "fas fa-link", "fas fa-infinity"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.09,
-    "weight": 25,
+    "weight": 50,
     "description": "Для усіх! Задається тема (напр., марки авто, рок-гурти). Починаючи з вас, кожен гравець по колу називає одне слово. Перший, хто повториться, замовкне або назве щось недоречне, програє та п'є 3 ковтки."
   },
   "Ігровий Вірус": {
@@ -132,7 +132,7 @@
     "icon_classes": ["fas fa-virus", "fas fa-biohazard", "fas fa-exclamation-triangle", "fas fa-shield-virus"],
     "icon_color": "rgba(0, 0, 0, 0.5)",
     "icon_opacity": 0.1,
-    "weight": 25,
+    "weight": 50,
     "description": "Епідемія! На одне коло для всіх гравців вводиться правило (напр., не можна казати 'я', заборонено схрещувати руки). Порушник, якого 'спіймали', негайно п'є штрафний ковток. На початку вашого наступного ходу буде нагадування про зняття карантину."
   },
   "Дуель": {
@@ -140,7 +140,7 @@
     "icon_classes": ["fas fa-bolt", "fas fa-stopwatch", "fas fa-users-slash", "fas fa-gamepad"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.12,
-    "weight": 25,
+    "weight": 50,
     "description": "Змагання! Ви та випадковий гравець. Гра задає тему. Суперник закриває вуха. У вас є 10 секунд, щоб назвати якомога більше асоціацій. Потім те ж саме робить суперник. У кого менше — той п'є 3 ковтки."
   },
   "Спільний Розум": {
@@ -148,7 +148,7 @@
     "icon_classes": ["fas fa-brain", "fas fa-bullhorn", "fas fa-users", "fas fa-object-group"],
     "icon_color": "rgba(0, 0, 0, 0.5)",
     "icon_opacity": 0.08,
-    "weight": 25,
+    "weight": 50,
     "description": "Асоціації! Грою задається слово-тема. На рахунок 'три' всі гравці одночасно вигукують першу асоціацію. Гравці, чиї асоціації опинились в меншості (або виявились унікальними), п'ють 2 ковтки. Думай як всі... або ні!"
   },
   "Кривий Художник": {
@@ -156,7 +156,7 @@
     "icon_classes": ["fas fa-paint-brush", "fas fa-pencil-ruler", "fas fa-question", "far fa-image"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.1,
-    "weight": 10,
+    "weight": 20,
     "description": "Малювання! Гра дає об'єкт. Намалюйте його за 30 секунд. Покажіть малюнок гравцю на ваш вибір. Якщо він вгадує, що це, — ви перемогли! Якщо ні — ви п'єте 3 ковтки. Талант не обов'язковий! Букви малювати заборонено!"
   },
   "Перекличка": {
@@ -164,7 +164,7 @@
     "icon_classes": ["fas fa-user-tag", "fas fa-tshirt", "fas fa-shoe-prints", "fas fa-users-cog"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.09,
-    "weight": 25,
+    "weight": 50,
     "description": "Ті, у кого...! Всі, у кого є певна річ або ознака (напр., телефон Samsung, борода, одяг з секонду), роблять по 2 ковтки. Уважно слухайте, кого це стосується цього разу."
   },
   "Таємно": {
@@ -180,7 +180,7 @@
     "icon_classes": ["fas fa-balance-scale", "fas fa-vote-yea", "fas fa-divide", "fas fa-arrows-alt-h"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.09,
-    "weight": 20,
+    "weight": 50,
     "description": "Питання для всіх: що б ви обрали? Одне чи інше. Відповідайте одночасно. Ті, хто опинився в меншості, п'ють 3 ковтки."
   },
   "Я ніколи не...": {
@@ -188,7 +188,7 @@
     "icon_classes": ["fas fa-beer", "fas fa-user-secret", "fas fa-fingerprint", "fas fa-question-circle"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.1,
-    "weight": 25,
+    "weight": 1,
     "description": "Класична гра в грі. Зачитайте фразу, що починається з 'Я ніколи не...'. Всі, хто це робив, п'ють. Будьте чесними!"
   },
   "18+": {
@@ -196,7 +196,7 @@
     "icon_classes": ["fas fa-fire-alt", "fas fa-wine-glass", "fas fa-bed", "fas fa-heart-broken"],
     "icon_color": "rgba(255, 255, 255, 0.4)",
     "icon_opacity": 0.08,
-    "weight": 15,
+    "weight": 1,
     "description": "Категорія для дорослих розмов. Відверті, пікантні та інтимні питання. Якщо вам некомфортно — завжди є опція 'пити замість відповіді'."
   },
   "Default": {
