@@ -188,7 +188,7 @@
     "icon_classes": ["fas fa-beer", "fas fa-user-secret", "fas fa-fingerprint", "fas fa-question-circle"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.1,
-    "weight": 1,
+    "weight": 0,
     "description": "Класична гра в грі. Зачитайте фразу, що починається з 'Я ніколи не...'. Всі, хто це робив, п'ють. Будьте чесними!"
   },
   "18+": {
@@ -196,7 +196,7 @@
     "icon_classes": ["fas fa-fire-alt", "fas fa-wine-glass", "fas fa-bed", "fas fa-heart-broken"],
     "icon_color": "rgba(255, 255, 255, 0.4)",
     "icon_opacity": 0.08,
-    "weight": 1,
+    "weight": 0,
     "description": "Категорія для дорослих розмов. Відверті, пікантні та інтимні питання. Якщо вам некомфортно — завжди є опція 'пити замість відповіді'."
   },
   "Default": {
