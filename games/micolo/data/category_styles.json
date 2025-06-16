@@ -4,7 +4,7 @@
     "icon_classes": ["fas fa-comments", "far fa-comment-dots", "fas fa-brain", "fas fa-heart"],
     "icon_color": "rgba(255, 255, 255, 0.5)",
     "icon_opacity": 0.08,
-    "weight": 50,
+    "weight": 40,
     "description": "Категорія для глибоких та особистих розмов. Питання, що змушують замислитися про життя, цінності та мрії."
   },
   "Штраф": {
