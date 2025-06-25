@@ -36,196 +36,51 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.textContent = isHidden ? 'Сховати розширені налаштування' : 'Показати розширені налаштування';
             });
         }
+        
+        const voiceSelect = document.getElementById('voice-select');
+        function populateVoiceList() {
+            if(typeof speechSynthesis === 'undefined') {
+                voiceSelect.innerHTML = '<option value="">TTS не підтримується</option>';
+                return;
+            }
+            const voices = speechSynthesis.getVoices();
+            voiceSelect.innerHTML = '';
+            if(voices.length === 0){
+                 voiceSelect.innerHTML = '<option>Не знайдено голосів</option>';
+                 return;
+            }
+            const savedVoiceURI = localStorage.getItem('tts_voice_uri');
 
-    const presets = {
-        party: {
-            settings: { reading_timer_duration: 15, max_rounds: 10, initial_skips: 2 },
-            categories: {
-                "Розкрийся!": { enabled: !0, weight: 20 },
-                "Штраф": { enabled: !0, weight: 15 },
-                "Подарунок": { enabled: !0, weight: 15 },
-                "Виклик": { enabled: !0, weight: 35 },
-                "Машина Часу": { enabled: !0, weight: 15 },
-                "Погляд у Майбутнє": { enabled: !0, weight: 15 },
-                "А що, якби...?": { enabled: !0, weight: 25 },
-                "Ти і Я": { enabled: !0, weight: 30 },
-                "Сміхопанорама": { enabled: !0, weight: 40 },
-                "Етична Дилема": { enabled: !0, weight: 10 },
-                "Світ Кіно та Музики": { enabled: !0, weight: 25 },
-                "Таємна Скринька": { enabled: !0, weight: 15 },
-                "Креативний Куточок": { enabled: !0, weight: 15 },
-                "Бліц!": { enabled: !0, weight: 20 },
-                "Хто перший?": { enabled: !0, weight: 30 },
-                "Ланцюгова Реакція": { enabled: !0, weight: 35 },
-                "Ігровий Вірус": { enabled: !0, weight: 25 },
-                "Дуель": { enabled: !0, weight: 25 },
-                "Спільний Розум": { enabled: !0, weight: 30 },
-                "Кривий Художник": { enabled: !0, weight: 15 },
-                "Перекличка": { enabled: !0, weight: 35 },
-                "Таємно": { enabled: !0, weight: 25 },
-                "Обирайте": { enabled: !0, weight: 30 },
-                "18+": { enabled: !1, weight: 10 },
-                "Я ніколи не...": { enabled: !1, weight: 10 },
-                "Default": { enabled: !0, weight: 0 }
-            }
-        },
-        toTalk: { // Раніше "deepTalk", перейменовано на "Поговорити"
-            settings: { reading_timer_duration: 15, max_rounds: 10, initial_skips: 3 },
-            categories: {
-                "Розкрийся!": { enabled: !0, weight: 50 },
-                "Штраф": { enabled: !1, weight: 1 },
-                "Подарунок": { enabled: !1, weight: 1 },
-                "Виклик": { enabled: !0, weight: 1 },
-                "Машина Часу": { enabled: !0, weight: 45 },
-                "Погляд у Майбутнє": { enabled: !0, weight: 45 },
-                "А що, якби...?": { enabled: !0, weight: 35 },
-                "Ти і Я": { enabled: !0, weight: 30 },
-                "Сміхопанорама": { enabled: !0, weight: 20 },
-                "Етична Дилема": { enabled: !0, weight: 40 },
-                "Світ Кіно та Музики": { enabled: !0, weight: 25 },
-                "Таємна Скринька": { enabled: !0, weight: 1 },
-                "Креативний Куточок": { enabled: !0, weight: 1 },
-                "Бліц!": { enabled: !1, weight: 1 },
-                "Хто перший?": { enabled: !1, weight: 1 },
-                "Ланцюгова Реакція": { enabled: !0, weight: 1 },
-                "Ігровий Вірус": { enabled: !1, weight: 1 },
-                "Дуель": { enabled: !1, weight: 1 },
-                "Спільний Розум": { enabled: !0, weight: 1 },
-                "Кривий Художник": { enabled: !0, weight: 1 },
-                "Перекличка": { enabled: !0, weight: 1 },
-                "Таємно": { enabled: !0, weight: 1 },
-                "Обирайте": { enabled: !0, weight: 1 },
-                "18+": { enabled: !1, weight: 10 },
-                "Я ніколи не...": { enabled: !1, weight: 10 },
-                "Default": { enabled: !0, weight: 0 }
-            }
-        },
-        creative: {
-            settings: { reading_timer_duration: 20, max_rounds: 7, initial_skips: 2 },
-            categories: {
-                "Розкрийся!": { enabled: !0, weight: 20 },
-                "Штраф": { enabled: !0, weight: 10 },
-                "Подарунок": { enabled: !0, weight: 10 },
-                "Виклик": { enabled: !0, weight: 25 },
-                "Машина Часу": { enabled: !0, weight: 20 },
-                "Погляд у Майбутнє": { enabled: !0, weight: 20 },
-                "А що, якби...?": { enabled: !0, weight: 50 },
-                "Ти і Я": { enabled: !0, weight: 25 },
-                "Сміхопанорама": { enabled: !0, weight: 30 },
-                "Етична Дилема": { enabled: !0, weight: 10 },
-                "Світ Кіно та Музики": { enabled: !0, weight: 25 },
-                "Таємна Скринька": { enabled: !0, weight: 10 },
-                "Креативний Куточок": { enabled: !0, weight: 50 },
-                "Бліц!": { enabled: !0, weight: 15 },
-                "Хто перший?": { enabled: !0, weight: 15 },
-                "Ланцюгова Реакція": { enabled: !0, weight: 20 },
-                "Ігровий Вірус": { enabled: !0, weight: 20 },
-                "Дуель": { enabled: !0, weight: 15 },
-                "Спільний Розум": { enabled: !0, weight: 25 },
-                "Кривий Художник": { enabled: !0, weight: 50 },
-                "Перекличка": { enabled: !0, weight: 15 },
-                "Таємно": { enabled: !0, weight: 40 },
-                "Обирайте": { enabled: !0, weight: 20 },
-                "18+": { enabled: !1, weight: 10 },
-                "Я ніколи не...": { enabled: !1, weight: 10 },
-                "Default": { enabled: !0, weight: 0 }
-            }
-        },
-        gameNight: {
-            settings: { reading_timer_duration: 12, max_rounds: 12, initial_skips: 1 },
-            categories: {
-                "Розкрийся!": { enabled: !0, weight: 10 },
-                "Штраф": { enabled: !0, weight: 20 },
-                "Подарунок": { enabled: !0, weight: 20 },
-                "Виклик": { enabled: !0, weight: 30 },
-                "Машина Часу": { enabled: !0, weight: 10 },
-                "Погляд у Майбутнє": { enabled: !0, weight: 10 },
-                "А що, якби...?": { enabled: !0, weight: 15 },
-                "Ти і Я": { enabled: !0, weight: 35 },
-                "Сміхопанорама": { enabled: !0, weight: 20 },
-                "Етична Дилема": { enabled: !0, weight: 10 },
-                "Світ Кіно та Музики": { enabled: !0, weight: 20 },
-                "Таємна Скринька": { enabled: !0, weight: 15 },
-                "Креативний Куточок": { enabled: !0, weight: 15 },
-                "Бліц!": { enabled: !0, weight: 35 },
-                "Хто перший?": { enabled: !0, weight: 45 },
-                "Ланцюгова Реакція": { enabled: !0, weight: 45 },
-                "Ігровий Вірус": { enabled: !0, weight: 40 },
-                "Дуель": { enabled: !0, weight: 40 },
-                "Спільний Розум": { enabled: !0, weight: 40 },
-                "Кривий Художник": { enabled: !0, weight: 20 },
-                "Перекличка": { enabled: !0, weight: 35 },
-                "Таємно": { enabled: !0, weight: 25 },
-                "Обирайте": { enabled: !0, weight: 35 },
-                "18+": { enabled: !1, weight: 10 },
-                "Я ніколи не...": { enabled: !1, weight: 10 },
-                "Default": { enabled: !0, weight: 0 }
-            }
-        },
-        adultsOnly: { // Пресет 18+
-            settings: { reading_timer_duration: 10, max_rounds: 10, initial_skips: 2 },
-            categories: {
-                "18+": { enabled: !0, weight: 60 },
-                "Я ніколи не...": { enabled: !0, weight: 50 },
-                "Розкрийся!": { enabled: !0, weight: 15 },
-                "Штраф": { enabled: !0, weight: 15 },
-                "Подарунок": { enabled: !0, weight: 10 },
-                "Виклик": { enabled: !0, weight: 15 },
-                "Машина Часу": { enabled: !0, weight: 1 },
-                "Погляд у Майбутнє": { enabled: !0, weight: 1 },
-                "А що, якби...?": { enabled: !0, weight: 1 },
-                "Ти і Я": { enabled: !0, weight: 15 },
-                "Сміхопанорама": { enabled: !0, weight: 1 },
-                "Етична Дилема": { enabled: !0, weight: 1 },
-                "Світ Кіно та Музики": { enabled: !0, weight: 1 },
-                "Таємна Скринька": { enabled: !0, weight: 40 },
-                "Креативний Куточок": { enabled: !1, weight: 1 },
-                "Бліц!": { enabled: !0, weight: 1 },
-                "Хто перший?": { enabled: !0, weight: 1 },
-                "Ланцюгова Реакція": { enabled: !0, weight: 1 },
-                "Ігровий Вірус": { enabled: !0, weight: 1 },
-                "Дуель": { enabled: !0, weight: 1 },
-                "Спільний Розум": { enabled: !0, weight: 1 },
-                "Кривий Художник": { enabled: !1, weight: 1 }, 
-                "Перекличка": { enabled: !0, weight: 1 },
-                "Таємно": { enabled: !0, weight: 1 },
-                "Обирайте": { enabled: !0, weight: 1 },
-                "Default": { enabled: !0, weight: 0 }
-            }
-        },
-        default: {
-            settings: { reading_timer_duration: 10, max_rounds: 10, initial_skips: 2 },
-            categories: {
-                "Розкрийся!": { enabled: !0, weight: 25 },
-                "Штраф": { enabled: !0, weight: 15 },
-                "Подарунок": { enabled: !0, weight: 15 },
-                "Виклик": { enabled: !0, weight: 25 },
-                "Машина Часу": { enabled: !0, weight: 25 },
-                "Погляд у Майбутнє": { enabled: !0, weight: 25 },
-                "А що, якби...?": { enabled: !0, weight: 25 },
-                "Ти і Я": { enabled: !0, weight: 25 },
-                "Сміхопанорама": { enabled: !0, weight: 25 },
-                "Етична Дилема": { enabled: !0, weight: 15 },
-                "Світ Кіно та Музики": { enabled: !0, weight: 25 },
-                "Таємна Скринька": { enabled: !0, weight: 15 },
-                "Креативний Куточок": { enabled: !0, weight: 25 },
-                "Бліц!": { enabled: !0, weight: 25 },
-                "Хто перший?": { enabled: !0, weight: 25 },
-                "Ланцюгова Реакція": { enabled: !0, weight: 25 },
-                "Ігровий Вірус": { enabled: !0, weight: 25 },
-                "Дуель": { enabled: !0, weight: 25 },
-                "Спільний Розум": { enabled: !0, weight: 25 },
-                "Кривий Художник": { enabled: !0, weight: 25 },
-                "Перекличка": { enabled: !0, weight: 25 },
-                "Таємно": { enabled: !0, weight: 25 },
-                "Обирайте": { enabled: !0, weight: 25 },
-                "18+": { enabled: !1, weight: 10 },
-                "Я ніколи не": { enabled: !1, weight: 10 },
-                "тест": { enabled: !1, weight: 0 },
-                "Default": { enabled: !0, weight: 0 }
-            }
+            voices.forEach(voice => {
+                const option = document.createElement('option');
+                option.textContent = `${voice.name} (${voice.lang})`;
+                option.setAttribute('value', voice.voiceURI);
+                if (voice.voiceURI === savedVoiceURI) {
+                    option.selected = true;
+                }
+                voiceSelect.appendChild(option);
+            });
         }
-    };
+
+        populateVoiceList();
+        if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = populateVoiceList;
+        }
+
+        if (voiceSelect) {
+            voiceSelect.addEventListener('change', () => {
+                localStorage.setItem('tts_voice_uri', voiceSelect.value);
+            });
+        }
+
+        const presets = {
+            party: { settings: { reading_timer_duration: 15, max_rounds: 10, initial_skips: 2 }, categories: { "Розкрийся!": { enabled: !0, weight: 20 }, "Штраф": { enabled: !0, weight: 15 }, "Подарунок": { enabled: !0, weight: 15 }, "Виклик": { enabled: !0, weight: 35 }, "Машина Часу": { enabled: !0, weight: 15 }, "Погляд у Майбутнє": { enabled: !0, weight: 15 }, "А що, якби...?": { enabled: !0, weight: 25 }, "Ти і Я": { enabled: !0, weight: 30 }, "Сміхопанорама": { enabled: !0, weight: 40 }, "Етична Дилема": { enabled: !0, weight: 10 }, "Світ Кіно та Музики": { enabled: !0, weight: 25 }, "Таємна Скринька": { enabled: !0, weight: 15 }, "Креативний Куточок": { enabled: !0, weight: 15 }, "Бліц!": { enabled: !0, weight: 20 }, "Хто перший?": { enabled: !0, weight: 30 }, "Ланцюгова Реакція": { enabled: !0, weight: 35 }, "Ігровий Вірус": { enabled: !0, weight: 25 }, "Дуель": { enabled: !0, weight: 25 }, "Спільний Розум": { enabled: !0, weight: 30 }, "Кривий Художник": { enabled: !0, weight: 15 }, "Перекличка": { enabled: !0, weight: 35 }, "Таємно": { enabled: !0, weight: 25 }, "Обирайте": { enabled: !0, weight: 30 }, "18+": { enabled: !1, weight: 10 }, "Я ніколи не...": { enabled: !1, weight: 10 }, "Default": { enabled: !0, weight: 0 } } },
+            toTalk: { settings: { reading_timer_duration: 15, max_rounds: 10, initial_skips: 3 }, categories: { "Розкрийся!": { enabled: !0, weight: 50 }, "Штраф": { enabled: !1, weight: 1 }, "Подарунок": { enabled: !1, weight: 1 }, "Виклик": { enabled: !0, weight: 1 }, "Машина Часу": { enabled: !0, weight: 45 }, "Погляд у Майбутнє": { enabled: !0, weight: 45 }, "А що, якби...?": { enabled: !0, weight: 35 }, "Ти і Я": { enabled: !0, weight: 30 }, "Сміхопанорама": { enabled: !0, weight: 20 }, "Етична Дилема": { enabled: !0, weight: 40 }, "Світ Кіно та Музики": { enabled: !0, weight: 25 }, "Таємна Скринька": { enabled: !0, weight: 1 }, "Креативний Куточок": { enabled: !0, weight: 1 }, "Бліц!": { enabled: !1, weight: 1 }, "Хто перший?": { enabled: !1, weight: 1 }, "Ланцюгова Реакція": { enabled: !0, weight: 1 }, "Ігровий Вірус": { enabled: !1, weight: 1 }, "Дуель": { enabled: !1, weight: 1 }, "Спільний Розум": { enabled: !0, weight: 1 }, "Кривий Художник": { enabled: !0, weight: 1 }, "Перекличка": { enabled: !0, weight: 1 }, "Таємно": { enabled: !0, weight: 1 }, "Обирайте": { enabled: !0, weight: 1 }, "18+": { enabled: !1, weight: 10 }, "Я ніколи не...": { enabled: !1, weight: 10 }, "Default": { enabled: !0, weight: 0 } } },
+            creative: { settings: { reading_timer_duration: 20, max_rounds: 7, initial_skips: 2 }, categories: { "Розкрийся!": { enabled: !0, weight: 20 }, "Штраф": { enabled: !0, weight: 10 }, "Подарунок": { enabled: !0, weight: 10 }, "Виклик": { enabled: !0, weight: 25 }, "Машина Часу": { enabled: !0, weight: 20 }, "Погляд у Майбутнє": { enabled: !0, weight: 20 }, "А що, якби...?": { enabled: !0, weight: 50 }, "Ти і Я": { enabled: !0, weight: 25 }, "Сміхопанорама": { enabled: !0, weight: 30 }, "Етична Дилема": { enabled: !0, weight: 10 }, "Світ Кіно та Музики": { enabled: !0, weight: 25 }, "Таємна Скринька": { enabled: !0, weight: 10 }, "Креативний Куточок": { enabled: !0, weight: 50 }, "Бліц!": { enabled: !0, weight: 15 }, "Хто перший?": { enabled: !0, weight: 15 }, "Ланцюгова Реакція": { enabled: !0, weight: 20 }, "Ігровий Вірус": { enabled: !0, weight: 20 }, "Дуель": { enabled: !0, weight: 15 }, "Спільний Розум": { enabled: !0, weight: 25 }, "Кривий Художник": { enabled: !0, weight: 50 }, "Перекличка": { enabled: !0, weight: 15 }, "Таємно": { enabled: !0, weight: 40 }, "Обирайте": { enabled: !0, weight: 20 }, "18+": { enabled: !1, weight: 10 }, "Я ніколи не...": { enabled: !1, weight: 10 }, "Default": { enabled: !0, weight: 0 } } },
+            gameNight: { settings: { reading_timer_duration: 12, max_rounds: 12, initial_skips: 1 }, categories: { "Розкрийся!": { enabled: !0, weight: 10 }, "Штраф": { enabled: !0, weight: 20 }, "Подарунок": { enabled: !0, weight: 20 }, "Виклик": { enabled: !0, weight: 30 }, "Машина Часу": { enabled: !0, weight: 10 }, "Погляд у Майбутнє": { enabled: !0, weight: 10 }, "А що, якби...?": { enabled: !0, weight: 15 }, "Ти і Я": { enabled: !0, weight: 35 }, "Сміхопанорама": { enabled: !0, weight: 20 }, "Етична Дилема": { enabled: !0, weight: 10 }, "Світ Кіно та Музики": { enabled: !0, weight: 20 }, "Таємна Скринька": { enabled: !0, weight: 15 }, "Креативний Куточок": { enabled: !0, weight: 15 }, "Бліц!": { enabled: !0, weight: 35 }, "Хто перший?": { enabled: !0, weight: 45 }, "Ланцюгова Реакція": { enabled: !0, weight: 45 }, "Ігровий Вірус": { enabled: !0, weight: 40 }, "Дуель": { enabled: !0, weight: 40 }, "Спільний Розум": { enabled: !0, weight: 40 }, "Кривий Художник": { enabled: !0, weight: 20 }, "Перекличка": { enabled: !0, weight: 35 }, "Таємно": { enabled: !0, weight: 25 }, "Обирайте": { enabled: !0, weight: 35 }, "18+": { enabled: !1, weight: 10 }, "Я ніколи не...": { enabled: !1, weight: 10 }, "Default": { enabled: !0, weight: 0 } } },
+            adultsOnly: { settings: { reading_timer_duration: 10, max_rounds: 10, initial_skips: 2 }, categories: { "18+": { enabled: !0, weight: 60 }, "Я ніколи не...": { enabled: !0, weight: 50 }, "Розкрийся!": { enabled: !0, weight: 15 }, "Штраф": { enabled: !0, weight: 15 }, "Подарунок": { enabled: !0, weight: 10 }, "Виклик": { enabled: !0, weight: 15 }, "Машина Часу": { enabled: !0, weight: 1 }, "Погляд у Майбутнє": { enabled: !0, weight: 1 }, "А що, якби...?": { enabled: !0, weight: 1 }, "Ти і Я": { enabled: !0, weight: 15 }, "Сміхопанорама": { enabled: !0, weight: 1 }, "Етична Дилема": { enabled: !0, weight: 1 }, "Світ Кіно та Музики": { enabled: !0, weight: 1 }, "Таємна Скринька": { enabled: !0, weight: 40 }, "Креативний Куточок": { enabled: !1, weight: 1 }, "Бліц!": { enabled: !0, weight: 1 }, "Хто перший?": { enabled: !0, weight: 1 }, "Ланцюгова Реакція": { enabled: !0, weight: 1 }, "Ігровий Вірус": { enabled: !0, weight: 1 }, "Дуель": { enabled: !0, weight: 1 }, "Спільний Розум": { enabled: !0, weight: 1 }, "Кривий Художник": { enabled: !1, weight: 1 }, "Перекличка": { enabled: !0, weight: 1 }, "Таємно": { enabled: !0, weight: 1 }, "Обирайте": { enabled: !0, weight: 1 }, "Default": { enabled: !0, weight: 0 } } },
+            default: { settings: { reading_timer_duration: 10, max_rounds: 10, initial_skips: 2 }, categories: { "Розкрийся!": { enabled: !0, weight: 25 }, "Штраф": { enabled: !0, weight: 15 }, "Подарунок": { enabled: !0, weight: 15 }, "Виклик": { enabled: !0, weight: 25 }, "Машина Часу": { enabled: !0, weight: 25 }, "Погляд у Майбутнє": { enabled: !0, weight: 25 }, "А що, якби...?": { enabled: !0, weight: 25 }, "Ти і Я": { enabled: !0, weight: 25 }, "Сміхопанорама": { enabled: !0, weight: 25 }, "Етична Дилема": { enabled: !0, weight: 15 }, "Світ Кіно та Музики": { enabled: !0, weight: 25 }, "Таємна Скринька": { enabled: !0, weight: 15 }, "Креативний Куточок": { enabled: !0, weight: 25 }, "Бліц!": { enabled: !0, weight: 25 }, "Хто перший?": { enabled: !0, weight: 25 }, "Ланцюгова Реакція": { enabled: !0, weight: 25 }, "Ігровий Вірус": { enabled: !0, weight: 25 }, "Дуель": { enabled: !0, weight: 25 }, "Спільний Розум": { enabled: !0, weight: 25 }, "Кривий Художник": { enabled: !0, weight: 25 }, "Перекличка": { enabled: !0, weight: 25 }, "Таємно": { enabled: !0, weight: 25 }, "Обирайте": { enabled: !0, weight: 25 }, "18+": { enabled: !1, weight: 10 }, "Я ніколи не": { enabled: !1, weight: 10 }, "тест": { enabled: !1, weight: 0 }, "Default": { enabled: !0, weight: 0 } } }
+        };
 
         document.querySelectorAll('.preset-btn').forEach(button => {
             button.addEventListener('click', function() {
@@ -263,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-
 
     const gamePage = document.querySelector('.game-page');
     if (gamePage && window.INITIAL_GAME_STATE) {
@@ -305,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const btnSkip = document.getElementById('btn-skip');
         const btnGoBack = document.getElementById('btn-go-back');
         const btnQuit = document.getElementById('btn-quit');
+        const btnTts = document.getElementById('btn-tts');
         const backgroundIconsContainer = document.querySelector('.background-icons-container');
         
         function deepCopy(obj) {
@@ -335,40 +190,35 @@ document.addEventListener('DOMContentLoaded', function() {
             stopAllTimerSounds();
             updateTimerDisplayOnly();
 
-            if (currentTimerPhase === 'reading' && effectiveReadingDuration > 0 && secondsLeft > 0) {
-                // No sound
-            } else if (currentTimerPhase === 'main' && mainTimerDurationFromQuestion > 0 && secondsLeft > 0) {
-                tickSound.play().catch(e => console.warn("Main timer sound blocked."));
+            if ((currentTimerPhase === 'main' && secondsLeft <= 0 && mainTimerDurationFromQuestion > 0) ||
+                (currentTimerPhase === 'reading' && secondsLeft <= 0 && effectiveReadingDuration > 0 && mainTimerDurationFromQuestion <= 0)) {
+                return;
             }
-
-             if ( (currentTimerPhase === 'main' && secondsLeft <= 0 && mainTimerDurationFromQuestion > 0) ||
-                  (currentTimerPhase === 'reading' && secondsLeft <= 0 && effectiveReadingDuration > 0 && mainTimerDurationFromQuestion <= 0) ) {
-                 return; 
-            }
-            if (effectiveReadingDuration <= 0 && mainTimerDurationFromQuestion <= 0) return; 
-
+            if (effectiveReadingDuration <= 0 && mainTimerDurationFromQuestion <= 0) return;
 
             timerInterval = setInterval(() => {
                 secondsLeft--;
                 updateTimerDisplayOnly();
+                
+                if (currentTimerPhase === 'main' && mainTimerDurationFromQuestion > 0 && secondsLeft === 5) {
+                    tickSound.play().catch(e => console.warn("Timer sound blocked."));
+                }
 
                 if (currentTimerPhase === 'reading' && secondsLeft <= 0 && effectiveReadingDuration > 0) {
                     currentTimerPhase = 'main';
-                    secondsLeft = mainTimerDurationFromQuestion; 
+                    secondsLeft = mainTimerDurationFromQuestion;
                     updateTimerDisplayOnly();
                     stopAllTimerSounds();
-                    if (mainTimerDurationFromQuestion > 0) {
+                    if (mainTimerDurationFromQuestion > 0 && secondsLeft > 0 && secondsLeft <= 5) {
                         tickSound.play().catch(e => console.warn("Timer sound blocked."));
-                    } else {
-                        clearInterval(timerInterval);
                     }
                 } else if (currentTimerPhase === 'main' && secondsLeft <= 0 && mainTimerDurationFromQuestion > 0) {
                     clearInterval(timerInterval);
                     stopAllTimerSounds();
                     dingSound.play().catch(e => console.warn("Timer sound blocked."));
-                } else if ((currentTimerPhase === 'reading' && effectiveReadingDuration <=0) || (currentTimerPhase === 'main' && mainTimerDurationFromQuestion <=0)) {
-                     clearInterval(timerInterval);
-                     stopAllTimerSounds();
+                } else if ((currentTimerPhase === 'reading' && effectiveReadingDuration <= 0) || (currentTimerPhase === 'main' && mainTimerDurationFromQuestion <= 0)) {
+                    clearInterval(timerInterval);
+                    stopAllTimerSounds();
                 }
             }, 1000);
         }
@@ -413,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         function updateDisplay(isRestoringFromHistory = false) {
+            if (typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
             if (!currentQuestion) return; 
 
             const currentPlayer = players[currentPlayerIndex];
@@ -433,22 +284,15 @@ document.addEventListener('DOMContentLoaded', function() {
             questionTextDisplay.innerHTML = qText.replace(/\n/g, '<br>');
             
             const activeDeferredEffects = currentPlayer.deferred_effects ? currentPlayer.deferred_effects.filter(effect => effect.turns_left > 0) : [];
-             if (activeDeferredEffects.length > 0) {
+            if (activeDeferredEffects.length > 0) {
                 let effectsHtml = '';
                 activeDeferredEffects.forEach(effect => {
                     const originalTurnsForEffect = parseInt(allQuestionsDataMap[effect.question_id]?.deferred_turns_player || 0);
-                    // Показуємо turns_left "як є" для відображення, бо воно вже скориговане (зменшене)
-                    // або буде зменшене в handlePlayerAction.
-                    // Для коректного відображення "залишилось Х ходів" потрібне саме turns_left - 1,
-                    // якщо тільки ефект не щойно отриманий (тоді turns_left = original_duration + 1).
-                    // Якщо effect.turns_left == originalTurnsForEffect + 1, то показуємо originalTurnsForEffect
-                    // інакше показуємо effect.turns_left - 1 (але не менше 1, якщо ще активний)
-                    let turnsToDisplay = effect.turns_left -1;
+                    let turnsToDisplay = effect.turns_left - 1;
                     if (effect.turns_left === originalTurnsForEffect + 1) {
                         turnsToDisplay = originalTurnsForEffect;
                     }
-                    turnsToDisplay = Math.max(1, turnsToDisplay); // Якщо ефект ще активний, показуємо хоча б 1
-
+                    turnsToDisplay = Math.max(1, turnsToDisplay);
                     effectsHtml += `<p>${effect.template.replace('{TURNS_LEFT}', turnsToDisplay).replace('{PLAYER_NAME}', currentPlayer.name)}</p>`;
                 });
                 deferredMessagesContent.innerHTML = effectsHtml;
@@ -499,29 +343,28 @@ document.addEventListener('DOMContentLoaded', function() {
             if (gameHistoryForUndo.length >= 20) gameHistoryForUndo.shift();
             gameHistoryForUndo.push({
                 question: deepCopy(currentQuestion),
-                playerIndex: currentPlayerIndex, // Зберігаємо індекс гравця, який щойно діяв
+                playerIndex: currentPlayerIndex,
                 round: currentRound,
-                playersSnapshot: deepCopy(players), // Зберігаємо стан гравців після дії
-                questionPoolSnapshot: deepCopy(questionPool), // Пул питань до вибору наступного
-                playedQuestionIdsSnapshot: new Set(playedQuestionIdsThisSession) // Зіграні питання
+                playersSnapshot: deepCopy(players),
+                questionPoolSnapshot: deepCopy(questionPool),
+                playedQuestionIdsSnapshot: new Set(playedQuestionIdsThisSession)
             });
             btnGoBack.disabled = false;
         }
 
-        function selectAndDisplayQuestion() { // isAfterSkip параметр більше не потрібен тут для історії
+        function selectAndDisplayQuestion() {
             if (questionPool.length === 0) {
                 triggerGameOverJS("Питання закінчились!");
                 return;
             }
             currentQuestion = questionPool.shift();
             playedQuestionIdsThisSession.add(currentQuestion.id);
-            updateDisplay(); // isRestoringFromHistory = false за замовчуванням
+            updateDisplay();
         }
 
         function handlePlayerAction(isCompletedOrQuitAction) {
-            const actingPlayerIndex = currentPlayerIndex; // Гравець, який щойно завершив хід
+            const actingPlayerIndex = currentPlayerIndex; 
 
-            // Обробляємо ефекти для гравця, який щойно діяв
             if (isCompletedOrQuitAction) { 
                 const playerWhoActed = players[actingPlayerIndex];
                 if (playerWhoActed.deferred_effects && playerWhoActed.deferred_effects.length > 0) {
@@ -531,26 +374,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     })).filter(effect => effect.turns_left > 0);
                 }
             }
-            // `players` тепер відображає стан після того, як actingPlayerIndex завершив свій хід
-            // `currentQuestion` - це питання, на яке він діяв
-            // `currentPlayerIndex` - це все ще actingPlayerIndex
-            // `currentRound` - це поточний раунд
-            saveCurrentStateForUndo(); // Зберігаємо цей стан
+            saveCurrentStateForUndo(); 
 
-            // Перевіряємо умови завершення гри після збереження, але до переходу до наступного гравця
             const activePlayerIndices = getActivePlayerIndices();
             if (activePlayerIndices.length === 0) {
                 triggerGameOverJS("Гравців не залишилось!");
                 return;
             }
-            if (activePlayerIndices.length === 1 && players[actingPlayerIndex].active) { // Якщо щойно вийшов гравець і залишився один
+            if (activePlayerIndices.length === 1 && players[actingPlayerIndex].active) {
                  const lastPlayer = players[activePlayerIndices[0]];
-                 if(lastPlayer.active) { // Переконуємось, що останній гравець активний
+                 if(lastPlayer.active) {
                     triggerGameOverJS("Залишився переможець: " + lastPlayer.name + "!");
                     return;
                  }
             }
-             if (activePlayerIndices.length < 2 && !(activePlayerIndices.length === 1 && players[actingPlayerIndex].active)) { // Загальна перевірка
+             if (activePlayerIndices.length < 2 && !(activePlayerIndices.length === 1 && players[actingPlayerIndex].active)) {
                 triggerGameOverJS(activePlayerIndices.length === 1 ? "Залишився переможець!" : "Гравців не залишилось!");
                 return;
             }
@@ -558,8 +396,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let nextPlayerIdx = getNextActivePlayerIndex(actingPlayerIndex);
             
-            if (nextPlayerIdx === null && activePlayerIndices.length > 0) { // Якщо getNextActivePlayerIndex повернув null, але є активні
-                nextPlayerIdx = activePlayerIndices[0]; // Аварійний вибір
+            if (nextPlayerIdx === null && activePlayerIndices.length > 0) {
+                nextPlayerIdx = activePlayerIndices[0];
             }
 
             if (nextPlayerIdx === null) { 
@@ -567,14 +405,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            const firstActivePlayerIndex = activePlayerIndices[0]; // Визначаємо першого активного з поточного стану
+            const firstActivePlayerIndex = activePlayerIndices[0];
             if (nextPlayerIdx === firstActivePlayerIndex && activePlayerIndices.indexOf(actingPlayerIndex) === activePlayerIndices.length -1 ) {
                  if (actingPlayerIndex !== nextPlayerIdx || activePlayerIndices.length > 1) { 
                     currentRound++;
                  }
             }
             
-            currentPlayerIndex = nextPlayerIdx; // Оновлюємо currentPlayerIndex для наступного ходу
+            currentPlayerIndex = nextPlayerIdx;
 
             if (currentRound > gameConfig.general.max_rounds) {
                 triggerGameOverJS(`${gameConfig.general.max_rounds} кіл зіграно. Гра завершена!`);
@@ -586,7 +424,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btnCompleted.addEventListener('click', () => {
             doneSound.play().catch(e => console.warn("Done sound was blocked."));
             const q = currentQuestion;
-            const player = players[currentPlayerIndex]; // Гравець, який виконує дію
+            const player = players[currentPlayerIndex];
             if (q.bonus_skip_on_complete) player.skips_left++;
             if (q.deferred_text_template && q.deferred_turns_player) {
                 player.deferred_effects = player.deferred_effects || [];
@@ -606,20 +444,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 btnGoBack.disabled = true; 
                 
                 player.skips_left--;
-                // Після пропуску питання просто показуємо наступне для того ж гравця, не передаючи хід
-                // і не викликаючи handlePlayerAction, щоб не зберігати історію.
+
                 if (questionPool.length === 0) {
                     triggerGameOverJS("Питання закінчились після спроби пропуску!");
                     return;
                 }
                 currentQuestion = questionPool.shift();
                 playedQuestionIdsThisSession.add(currentQuestion.id);
-                updateDisplay(); // Оновлюємо дисплей з новим питанням для поточного гравця
+                updateDisplay();
             }
         });
         
         btnQuit.addEventListener('click', () => {
-            // saveCurrentStateForUndo(); // Видалено, бо handlePlayerAction тепер зберігає
             players[currentPlayerIndex].active = false;
             handlePlayerAction(true); 
         });
@@ -627,23 +463,42 @@ document.addEventListener('DOMContentLoaded', function() {
         btnGoBack.addEventListener('click', () => {
             if (gameHistoryForUndo.length > 0) {
                 const prevState = gameHistoryForUndo.pop();
-
-                // Питання, яке було на екрані до скасування, додаємо назад в початок пулу
                 if (currentQuestion && (!prevState.question || currentQuestion.id !== prevState.question.id)) {
                     questionPool.unshift(deepCopy(currentQuestion));
-                } else if (!currentQuestion && prevState.question) {
-                    // Якщо поточного питання немає (наприклад, кінець гри), але в історії є, це не має статися тут
                 }
                 
                 currentQuestion = deepCopy(prevState.question);
-                currentPlayerIndex = prevState.playerIndex; // Відновлюємо правильний індекс гравця
+                currentPlayerIndex = prevState.playerIndex;
                 currentRound = prevState.round;
-                players = deepCopy(prevState.playersSnapshot); // Відновлюємо повний стан гравців
-                playedQuestionIdsThisSession = new Set(prevState.playedQuestionIdsSnapshot); // Відновлюємо зіграні ID
+                players = deepCopy(prevState.playersSnapshot);
+                playedQuestionIdsThisSession = new Set(prevState.playedQuestionIdsSnapshot);
                 
-                updateDisplay(true); // isRestoringFromHistory = true
+                updateDisplay(true);
                 btnGoBack.disabled = gameHistoryForUndo.length === 0;
             }
+        });
+
+        btnTts.addEventListener('click', () => {
+            if (typeof speechSynthesis === 'undefined') {
+                alert('Синтез мовлення не підтримується у вашому браузері.');
+                return;
+            }
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                return;
+            }
+
+            const textToSpeak = questionTextDisplay.innerText;
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            const savedVoiceURI = localStorage.getItem('tts_voice_uri');
+            const voices = speechSynthesis.getVoices();
+            
+            if (savedVoiceURI) {
+                const selectedVoice = voices.find(voice => voice.voiceURI === savedVoiceURI);
+                if (selectedVoice) utterance.voice = selectedVoice;
+            }
+            utterance.lang = 'uk-UA';
+            speechSynthesis.speak(utterance);
         });
 
         function triggerGameOverJS(message) {
@@ -707,7 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const currentPlayer = players[currentPlayerIndex];
             skipsLeftDisplay.textContent = currentPlayer.skips_left;
             btnSkip.disabled = currentPlayer.skips_left <= 0;
-            btnGoBack.disabled = gameHistoryForUndo.length === 0; // На початку гри кнопка "Назад" неактивна
+            btnGoBack.disabled = gameHistoryForUndo.length === 0;
         }
 
         if (questionPool && questionPool.length > 0) {
