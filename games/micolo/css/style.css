@@ -37,7 +37,7 @@ body, html {
     align-items: center;
 }
 
-.setup-page input[type="text"], .setup-page input[type="number"] {
+.setup-page input[type="text"], .setup-page input[type="number"], .setup-page select {
     padding: 12px 18px;
     margin: 8px 0;
     border-radius: 8px;
@@ -144,7 +144,7 @@ body, html {
     color: #ecf0f1;
 }
 
-.settings-group input[type="number"], .settings-group input[type="text"] {
+.settings-group input[type="number"], .settings-group input[type="text"], .settings-group select {
     width: 100%; 
     padding: 10px;
     font-size: 1em;
@@ -240,7 +240,6 @@ body, html {
 
 .background-icons-container i {
     position: absolute;
-    /* font-size: 15vw; */ /* Can make icons too large on wide screens */
     font-size: clamp(10vw, 15vmin, 20vw); /* Responsive font size */
     animation: floatIcon 30s infinite linear alternate;
     color: var(--icon-color, rgba(255, 255, 255, 0.1));
@@ -261,7 +260,7 @@ body, html {
 }
 
 /* Game UI Elements Positioning */
-.category-display, .round-player-info, .question-container, .action-buttons, .timer-container {
+.category-display, .round-player-info, .question-container, .action-buttons, .top-right-ui-container {
     position: relative;
     z-index: 5;
 }
@@ -357,11 +356,20 @@ body, html {
 .btn-go-back { background-color: #9b59b6; color: white; }
 .btn-go-back:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed; opacity: 0.7; }
 
-/* Timer Styles */
-.timer-container {
+/* Timer and TTS Styles */
+.top-right-ui-container {
     position: absolute;
-    top: 80px; /* Default */
+    top: 60px;
     right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 10;
+}
+
+.timer-container {
+    position: relative;
     width: clamp(50px, 12vw, 80px);
     height: clamp(50px, 12vw, 80px);
     border-radius: 50%;
@@ -372,7 +380,26 @@ body, html {
     font-size: clamp(1.2em, 5vw, 2em);
     color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    z-index: 10;
+}
+
+.tts-btn {
+    width: clamp(40px, 10vw, 60px);
+    height: clamp(40px, 10vw, 60px);
+    border-radius: 50%;
+    border: none;
+    background-color: #3498db;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1em, 4vw, 1.5em);
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+.tts-btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .timer-circle {
@@ -404,7 +431,9 @@ body, html {
     .question-text { font-size: clamp(1.9em, 3.5vw, 1.9em); min-height: 60px; margin-bottom: 10px;}
     .action-buttons button { padding: 12px; font-size: clamp(1em, 3.8vw, 1.2em); margin: 5px 0; }
     .action-buttons { gap: 5px; }
-    .timer-container { width: clamp(40px, 10vw, 60px); height: clamp(40px, 10vw, 60px); font-size: clamp(1em, 4vw, 1.5em); top: 55px; }
+    .top-right-ui-container { top: 45px; }
+    .timer-container { width: clamp(40px, 10vw, 60px); height: clamp(40px, 10vw, 60px); font-size: clamp(1em, 4vw, 1.5em); }
+    .tts-btn { width: clamp(35px, 9vw, 50px); height: clamp(35px, 9vw, 50px); font-size: clamp(0.9em, 3.5vw, 1.3em); }
     .category-display, .round-player-info { top: 5px; }
 }
 
