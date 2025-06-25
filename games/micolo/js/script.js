@@ -273,517 +273,453 @@ document.addEventListener('DOMContentLoaded', function() {
         let currentRound = window.INITIAL_GAME_STATE.currentRound;
         const gameConfig = window.INITIAL_GAME_STATE.gameConfig;
         const categoryStyles = window.INITIAL_GAME_STATE.categoryStyles;
-        const allQuestionsDataMap = window.INITIAL_GAME_STATE.allQuestionsDataMap; // For accessing questions by ID
+        const allQuestionsDataMap = window.INITIAL_GAME_STATE.allQuestionsDataMap;
+        
+        let currentQuestion = null;
+        let gameHistoryForUndo = []; 
+        let playedQuestionIdsThisSession = new Set(); 
 
-        // Game UI Elements
-        const questionTextDisplay = document.getElementById('question-text-display');
-        const currentPlayerNameDisplay = document.getElementById('current-player-name-display');
-        const skipsLeftDisplay = document.getElementById('skips-left-display');
-        const nextPlayerBtnInfo = document.getElementById('next-player-btn-info');
+        let timerInterval;
+        let secondsLeft;
+        let currentTimerPhase; 
+        let effectiveReadingDuration;
+        let mainTimerDurationFromQuestion;
+        const tickSound = new Audio('sounds/tick-tock.wav');
+        tickSound.loop = true;
+        const dingSound = new Audio('sounds/ding.mp3');
+        const doneSound = new Audio('sounds/ding.mp3');
+
+        const qIdDisplay = document.getElementById('q-id');
+        const qCategoryDisplay = document.getElementById('q-category');
         const roundNumDisplay = document.getElementById('round-num');
         const activePlayersCountDisplay = document.getElementById('active-players-count');
-        const categoryDisplay = document.getElementById('q-category');
-        const questionIdDisplay = document.getElementById('q-id');
-        const backgroundIconsContainer = document.querySelector('.background-icons-container');
-        const btnSkip = document.getElementById('btn-skip');
-        const btnCompleted = document.getElementById('btn-completed');
-        const btnGoBack = document.getElementById('btn-go-back');
-        const btnQuit = document.getElementById('btn-quit');
-        const deferredMessagesDisplay = document.getElementById('deferred-messages-display');
-        const deferredMessagesContent = document.getElementById('deferred-messages-content');
-
-        // Timer Elements
         const timerContainer = document.getElementById('timer-container');
         const timerCircle = document.getElementById('timer-circle');
-        let countdownTimer;
-        let currentTimerValue = window.INITIAL_GAME_STATE.initialTimerValue;
-        let currentTimerPhase = window.INITIAL_GAME_STATE.initialPhase;
-        const mainTimerDurationSetting = window.INITIAL_GAME_STATE.initialMainTimerDuration;
-        const readingTimerDurationSetting = gameConfig.general.reading_timer_duration;
-        const serverTimeAtStart = window.INITIAL_GAME_STATE.serverTimeAtStart;
+        const currentPlayerNameDisplay = document.getElementById('current-player-name-display');
+        const questionTextDisplay = document.getElementById('question-text-display');
+        const deferredMessagesDisplay = document.getElementById('deferred-messages-display');
+        const deferredMessagesContent = document.getElementById('deferred-messages-content');
+        const nextPlayerBtnInfo = document.getElementById('next-player-btn-info');
+        const skipsLeftDisplay = document.getElementById('skips-left-display');
+        const btnCompleted = document.getElementById('btn-completed');
+        const btnSkip = document.getElementById('btn-skip');
+        const btnGoBack = document.getElementById('btn-go-back');
+        const btnQuit = document.getElementById('btn-quit');
+        const backgroundIconsContainer = document.querySelector('.background-icons-container');
+        
+        function deepCopy(obj) {
+            return JSON.parse(JSON.stringify(obj));
+        }
 
-
-        // NEW: TTS Elements and Logic
-        const ttsControlsContainer = document.querySelector('.tts-controls-container');
-        const btnTts = document.getElementById('btn-tts');
-        const ttsLanguageSelect = document.getElementById('tts-language-select');
-
-        let voices = [];
-        let selectedVoice = null;
-        let currentUtterance = null; // To keep track of the current speech
-
-        if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) {
-            ttsControlsContainer.style.display = 'flex'; // Show controls if supported
-
-            function populateVoiceList() {
-                voices = speechSynthesis.getVoices();
-                ttsLanguageSelect.innerHTML = ''; // Clear previous options
-                
-                // Prioritize Ukrainian voices, then English, then any available
-                let voicesToDisplay = voices.filter(voice => voice.lang.startsWith('uk-'));
-                if (voicesToDisplay.length === 0) {
-                    voicesToDisplay = voices.filter(voice => voice.lang.startsWith('en-'));
-                }
-                if (voicesToDisplay.length === 0) {
-                    voicesToDisplay = voices; // Fallback to any voice
-                }
-
-                if (voicesToDisplay.length === 0) {
-                    btnTts.disabled = true;
-                    btnTts.innerHTML = '<i class="fas fa-volume-off"></i> TTS недоступний'; // Update icon and text
-                    ttsLanguageSelect.style.display = 'none';
-                    return;
-                }
-
-                voicesToDisplay.forEach(voice => {
-                    const option = document.createElement('option');
-                    option.textContent = voice.name + ' (' + voice.lang + ')';
-                    option.value = voice.name;
-                    ttsLanguageSelect.appendChild(option);
-                });
-
-                // Set initial selected voice to the first suitable one
-                selectedVoice = voicesToDisplay[0] || null;
-                if (selectedVoice) {
-                    ttsLanguageSelect.value = selectedVoice.name;
-                }
-
-                // Show language select only if multiple options are available
-                if (voicesToDisplay.length > 1) {
-                    ttsLanguageSelect.style.display = 'block';
+        function updateTimerDisplayOnly() {
+            if (timerCircle) {
+                timerCircle.textContent = Math.max(0, Math.floor(secondsLeft));
+            }
+            if (timerContainer) {
+                timerContainer.className = `timer-container timer-${currentTimerPhase}`;
+                if (effectiveReadingDuration <= 0 && mainTimerDurationFromQuestion <= 0) {
+                     timerContainer.style.display = 'none';
                 } else {
-                    ttsLanguageSelect.style.display = 'none';
+                     timerContainer.style.display = 'flex';
                 }
-            }
-
-            // Load voices, handling asynchronous nature
-            // The 'voiceschanged' event fires when the list of voices is loaded or changes.
-            speechSynthesis.onvoiceschanged = populateVoiceList;
-            // Also try to load immediately if voices are already available (e.g., on page reload)
-            if (speechSynthesis.getVoices().length > 0) {
-                populateVoiceList();
-            }
-
-            btnTts.addEventListener('click', () => {
-                if (speechSynthesis.speaking) {
-                    speechSynthesis.cancel(); // Stop current speech if any
-                }
-
-                if (!selectedVoice) {
-                    console.warn('No voice selected for TTS.');
-                    alert('Для озвучення не знайдено відповідного голосу.');
-                    return;
-                }
-                
-                // Get the current question text from the display
-                let textToSpeak = questionTextDisplay.innerText;
-                // Add deferred messages if present
-                if (deferredMessagesDisplay.style.display !== 'none' && deferredMessagesContent.innerText.trim() !== '') {
-                    textToSpeak += `. Активні ефекти: ${deferredMessagesContent.innerText}`;
-                }
-
-
-                currentUtterance = new SpeechSynthesisUtterance(textToSpeak);
-                currentUtterance.voice = selectedVoice;
-                currentUtterance.lang = selectedVoice.lang; // Crucial for correct pronunciation and voice selection
-
-                currentUtterance.onstart = () => {
-                    btnTts.disabled = true;
-                    btnTts.innerHTML = '<i class="fas fa-volume-mute"></i>'; // Indicate speaking/muted
-                };
-                currentUtterance.onend = () => {
-                    btnTts.disabled = false;
-                    btnTts.innerHTML = '<i class="fas fa-volume-up"></i>'; // Back to speak icon
-                };
-                currentUtterance.onerror = (event) => {
-                    console.error('SpeechSynthesisUtterance.onerror', event);
-                    btnTts.disabled = false;
-                    btnTts.innerHTML = '<i class="fas fa-volume-up"></i>'; // Back to speak icon
-                    alert('Помилка відтворення голосу: ' + event.error);
-                };
-
-                speechSynthesis.speak(currentUtterance);
-            });
-
-            ttsLanguageSelect.addEventListener('change', (event) => {
-                const selectedVoiceName = event.target.value;
-                selectedVoice = voices.find(voice => voice.name === selectedVoiceName) || null;
-            });
-
-        } else {
-            console.warn('Web Speech API is not supported in this browser.');
-            ttsControlsContainer.style.display = 'none'; // Ensure it's hidden if not supported
-        }
-        // END NEW TTS Elements and Logic
-
-        let playedQuestionIds = [window.INITIAL_GAME_STATE.questionPool[0].id]; // Track played question IDs for logging
-
-        // History for "Go Back" button
-        let questionHistory = [];
-
-        function saveCurrentStateToHistory() {
-            questionHistory.push({
-                question: JSON.parse(JSON.stringify(window.INITIAL_GAME_STATE.questionPool[0])), // Deep copy
-                playerIndex: currentPlayerIndex,
-                round: currentRound,
-                playersState: JSON.parse(JSON.stringify(players)), // Deep copy players state
-                timerValue: currentTimerValue,
-                timerPhase: currentTimerPhase
-            });
-            updateGoBackButtonState();
-        }
-
-        function restoreStateFromHistory() {
-            if (questionHistory.length > 1) { // Need at least two items to go back
-                // Pop the current state (that we're leaving)
-                questionHistory.pop(); 
-                const previousState = questionHistory[questionHistory.length - 1];
-
-                // Restore state
-                window.INITIAL_GAME_STATE.questionPool.unshift(previousState.question); // Add back to the front
-                currentPlayerIndex = previousState.playerIndex;
-                currentRound = previousState.round;
-                players = JSON.parse(JSON.stringify(previousState.playersState)); // Restore players state
-                currentTimerValue = previousState.timerValue;
-                currentTimerPhase = previousState.timerPhase;
-
-                // Re-render UI based on restored state
-                updateQuestionDisplay();
-                updatePlayerInfoDisplay();
-                updateGoBackButtonState();
-                updateSkipButtonState();
-                startTimer(); // Restart timer with restored values
-            }
-        }
-
-        function updateGoBackButtonState() {
-            btnGoBack.disabled = questionHistory.length <= 1;
-        }
-
-
-        // Initial state save
-        saveCurrentStateToHistory();
-
-
-        function updatePlayerInfoDisplay() {
-            const currentPlayer = players[currentPlayerIndex];
-            currentPlayerNameDisplay.textContent = currentPlayer.name;
-            skipsLeftDisplay.textContent = currentPlayer.skips_left;
-            roundNumDisplay.textContent = currentRound;
-            activePlayersCountDisplay.textContent = players.filter(p => p.active).length;
-
-            let activeIndices = players.map((p, idx) => p.active ? idx : -1).filter(idx => idx !== -1);
-            let nextPlayerName = 'Нікого';
-            if (activeIndices.length > 0) {
-                let currentPosInActive = activeIndices.indexOf(currentPlayerIndex);
-                if (currentPosInActive !== -1) {
-                    let nextPosInActive = (currentPosInActive + 1) % activeIndices.length;
-                    let nextPlayerIdxVal = activeIndices[nextPosInActive];
-                    nextPlayerName = players[nextPlayerIdxVal].name;
-                } else { // Current player somehow not in active list, pick first active
-                    nextPlayerName = players[activeIndices[0]].name;
-                }
-            }
-            nextPlayerBtnInfo.textContent = nextPlayerName;
-            updateSkipButtonState();
-            updateDeferredMessagesDisplay(currentPlayer);
-        }
-
-        function updateDeferredMessagesDisplay(currentPlayer) {
-            deferredMessagesContent.innerHTML = '';
-            let hasDeferredMessages = false;
-            if (currentPlayer.deferred_effects && currentPlayer.deferred_effects.length > 0) {
-                currentPlayer.deferred_effects.forEach(effect => {
-                    // Only display if turns_left is positive
-                    if (effect.turns_left > 0) {
-                        const message = effect.template
-                            .replace('{TURNS_LEFT}', effect.turns_left)
-                            .replace('{PLAYER_NAME}', currentPlayer.name);
-                        const p = document.createElement('p');
-                        p.textContent = message;
-                        deferredMessagesContent.appendChild(p);
-                        hasDeferredMessages = true;
-                    }
-                });
-            }
-            deferredMessagesDisplay.style.display = hasDeferredMessages ? 'block' : 'none';
-        }
-
-        function applyDeferredEffects() {
-            players.forEach(player => {
-                if (player.deferred_effects && player.deferred_effects.length > 0) {
-                    player.deferred_effects.forEach(effect => {
-                        if (effect.type === 'skip_turn') {
-                            // This effect means the player *will* skip their *next* turn
-                            // For simplicity, we apply it here and then remove.
-                            // A more complex system might apply it at the start of their turn.
-                            if (effect.turns_left > 0) {
-                                // Logic for skipping the turn could go here or be managed differently
-                                // For now, we'll just decrement and remove.
-                            }
-                        }
-                    });
-                    // Decrement turns_left and filter out expired effects
-                    player.deferred_effects = player.deferred_effects.filter(effect => {
-                        effect.turns_left--;
-                        return effect.turns_left > 0;
-                    });
-                }
-            });
-        }
-
-
-        function getRandomIcon() {
-            const icons = ["fas fa-star", "fas fa-heart", "fas fa-ghost", "fas fa-brain", "fas fa-lightbulb", "fas fa-fire", "fas fa-dice", "fas fa-moon", "fas fa-sun", "fas fa-flask", "fas fa-trophy", "fas fa-gem"];
-            return icons[Math.floor(Math.random() * icons.length)];
-        }
-
-        function addBackgroundIcons(categoryIconClasses, categoryIconColor, categoryIconOpacity) {
-            // Clear existing icons
-            backgroundIconsContainer.innerHTML = '';
-            const numIcons = 5; 
-
-            for (let i = 0; i < numIcons; i++) {
-                const icon = document.createElement('i');
-                const randomIconClass = categoryIconClasses && categoryIconClasses.length > 0 ? 
-                                        categoryIconClasses[Math.floor(Math.random() * categoryIconClasses.length)] : 
-                                        getRandomIcon(); // Fallback if no specific category icons
-
-                icon.className = randomIconClass;
-                icon.style.left = `${Math.random() * 100}vw`;
-                icon.style.top = `${Math.random() * 100}vh`;
-                icon.style.animationDelay = `${Math.random() * 10}s`;
-                icon.style.animationDuration = `${20 + Math.random() * 20}s`;
-                icon.style.setProperty('--icon-color', categoryIconColor || 'rgba(255,255,255,0.1)');
-                icon.style.setProperty('--icon-opacity', categoryIconOpacity || 0.1);
-                backgroundIconsContainer.appendChild(icon);
             }
         }
         
-        function updateQuestionDisplay() {
-            if (questionPool.length === 0) {
-                endGame('Усі питання вичерпано!');
-                return;
-            }
-
-            const currentQuestion = questionPool[0];
-            const currentPlayer = players[currentPlayerIndex];
-
-            // Replace placeholders in question text
-            let displayQuestionText = currentQuestion.text.replace('{PLAYER_NAME}', currentPlayer.name);
-            if (displayQuestionText.includes('{RANDOM_PLAYER_NAME}')) {
-                const otherActivePlayers = players.filter((p, idx) => p.active && idx !== currentPlayerIndex);
-                if (otherActivePlayers.length > 0) {
-                    const randomOtherPlayer = otherActivePlayers[Math.floor(Math.random() * otherActivePlayers.length)];
-                    displayQuestionText = displayQuestionText.replace('{RANDOM_PLAYER_NAME}', randomOtherPlayer.name);
-                } else {
-                    displayQuestionText = displayQuestionText.replace('{RANDOM_PLAYER_NAME}', '(інший гравець)');
-                }
-            }
-
-            questionIdDisplay.textContent = currentQuestion.id;
-            categoryDisplay.textContent = currentQuestion.category;
-            questionTextDisplay.innerHTML = displayQuestionText.replace(/\n/g, '<br>');
-
-            // Update background and icons
-            const categoryStyle = categoryStyles[currentQuestion.category] || categoryStyles['Default'];
-            document.documentElement.style.setProperty('--game-background', categoryStyle.background);
-            addBackgroundIcons(categoryStyle.icon_classes, categoryStyle.icon_color, categoryStyle.icon_opacity);
-
-            // Update timer state
-            currentTimerValue = currentQuestion.timer || 0;
-            if (currentTimerValue > 0 && readingTimerDurationSetting > 0) {
-                currentTimerPhase = 'reading';
-                currentTimerValue = readingTimerDurationSetting;
-            } else {
-                currentTimerPhase = 'main';
-            }
-            startTimer();
-
-            updatePlayerInfoDisplay();
+        function stopAllTimerSounds() {
+            tickSound.pause();
+            tickSound.currentTime = 0;
         }
 
-        function startTimer() {
-            clearInterval(countdownTimer);
-            if (currentTimerValue <= 0 && currentTimerPhase === 'main') {
-                timerContainer.style.display = 'none';
-                timerCircle.textContent = '0';
-                return;
-            } else {
-                 timerContainer.style.display = 'flex';
+        function startTimerLogic() {
+            clearInterval(timerInterval);
+            stopAllTimerSounds();
+            updateTimerDisplayOnly();
+
+            if (currentTimerPhase === 'reading' && effectiveReadingDuration > 0 && secondsLeft > 0) {
+                // No sound
+            } else if (currentTimerPhase === 'main' && mainTimerDurationFromQuestion > 0 && secondsLeft > 0) {
+                tickSound.play().catch(e => console.warn("Main timer sound blocked."));
             }
 
-            timerContainer.classList.remove('timer-reading', 'timer-main');
-            timerContainer.classList.add('timer-' + currentTimerPhase);
-            timerCircle.textContent = currentTimerValue;
+             if ( (currentTimerPhase === 'main' && secondsLeft <= 0 && mainTimerDurationFromQuestion > 0) ||
+                  (currentTimerPhase === 'reading' && secondsLeft <= 0 && effectiveReadingDuration > 0 && mainTimerDurationFromQuestion <= 0) ) {
+                 return; 
+            }
+            if (effectiveReadingDuration <= 0 && mainTimerDurationFromQuestion <= 0) return; 
 
-            countdownTimer = setInterval(() => {
-                currentTimerValue--;
-                timerCircle.textContent = currentTimerValue;
 
-                if (currentTimerValue <= 0) {
-                    if (currentTimerPhase === 'reading') {
-                        currentTimerPhase = 'main';
-                        currentTimerValue = questionPool[0].timer || 0;
-                        timerContainer.classList.remove('timer-reading');
-                        timerContainer.classList.add('timer-main');
-                        timerCircle.textContent = currentTimerValue; // Update immediately
-                        if (currentTimerValue <= 0) { // If main timer is also 0, stop
-                            clearInterval(countdownTimer);
-                            timerContainer.style.display = 'none';
-                            playTickTockSound(true); // Stop sound
-                        } else {
-                            playDingSound(); // Sound to indicate phase change
-                            playTickTockSound(false); // Start tick-tock for main phase
-                        }
-                    } else { // currentTimerPhase === 'main' and timer reached 0
-                        clearInterval(countdownTimer);
-                        timerContainer.style.display = 'none';
-                        playTickTockSound(true); // Stop sound
+            timerInterval = setInterval(() => {
+                secondsLeft--;
+                updateTimerDisplayOnly();
+
+                if (currentTimerPhase === 'reading' && secondsLeft <= 0 && effectiveReadingDuration > 0) {
+                    currentTimerPhase = 'main';
+                    secondsLeft = mainTimerDurationFromQuestion; 
+                    updateTimerDisplayOnly();
+                    stopAllTimerSounds();
+                    if (mainTimerDurationFromQuestion > 0) {
+                        tickSound.play().catch(e => console.warn("Timer sound blocked."));
+                    } else {
+                        clearInterval(timerInterval);
                     }
-                } else {
-                    if (currentTimerValue <= 5 && currentTimerPhase === 'main') {
-                        playTickTockSound();
-                    } else if (currentTimerValue === 10 && currentTimerPhase === 'reading') {
-                         playTickTockSound(); // Optionally play tick-tock for reading too
-                    }
+                } else if (currentTimerPhase === 'main' && secondsLeft <= 0 && mainTimerDurationFromQuestion > 0) {
+                    clearInterval(timerInterval);
+                    stopAllTimerSounds();
+                    dingSound.play().catch(e => console.warn("Timer sound blocked."));
+                } else if ((currentTimerPhase === 'reading' && effectiveReadingDuration <=0) || (currentTimerPhase === 'main' && mainTimerDurationFromQuestion <=0)) {
+                     clearInterval(timerInterval);
+                     stopAllTimerSounds();
                 }
             }, 1000);
         }
 
-        function playDingSound() {
-            const audio = new Audio('sounds/ding.mp3');
-            audio.play();
-        }
-
-        let tickTockAudio = null;
-        function playTickTockSound(stop = false) {
-            if (stop) {
-                if (tickTockAudio) {
-                    tickTockAudio.pause();
-                    tickTockAudio.currentTime = 0;
-                }
-                return;
-            }
-
-            if (!tickTockAudio) {
-                tickTockAudio = new Audio('sounds/tick-tock.wav');
-                tickTockAudio.loop = true;
-            }
-            if (tickTockAudio.paused) {
-                tickTockAudio.play().catch(e => console.warn("Failed to play tick-tock sound:", e));
-            }
-        }
-
-        function nextPlayerAndQuestion() {
-            playTickTockSound(true); // Stop any active timer sound
-
-            // Apply deferred effects for all players before moving to the next turn
-            applyDeferredEffects();
+        function setupTimersForCurrentQuestion() {
+            mainTimerDurationFromQuestion = parseInt(currentQuestion.timer || 0);
+            const readingTimerSetting = parseInt(gameConfig.general.reading_timer_duration || 0);
             
-            // Remove the current question from the pool as it's been "played"
-            const playedQid = questionPool.shift().id;
-            playedQuestionIds.push(playedQid);
-
-            // Find the next active player
-            let nextPlayerFound = false;
-            let originalPlayerIndex = currentPlayerIndex;
-            for (let i = 0; i < players.length; i++) {
-                currentPlayerIndex = (originalPlayerIndex + 1 + i) % players.length;
-                if (players[currentPlayerIndex].active) {
-                    nextPlayerFound = true;
-                    break;
-                }
+            effectiveReadingDuration = 0;
+            if (mainTimerDurationFromQuestion > 0 && readingTimerSetting > 0) {
+                effectiveReadingDuration = readingTimerSetting;
             }
 
-            if (!nextPlayerFound) {
-                endGame('Не знайдено активних гравців для продовження гри. Гру завершено.');
-                return;
+            if (effectiveReadingDuration > 0) {
+                currentTimerPhase = 'reading';
+                secondsLeft = effectiveReadingDuration;
+            } else if (mainTimerDurationFromQuestion > 0) {
+                currentTimerPhase = 'main';
+                secondsLeft = mainTimerDurationFromQuestion;
+            } else {
+                currentTimerPhase = 'main'; 
+                secondsLeft = 0;
             }
+            startTimerLogic();
+        }
 
-            // If we've circled back to the first player, increment the round
-            if (currentPlayerIndex <= originalPlayerIndex && players.filter(p => p.active).indexOf(originalPlayerIndex) !== -1) {
-                currentRound++;
-            }
-
-            const maxRounds = gameConfig.general.max_rounds || 5;
-            if (currentRound > maxRounds) {
-                endGame('Досягнуто максимальної кількості раундів. Гра завершена.');
-                return;
+        function getActivePlayerIndices() {
+            return players.map((p, i) => p.active ? i : -1).filter(i => i !== -1);
+        }
+        
+        function getNextActivePlayerIndex(currentIdx) {
+            const activeIndices = getActivePlayerIndices();
+            if (activeIndices.length === 0) return null;
+            
+            const currentPositionInActive = activeIndices.indexOf(currentIdx);
+            if (currentPositionInActive === -1) { 
+                return activeIndices[0]; 
             }
             
-            saveCurrentStateToHistory(); // Save state before displaying new question
-            updateQuestionDisplay();
+            const nextPositionInActive = (currentPositionInActive + 1) % activeIndices.length;
+            return activeIndices[nextPositionInActive];
         }
 
-        function updateSkipButtonState() {
-            btnSkip.disabled = players[currentPlayerIndex].skips_left <= 0;
+        function updateDisplay(isRestoringFromHistory = false) {
+            if (!currentQuestion) return; 
+
+            const currentPlayer = players[currentPlayerIndex];
+            document.title = `Гра: Хід ${currentPlayer.name}`;
+
+            qIdDisplay.textContent = currentQuestion.id;
+            qCategoryDisplay.textContent = currentQuestion.category;
+            roundNumDisplay.textContent = currentRound;
+            activePlayersCountDisplay.textContent = getActivePlayerIndices().length;
+            currentPlayerNameDisplay.textContent = currentPlayer.name;
+            
+            let qText = currentQuestion.text.replace('{PLAYER_NAME}', currentPlayer.name);
+            if (qText.includes('{RANDOM_PLAYER_NAME}')) {
+                const otherActivePlayers = players.filter((p, i) => p.active && i !== currentPlayerIndex);
+                const randomOtherPlayerName = otherActivePlayers.length > 0 ? otherActivePlayers[Math.floor(Math.random() * otherActivePlayers.length)].name : '(інший гравець)';
+                qText = qText.replace('{RANDOM_PLAYER_NAME}', randomOtherPlayerName);
+            }
+            questionTextDisplay.innerHTML = qText.replace(/\n/g, '<br>');
+            
+            const activeDeferredEffects = currentPlayer.deferred_effects ? currentPlayer.deferred_effects.filter(effect => effect.turns_left > 0) : [];
+             if (activeDeferredEffects.length > 0) {
+                let effectsHtml = '';
+                activeDeferredEffects.forEach(effect => {
+                    const originalTurnsForEffect = parseInt(allQuestionsDataMap[effect.question_id]?.deferred_turns_player || 0);
+                    // Показуємо turns_left "як є" для відображення, бо воно вже скориговане (зменшене)
+                    // або буде зменшене в handlePlayerAction.
+                    // Для коректного відображення "залишилось Х ходів" потрібне саме turns_left - 1,
+                    // якщо тільки ефект не щойно отриманий (тоді turns_left = original_duration + 1).
+                    // Якщо effect.turns_left == originalTurnsForEffect + 1, то показуємо originalTurnsForEffect
+                    // інакше показуємо effect.turns_left - 1 (але не менше 1, якщо ще активний)
+                    let turnsToDisplay = effect.turns_left -1;
+                    if (effect.turns_left === originalTurnsForEffect + 1) {
+                        turnsToDisplay = originalTurnsForEffect;
+                    }
+                    turnsToDisplay = Math.max(1, turnsToDisplay); // Якщо ефект ще активний, показуємо хоча б 1
+
+                    effectsHtml += `<p>${effect.template.replace('{TURNS_LEFT}', turnsToDisplay).replace('{PLAYER_NAME}', currentPlayer.name)}</p>`;
+                });
+                deferredMessagesContent.innerHTML = effectsHtml;
+                deferredMessagesDisplay.style.display = 'block';
+            } else {
+                deferredMessagesContent.innerHTML = '';
+                deferredMessagesDisplay.style.display = 'none';
+            }
+
+            skipsLeftDisplay.textContent = currentPlayer.skips_left;
+            btnSkip.disabled = currentPlayer.skips_left <= 0;
+
+            const nextPlayerIdx = getNextActivePlayerIndex(currentPlayerIndex);
+            nextPlayerBtnInfo.textContent = nextPlayerIdx !== null ? players[nextPlayerIdx].name : 'Нікого';
+            
+            btnGoBack.disabled = gameHistoryForUndo.length === 0;
+
+            const styleInfo = categoryStyles[currentQuestion.category] || categoryStyles['Default'] || {background: 'linear-gradient(to right, #74ebd5, #ACB6E5)', icon_classes:['fas fa-question-circle'], icon_color:'rgba(255,255,255,0.1)', icon_opacity:0.1};
+            document.documentElement.style.setProperty('--game-background', styleInfo.background);
+            document.documentElement.style.setProperty('--icon-color', styleInfo.icon_color || 'rgba(255,255,255,0.1)');
+            document.documentElement.style.setProperty('--icon-opacity', styleInfo.icon_opacity || 0.1);
+            
+            if (!isRestoringFromHistory) { 
+                backgroundIconsContainer.innerHTML = ''; 
+                const iconClasses = styleInfo.icon_classes || ['fas fa-question-circle'];
+                const numIcons = Math.floor(Math.random() * 8) + 8;
+                 if (iconClasses.length > 0) {
+                    for (let i = 0; i < numIcons; i++) {
+                        const icon = document.createElement('i');
+                        icon.className = iconClasses[Math.floor(Math.random() * iconClasses.length)];
+                        icon.style.left = `${Math.random() * 100}vw`;
+                        icon.style.top = `${Math.random() * 100}vh`;
+                        icon.style.fontSize = `${Math.random() * 8 + 10}vw`; 
+                        const duration = Math.random() * 15 + 20;
+                        icon.style.animation = `floatIcon ${duration}s ${Math.random() * -duration}s infinite linear alternate`;
+                        backgroundIconsContainer.appendChild(icon);
+                    }
+                }
+            }
+             if (!isRestoringFromHistory) {
+                setupTimersForCurrentQuestion();
+            } else { 
+                setupTimersForCurrentQuestion(); 
+            }
+        }
+        
+        function saveCurrentStateForUndo() {
+            if (gameHistoryForUndo.length >= 20) gameHistoryForUndo.shift();
+            gameHistoryForUndo.push({
+                question: deepCopy(currentQuestion),
+                playerIndex: currentPlayerIndex, // Зберігаємо індекс гравця, який щойно діяв
+                round: currentRound,
+                playersSnapshot: deepCopy(players), // Зберігаємо стан гравців після дії
+                questionPoolSnapshot: deepCopy(questionPool), // Пул питань до вибору наступного
+                playedQuestionIdsSnapshot: new Set(playedQuestionIdsThisSession) // Зіграні питання
+            });
+            btnGoBack.disabled = false;
         }
 
-        btnCompleted.addEventListener('click', nextPlayerAndQuestion);
+        function selectAndDisplayQuestion() { // isAfterSkip параметр більше не потрібен тут для історії
+            if (questionPool.length === 0) {
+                triggerGameOverJS("Питання закінчились!");
+                return;
+            }
+            currentQuestion = questionPool.shift();
+            playedQuestionIdsThisSession.add(currentQuestion.id);
+            updateDisplay(); // isRestoringFromHistory = false за замовчуванням
+        }
+
+        function handlePlayerAction(isCompletedOrQuitAction) {
+            const actingPlayerIndex = currentPlayerIndex; // Гравець, який щойно завершив хід
+
+            // Обробляємо ефекти для гравця, який щойно діяв
+            if (isCompletedOrQuitAction) { 
+                const playerWhoActed = players[actingPlayerIndex];
+                if (playerWhoActed.deferred_effects && playerWhoActed.deferred_effects.length > 0) {
+                    playerWhoActed.deferred_effects = playerWhoActed.deferred_effects.map(effect => ({
+                        ...effect,
+                        turns_left: effect.turns_left - 1
+                    })).filter(effect => effect.turns_left > 0);
+                }
+            }
+            // `players` тепер відображає стан після того, як actingPlayerIndex завершив свій хід
+            // `currentQuestion` - це питання, на яке він діяв
+            // `currentPlayerIndex` - це все ще actingPlayerIndex
+            // `currentRound` - це поточний раунд
+            saveCurrentStateForUndo(); // Зберігаємо цей стан
+
+            // Перевіряємо умови завершення гри після збереження, але до переходу до наступного гравця
+            const activePlayerIndices = getActivePlayerIndices();
+            if (activePlayerIndices.length === 0) {
+                triggerGameOverJS("Гравців не залишилось!");
+                return;
+            }
+            if (activePlayerIndices.length === 1 && players[actingPlayerIndex].active) { // Якщо щойно вийшов гравець і залишився один
+                 const lastPlayer = players[activePlayerIndices[0]];
+                 if(lastPlayer.active) { // Переконуємось, що останній гравець активний
+                    triggerGameOverJS("Залишився переможець: " + lastPlayer.name + "!");
+                    return;
+                 }
+            }
+             if (activePlayerIndices.length < 2 && !(activePlayerIndices.length === 1 && players[actingPlayerIndex].active)) { // Загальна перевірка
+                triggerGameOverJS(activePlayerIndices.length === 1 ? "Залишився переможець!" : "Гравців не залишилось!");
+                return;
+            }
+
+
+            let nextPlayerIdx = getNextActivePlayerIndex(actingPlayerIndex);
+            
+            if (nextPlayerIdx === null && activePlayerIndices.length > 0) { // Якщо getNextActivePlayerIndex повернув null, але є активні
+                nextPlayerIdx = activePlayerIndices[0]; // Аварійний вибір
+            }
+
+            if (nextPlayerIdx === null) { 
+                triggerGameOverJS("Не вдалося знайти наступного гравця.");
+                return;
+            }
+            
+            const firstActivePlayerIndex = activePlayerIndices[0]; // Визначаємо першого активного з поточного стану
+            if (nextPlayerIdx === firstActivePlayerIndex && activePlayerIndices.indexOf(actingPlayerIndex) === activePlayerIndices.length -1 ) {
+                 if (actingPlayerIndex !== nextPlayerIdx || activePlayerIndices.length > 1) { 
+                    currentRound++;
+                 }
+            }
+            
+            currentPlayerIndex = nextPlayerIdx; // Оновлюємо currentPlayerIndex для наступного ходу
+
+            if (currentRound > gameConfig.general.max_rounds) {
+                triggerGameOverJS(`${gameConfig.general.max_rounds} кіл зіграно. Гра завершена!`);
+                return;
+            }
+            selectAndDisplayQuestion();
+        }
+
+        btnCompleted.addEventListener('click', () => {
+            doneSound.play().catch(e => console.warn("Done sound was blocked."));
+            const q = currentQuestion;
+            const player = players[currentPlayerIndex]; // Гравець, який виконує дію
+            if (q.bonus_skip_on_complete) player.skips_left++;
+            if (q.deferred_text_template && q.deferred_turns_player) {
+                player.deferred_effects = player.deferred_effects || [];
+                player.deferred_effects.push({
+                    template: q.deferred_text_template,
+                    turns_left: parseInt(q.deferred_turns_player) + 1, 
+                    question_id: q.id
+                });
+            }
+            handlePlayerAction(true);
+        });
 
         btnSkip.addEventListener('click', () => {
-            const currentPlayer = players[currentPlayerIndex];
-            if (currentPlayer.skips_left > 0) {
-                currentPlayer.skips_left--;
-                updateSkipButtonState();
-                nextPlayerAndQuestion();
+            const player = players[currentPlayerIndex];
+            if (player.skips_left > 0) {
+                gameHistoryForUndo = []; 
+                btnGoBack.disabled = true; 
+                
+                player.skips_left--;
+                // Після пропуску питання просто показуємо наступне для того ж гравця, не передаючи хід
+                // і не викликаючи handlePlayerAction, щоб не зберігати історію.
+                if (questionPool.length === 0) {
+                    triggerGameOverJS("Питання закінчились після спроби пропуску!");
+                    return;
+                }
+                currentQuestion = questionPool.shift();
+                playedQuestionIdsThisSession.add(currentQuestion.id);
+                updateDisplay(); // Оновлюємо дисплей з новим питанням для поточного гравця
             }
         });
         
-        btnGoBack.addEventListener('click', () => {
-            if (questionHistory.length > 1) { // Can go back only if there's previous history
-                restoreStateFromHistory();
-            }
-        });
-
         btnQuit.addEventListener('click', () => {
-            if (confirm('Ви впевнені, що хочете вийти з гри?')) {
-                endGame('Гра завершена гравцем.');
+            // saveCurrentStateForUndo(); // Видалено, бо handlePlayerAction тепер зберігає
+            players[currentPlayerIndex].active = false;
+            handlePlayerAction(true); 
+        });
+
+        btnGoBack.addEventListener('click', () => {
+            if (gameHistoryForUndo.length > 0) {
+                const prevState = gameHistoryForUndo.pop();
+
+                // Питання, яке було на екрані до скасування, додаємо назад в початок пулу
+                if (currentQuestion && (!prevState.question || currentQuestion.id !== prevState.question.id)) {
+                    questionPool.unshift(deepCopy(currentQuestion));
+                } else if (!currentQuestion && prevState.question) {
+                    // Якщо поточного питання немає (наприклад, кінець гри), але в історії є, це не має статися тут
+                }
+                
+                currentQuestion = deepCopy(prevState.question);
+                currentPlayerIndex = prevState.playerIndex; // Відновлюємо правильний індекс гравця
+                currentRound = prevState.round;
+                players = deepCopy(prevState.playersSnapshot); // Відновлюємо повний стан гравців
+                playedQuestionIdsThisSession = new Set(prevState.playedQuestionIdsSnapshot); // Відновлюємо зіграні ID
+                
+                updateDisplay(true); // isRestoringFromHistory = true
+                btnGoBack.disabled = gameHistoryForUndo.length === 0;
             }
         });
 
-        function endGame(message) {
-            clearInterval(countdownTimer);
-            playTickTockSound(true); // Stop any playing sounds
-            if (speechSynthesis.speaking) {
-                speechSynthesis.cancel(); // Stop any active speech
-            }
+        function triggerGameOverJS(message) {
+            clearInterval(timerInterval);
+            stopAllTimerSounds();
+            
+            const formData = new FormData();
+            formData.append('action', 'end_game');
+            formData.append('played_question_ids', JSON.stringify(Array.from(playedQuestionIdsThisSession)));
+            formData.append('game_over_message', message);
 
             fetch('ajax_game_actions.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    action: 'end_game',
-                    played_question_ids: JSON.stringify(playedQuestionIds),
-                    game_over_message: message
-                })
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     window.location.href = 'game_over.php';
                 } else {
-                    console.error('Failed to end game:', data.message);
-                    alert('Помилка при завершенні гри: ' + data.message + ' Будь ласка, перезавантажте сторінку.');
-                    // Fallback in case of AJAX error, still go to game_over page
-                    window.location.href = 'game_over.php'; 
+                    alert('Помилка завершення гри: ' + data.message + '\nСпробуйте оновити сторінку.');
                 }
             })
             .catch(error => {
                 console.error('Error ending game:', error);
-                alert('Сталася помилка при спілкуванні з сервером. Спробуйте ще раз.');
-                // Fallback in case of network error
-                window.location.href = 'game_over.php';
+                alert('Помилка зв\'язку з сервером при завершенні гри.');
             });
         }
+        
+        function initializeFirstQuestionDisplay() {
+            effectiveReadingDuration = window.INITIAL_GAME_STATE.initialEffectiveReadingDuration;
+            mainTimerDurationFromQuestion = window.INITIAL_GAME_STATE.initialMainTimerDuration;
+            secondsLeft = window.INITIAL_GAME_STATE.initialTimerValue;
+            currentTimerPhase = window.INITIAL_GAME_STATE.initialPhase;
+            
+            const serverTimeNow = Math.floor(Date.now() / 1000);
+            const serverTimeAtPageLoad = window.INITIAL_GAME_STATE.serverTimeAtStart || serverTimeNow;
+            const timeElapsedOnClientSinceLoad = serverTimeNow - serverTimeAtPageLoad;
 
-        // Initialize display and timer with initial state
-        updateQuestionDisplay(); 
-        updatePlayerInfoDisplay();
-        updateGoBackButtonState();
-        updateSkipButtonState();
+            if (currentTimerPhase === 'reading' && effectiveReadingDuration > 0) {
+                 secondsLeft -= timeElapsedOnClientSinceLoad;
+                 if(secondsLeft <=0) { 
+                    const deficit = Math.abs(secondsLeft);
+                    currentTimerPhase = 'main';
+                    secondsLeft = mainTimerDurationFromQuestion - deficit;
+                 }
+            } else if (currentTimerPhase === 'main' && mainTimerDurationFromQuestion > 0) {
+                secondsLeft -= timeElapsedOnClientSinceLoad;
+            }
+            secondsLeft = Math.max(0, secondsLeft);
+
+            currentQuestion = questionPool.shift(); 
+            if (currentQuestion) { 
+                 playedQuestionIdsThisSession.add(currentQuestion.id);
+                 updateDisplay(); 
+            } else {
+                triggerGameOverJS("Немає питань для гри на старті."); 
+                return;
+            }
+
+            const currentPlayer = players[currentPlayerIndex];
+            skipsLeftDisplay.textContent = currentPlayer.skips_left;
+            btnSkip.disabled = currentPlayer.skips_left <= 0;
+            btnGoBack.disabled = gameHistoryForUndo.length === 0; // На початку гри кнопка "Назад" неактивна
+        }
+
+        if (questionPool && questionPool.length > 0) {
+            initializeFirstQuestionDisplay();
+        } else {
+            triggerGameOverJS("Немає питань для гри.");
+        }
+    }
+
+    if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+        document.documentElement.addEventListener('touchend', (e) => {
+            if (e.touches.length > 1) e.preventDefault();
+        }, { passive: false });
     }
 });
