@@ -145,15 +145,6 @@ unset($_SESSION['initial_timer_started_at']);
         <div id="timer-container" class="timer-container" style="display:none;"><div id="timer-circle" class="timer-circle">0</div></div>
         <?php endif; ?>
 
-        <!-- NEW: TTS Controls Container -->
-        <div class="tts-controls-container" style="display: none;">
-            <button type="button" id="btn-tts" class="tts-btn">
-                <i class="fas fa-volume-up"></i>
-            </button>
-            <select id="tts-language-select" class="tts-lang-select" style="display: none;"></select>
-        </div>
-        <!-- END NEW -->
-
         <div class="question-container">
             <div class="current-player-name" id="current-player-name-display"><?php echo htmlspecialchars($current_player_data_for_first_display['name']); ?></div>
             <div class="question-text" id="question-text-display"><?php echo nl2br($question_text_first_display); ?></div>
