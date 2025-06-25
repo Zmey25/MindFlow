@@ -398,6 +398,62 @@ body, html {
     border-color: #c0392b;
 }
 
+/* NEW: TTS Controls */
+.tts-controls-container {
+    position: absolute;
+    top: 170px; /* Position below the timer at 80px + approx 80px timer height + 10px margin */
+    right: 10px;
+    display: flex; /* Will be set to 'flex' by JS if API supported */
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+    gap: 5px; /* Spacing between button and select */
+}
+
+.tts-btn {
+    background-color: #33d9b2; /* A nice teal color */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Make it round */
+    width: clamp(50px, 12vw, 80px); /* Same size as timer */
+    height: clamp(50px, 12vw, 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1.5em, 5vw, 2.5em); /* Icon size */
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.tts-btn:hover:not(:disabled) {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.tts-btn:disabled {
+    background-color: #7f8c8d;
+    color: #bdc3c7;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.tts-lang-select {
+    width: clamp(80px, 15vw, 120px); /* Adjust width as needed */
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #34495e;
+    color: white;
+    border: 1px solid #567086;
+    font-size: clamp(0.7em, 2.5vw, 0.9em);
+    cursor: pointer;
+    max-width: 90%; /* Prevent overflow on small screens */
+    box-sizing: border-box;
+    text-align: center;
+    text-align-last: center; /* Center placeholder/selected text */
+}
+
+/* Media query adjustments for TTS controls */
 @media (max-height: 650px) { /* More aggressive scaling for shorter screens */
     .question-container { margin-top: 2vh; max-height: 48vh; }
     .current-player-name { font-size: clamp(1.3em, 4.5vw, 1.8em); margin-bottom: 5px; }
@@ -406,6 +462,21 @@ body, html {
     .action-buttons { gap: 5px; }
     .timer-container { width: clamp(40px, 10vw, 60px); height: clamp(40px, 10vw, 60px); font-size: clamp(1em, 4vw, 1.5em); top: 55px; }
     .category-display, .round-player-info { top: 5px; }
+
+    /* NEW: Adjust TTS controls for shorter screens */
+    .tts-controls-container {
+        top: 120px; /* Adjusted position for shorter screens */
+        right: 5px; 
+    }
+    .tts-btn {
+        width: clamp(40px, 10vw, 60px);
+        height: clamp(40px, 10vw, 60px);
+        font-size: clamp(1.2em, 4vw, 2em);
+    }
+    .tts-lang-select {
+        width: clamp(70px, 13vw, 100px);
+        font-size: clamp(0.6em, 2vw, 0.8em);
+    }
 }
 
 @media (max-width: 400px) {
@@ -420,4 +491,11 @@ body, html {
     .setup-page .remove-player-btn { padding: 10px; }
     .action-buttons button { padding: 14px; } /* Slightly more padding for very narrow screens */
 
+    /* NEW: Adjust TTS controls for very narrow screens */
+    .tts-controls-container {
+        right: 5px; 
+    }
+    .tts-lang-select {
+        width: 100px; /* Fixed width for very small screens for consistency */
+    }
 }
