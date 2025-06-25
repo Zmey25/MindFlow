@@ -169,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Налаштування гри</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -212,6 +213,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <label for="initial_skips">Початкова кількість пропусків на гравця:</label>
                     <input type="number" id="initial_skips" name="initial_skips" min="0" value="<?php echo htmlspecialchars($current_game_config['general']['initial_skips']); ?>">
+                </div>
+                
+                <div class="settings-group">
+                    <h4>Налаштування голосу</h4>
+                    <label for="voice-select">Оберіть голос для зачитки:</label>
+                    <select id="voice-select" name="voice_select"><option>Завантаження голосів...</option></select>
                 </div>
 
                 <div class="settings-group">
