@@ -96,7 +96,6 @@ $max_rounds_setting = $game_config['general']['max_rounds'] ?? 5;
 $deferred_messages_to_display_first = [];
 if (!empty($current_player_data_for_first_display['deferred_effects'])) {
     foreach ($current_player_data_for_first_display['deferred_effects'] as $effect) {
-        // Ensure turns_left is positive before displaying
         if (isset($effect['turns_left']) && $effect['turns_left'] > 0) {
             $text = str_replace(['{TURNS_LEFT}', '{PLAYER_NAME}'], [$effect['turns_left'], htmlspecialchars($current_player_data_for_first_display['name'])], $effect['template']);
             $deferred_messages_to_display_first[] = $text;
@@ -139,11 +138,14 @@ unset($_SESSION['initial_timer_started_at']);
         </div>
         <div class="round-player-info">Раунд: <span id="round-num"><?php echo $current_round_initial; ?></span>/<?php echo $max_rounds_setting; ?><br>Гравців: <span id="active-players-count"><?php echo count(array_filter($players_initial_state, function($p){ return $p['active']; })); ?></span></div>
         
-        <?php if ($js_effective_reading_duration_first_q > 0 || $main_timer_from_first_question > 0): ?>
-        <div id="timer-container" class="timer-container timer-<?php echo $current_phase_for_js_first_q; ?>"><div id="timer-circle" class="timer-circle"></div></div>
-        <?php else: ?>
-        <div id="timer-container" class="timer-container" style="display:none;"><div id="timer-circle" class="timer-circle">0</div></div>
-        <?php endif; ?>
+        <div class="top-right-ui-container">
+            <?php if ($js_effective_reading_duration_first_q > 0 || $main_timer_from_first_question > 0): ?>
+            <div id="timer-container" class="timer-container timer-<?php echo $current_phase_for_js_first_q; ?>"><div id="timer-circle" class="timer-circle"></div></div>
+            <?php else: ?>
+            <div id="timer-container" class="timer-container" style="display:none;"><div id="timer-circle" class="timer-circle">0</div></div>
+            <?php endif; ?>
+            <button id="btn-tts" class="tts-btn"><i class="fas fa-volume-up"></i></button>
+        </div>
 
         <div class="question-container">
             <div class="current-player-name" id="current-player-name-display"><?php echo htmlspecialchars($current_player_data_for_first_display['name']); ?></div>
