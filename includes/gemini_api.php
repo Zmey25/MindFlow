@@ -52,7 +52,7 @@ function loadInstructionFromFile(string $instructionFileName): string|false {
  * Здійснює HTTP-запит до Google Gemini API.
  * (Залишається без змін)
  */
-function callGeminiApi(array $messages, string $model = 'gemini-2.5-flash-preview-05-20'): ?string {
+function callGeminiApi(array $messages, string $model = 'gemini-2.5-flash'): ?string {
     $apiKey = getenv('GEMINI_API_KEY');
     if (!$apiKey) {
         custom_log('GEMINI_API_KEY не встановлено в файлі .env. Неможливо викликати Gemini API.', 'gemini_error');
@@ -63,8 +63,10 @@ function callGeminiApi(array $messages, string $model = 'gemini-2.5-flash-previe
 
     $payload = [
         'contents' => $messages,
-        // Можна додати параметри, наприклад 'temperature'
-        // 'generationConfig' => ['temperature' => 0.5]
+        'generationConfig' => [
+            'temperature' => 0.6, // Можна налаштувати "креативність"
+            'maxOutputTokens' => 9000, // Жорстке обмеження на кількість токенів у відповіді
+        ]
     ];
 
     $ch = curl_init();
@@ -182,7 +184,7 @@ function determineRelevantData(string $userQuery): array {
     custom_log("Request to LLM1:\n" . json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 'gemini_route_request');
 
     // 5. Виклик Gemini API (LLM1)
-    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash-preview-05-20');
+    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash');
 
     // Логування відповіді від LLM1 в окремий файл
     custom_log("Response from LLM1:\n" . ($geminiResponseText ?? 'NULL'), 'gemini_route_response');
@@ -289,8 +291,8 @@ function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string
     }
 
     // Обмежуємо розмір контексту, щоб не перевищити ліміт токенів API
-    // gemini-2.5-flash-preview-05-20 має 128k контекстне вікно. 120k - безпечно.
-    $maxContextLength = 120000;
+    // gemini-2.5-flash має 128k контекстне вікно. 100k - безпечно.
+    $maxContextLength = 100000;
     $contextDataJsonShortened = $contextDataJson;
     if (strlen($contextDataJson) > $maxContextLength) {
         $contextDataJsonShortened = substr($contextDataJson, 0, $maxContextLength) . "\n... (дані обрізано через великий розмір)";
@@ -313,7 +315,7 @@ function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string
     custom_log("Request to LLM2:\n" . json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 'gemini_answer_request');
 
     // 2. Виклик Gemini API (LLM2)
-    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash-preview-05-20');
+    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash');
 
     // Логування відповіді від LLM2 в окремий файл
     custom_log("Response from LLM2:\n" . ($geminiResponseText ?? 'NULL'), 'gemini_answer_response');
