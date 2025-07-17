@@ -302,10 +302,58 @@ if (isset($update['message'])) {
         $responseText = "Я отримав ваше повідомлення, але воно не містить тексту. Будь ласка, надсилайте текстові повідомлення.";
         custom_log("Received non-text message.", 'telegram_webhook');
     }
+/**
+ * Розбиває текст на частини, видаляючи "розірвані" HTML-теги на межі частин.
+ *
+ * @param string $html Текст з HTML-тегами.
+ * @param int $limit Максимальна довжина однієї частини.
+ * @param string $allowed_tags Рядок з дозволеними тегами у форматі "<a><b><i>".
+ * @return array Масив повідомлень.
+ */
+function splitHtmlMessageFlexible(string $html, int $limit, string $allowed_tags): array
+{
+    // Генеруємо список тегів для регулярного виразу з $allowed_tags
+    $tag_list = trim(str_replace(['<', '>'], ['', '|'], $allowed_tags), '|');
+    if (empty($tag_list)) {
+        // Якщо тегів немає, просто розбиваємо текст
+        return explode("\n", wordwrap($html, $limit, "\n", true));
+    }
+
+    $regex = '/<(' . $tag_list . ')( [^>]*)?>$/i';
+    
+    $chunks = explode("\n", wordwrap($html, $limit, "\n", true));
+    $chunkCount = count($chunks);
+
+    for ($i = 0; $i < $chunkCount - 1; $i++) {
+        if (preg_match($regex, $chunks[$i], $matches)) {
+            $openingTag = $matches[0];
+            $tagName = $matches[1];
+            $closingTag = "</$tagName>";
+
+            if (str_starts_with(ltrim($chunks[$i + 1]), $closingTag)) {
+                $chunks[$i] = substr($chunks[$i], 0, -strlen($openingTag));
+                $chunks[$i + 1] = ltrim(substr_replace($chunks[$i + 1], '', 0, strlen($closingTag)));
+            }
+        }
+    }
+    return array_filter($chunks); // Видаляємо можливі порожні елементи
+}
 
     // Крок 4: Відправка відповіді користувачу
     if (!empty($responseText)) {
-        sendTelegramMessage($chatId, $responseText, $telegramToken);
+        $allowed_tags = '<b><i><u><s><a><code><pre>';
+        $sanitizedResponse = strip_tags($responseText, $allowed_tags);
+        $limit = 4000;
+        
+        if (mb_strlen($sanitizedResponse, 'UTF-8') > $limit) {
+            $messages = splitHtmlMessageFlexible($sanitizedResponse, $limit, $allowed_tags);
+            foreach ($messages as $messagePart) {
+                sendTelegramMessage($chatId, $messagePart, $telegramToken);
+                usleep(700000); // Затримка 0.7 секунди між повідомленнями
+            }
+        } else {
+            sendTelegramMessage($chatId, $sanitizedResponse, $telegramToken);
+        }
     } else {
         // Якщо відповідь порожня, логуємо, але не надсилаємо нічого користувачу
         custom_log("No response generated for update (Chat ID: {$chatId}, Text: '{$text}'). Update: " . $input, 'telegram_webhook');
