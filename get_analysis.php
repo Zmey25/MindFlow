@@ -13,7 +13,7 @@ loadEnv(__DIR__ . '/../.env');
 
 // --- Gemini Configuration ---
 $geminiApiKey = getenv('GEMINI_API_KEY'); // Отримуємо ключ з .env
-$geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-04-17:generateContent?key=' . $geminiApiKey;
+$geminiApiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' . $geminiApiKey;
 $geminiPromptTemplate = "Проведи психологічний аналіз профілю користувача на основі наданих даних.
 Дані містять скорочену назву риси ('trait'), самооцінку користувача ('self') за шкалою 1-7 (деякі питання можуть мати іншу шкалу, але інтерпретуй їх відповідно до контексту), та середню оцінку від інших користувачів ('others_avg') за тією ж шкалою (null означає, що інші не оцінювали цю рису або їх було недостатньо).
 
