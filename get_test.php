@@ -101,7 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_access'])) {
         $message_type = 'error';
     }
 }
-
 include __DIR__ . '/includes/header.php';
 ?>
 <!DOCTYPE html>
@@ -145,6 +144,6 @@ include __DIR__ . '/includes/header.php';
             </p>
         <?php endif; ?>
     </div>
-    <?php include __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>
+<?php include __DIR__ . '/includes/footer.php'; ?>
