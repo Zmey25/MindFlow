@@ -108,7 +108,6 @@ include __DIR__ . '/includes/header.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle); ?></title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; background-color: #f4f7f6; color: #333; }
         .container { max-width: 600px; margin: 40px auto; padding: 30px; background-color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 8px; text-align: center; }
         h1 { color: #2c3e50; margin-bottom: 15px; }
         p { color: #555; margin-bottom: 25px; }
