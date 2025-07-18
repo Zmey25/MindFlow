@@ -24,7 +24,7 @@
         
                     <div class="form-group">
                         <label for="edit_username">Логін:</label>
-                        <input type="text" id="edit_username" name="username" value="<?php echo htmlspecialchars($editUserData['username']); ?>" required pattern="^[a-zA-Z0-9_]+$" title="Тільки латинські літери, цифри та _">
+                        <input type="text" id="edit_username" name="username" value="<?php echo htmlspecialchars($editUserData['username']); ?>" required pattern="^[a-zA-Z0-9_.]+$" title="Тільки латинські літери, цифри та _">
                     </div>
                      <div class="form-group">
                         <label for="edit_first_name">Ім'я:</label>
