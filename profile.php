@@ -163,8 +163,8 @@ include __DIR__ . '/includes/header.php';
         </div>
         <div class="form-group checkbox-group">
              <input type="checkbox" id="hide_test_link" name="hide_test_link" value="1" <?php echo ($currentUser['hide_test_link'] ?? false) ? 'checked' : ''; ?>>
-             <label for="hide_test_link">Приховати можливість проходити тест про мене</label>
-             <span class="field-note">Якщо відмічено, посилання на проходження тесту про вас буде недоступним для інших.</span>
+             <label for="hide_test_link">Приховати посилання на тест про мене</label>
+             <span class="field-note">Якщо відмічено, посилання на проходження тесту про вас не буде публічно доступне. Важливо, люди, які мають посилання все одно зможуть проходити тест про вас.</span>
         </div>
         <div class="form-group checkbox-group">
              <input type="checkbox" id="participate_in_ratings" name="participate_in_ratings" value="1" <?php echo ($currentUser['participate_in_ratings'] ?? true) ? 'checked' : ''; ?>>
