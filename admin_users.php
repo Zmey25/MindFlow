@@ -1,71 +1,84 @@
         <!-- ========================================= -->
         <!--        СЕКЦІЯ УПРАВЛІННЯ КОРИСТУВАЧАМИ        -->
         <!-- ========================================= -->
-            <h2>Управління Користувачами</h2>
-
-            <!-- Пошук -->
-            <form action="admin.php#users-section" method="GET" class="search-form">
-                 <label for="search_query">Пошук:</label>
-                 <input type="search" id="search_query" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>" placeholder="Логін, ім'я або прізвище...">
-                 <input type="hidden" name="page" value="1"> <!-- Скидати на 1 сторінку при новому пошуку -->
-                 <button type="submit" class="btn btn-primary">Знайти</button>
-                 <?php if (!empty($searchQuery)): ?>
-                    <a href="admin.php?page=<?php echo $currentPage; ?>#users-section" class="cancel-btn" style="margin-left: 10px;">Скинути пошук</a>
-                 <?php endif; ?>
-            </form>
-
-             <?php if ($editUserData): // Форма редагування користувача ?>
-                <div id="edit-user-form" class="edit-form-section">
-                    <h3>Редагування користувача: <?php echo htmlspecialchars($editUserData['username']); ?></h3>
-                    <form action="admin.php#users-section" method="POST">
-                        <input type="hidden" name="action_user" value="update_user">
-                        <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($editUserData['id']); ?>">
-                        <input type="hidden" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>"> <!-- Зберігаємо пошук -->
-                        <input type="hidden" name="page" value="<?php echo $currentPage; ?>"> <!-- Зберігаємо сторінку -->
-
-                        <div class="form-group">
-                            <label for="edit_username">Логін:</label>
-                            <input type="text" id="edit_username" name="username" value="<?php echo htmlspecialchars($editUserData['username']); ?>" required pattern="^[a-zA-Z0-9_]+$" title="Тільки латинські літери, цифри та _">
-                        </div>
-                         <div class="form-group">
-                            <label for="edit_first_name">Ім'я:</label>
-                            <input type="text" id="edit_first_name" name="first_name" value="<?php echo htmlspecialchars($editUserData['first_name'] ?? ''); ?>">
-                        </div>
-                         <div class="form-group">
-                            <label for="edit_last_name">Прізвище:</label>
-                            <input type="text" id="edit_last_name" name="last_name" value="<?php echo htmlspecialchars($editUserData['last_name'] ?? ''); ?>">
-                        </div>
-                        <p class="form-note">Пароль не змінюється через адмін-панель.</p>
-                        <button type="submit" class="btn btn-primary">Оновити користувача</button>
-                        <a href="admin.php?search_query=<?php echo urlencode($searchQuery); ?>&page=<?php echo $currentPage; ?>#users-section" class="cancel-btn">Скасувати</a>
-                    </form>
-                </div>
-
-             <?php else: // Форма додавання користувача (показуємо, якщо не редагуємо) ?>
-                <div id="add-user-form" class="section-form">
-                    <h3>Додати нового користувача</h3>
-                    <form action="admin.php#users-section" method="POST">
-                         <input type="hidden" name="action_user" value="add_user">
-                         <input type="hidden" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>">
-                         <input type="hidden" name="page" value="<?php echo $currentPage; ?>">
-
-                        <div class="form-group">
-                            <label for="add_username">Логін:</label>
-                            <input type="text" id="add_username" name="username" required pattern="^[a-zA-Z0-9_]+$" title="Тільки латинські літери, цифри та _">
-                        </div>
-                         <div class="form-group">
-                            <label for="add_first_name">Ім'я:</label>
-                            <input type="text" id="add_first_name" name="first_name">
-                        </div>
-                         <div class="form-group">
-                            <label for="add_last_name">Прізвище:</label>
-                            <input type="text" id="add_last_name" name="last_name">
-                        </div>
-                        <p class="form-note">Пароль буде встановлено за замовчуванням: <code>mindflow2025</code></p>
-                        <button type="submit" class="btn add-btn">Додати користувача</button>
-                    </form>
-                </div>
-            <?php endif; ?>
+        <h2>Управління Користувачами</h2>
+        
+        <form action="admin.php#users-section" method="GET" class="search-form">
+             <label for="search_query">Пошук:</label>
+             <input type="search" id="search_query" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>" placeholder="Логін, ім'я або прізвище...">
+             <input type="hidden" name="page" value="1">
+             <button type="submit" class="btn btn-primary">Знайти</button>
+             <?php if (!empty($searchQuery)): ?>
+                <a href="admin.php?page=<?php echo $currentPage; ?>#users-section" class="cancel-btn" style="margin-left: 10px;">Скинути пошук</a>
+             <?php endif; ?>
+        </form>
+        
+         <?php if ($editUserData): ?>
+            <div id="edit-user-form" class="edit-form-section">
+                <h3>Редагування користувача: <?php echo htmlspecialchars($editUserData['username']); ?></h3>
+                <form action="admin.php#users-section" method="POST">
+                    <input type="hidden" name="action_user" value="update_user">
+                    <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($editUserData['id']); ?>">
+                    <input type="hidden" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>">
+                    <input type="hidden" name="page" value="<?php echo $currentPage; ?>">
+        
+                    <div class="form-group">
+                        <label for="edit_username">Логін:</label>
+                        <input type="text" id="edit_username" name="username" value="<?php echo htmlspecialchars($editUserData['username']); ?>" required pattern="^[a-zA-Z0-9_]+$" title="Тільки латинські літери, цифри та _">
+                    </div>
+                     <div class="form-group">
+                        <label for="edit_first_name">Ім'я:</label>
+                        <input type="text" id="edit_first_name" name="first_name" value="<?php echo htmlspecialchars($editUserData['first_name'] ?? ''); ?>">
+                    </div>
+                     <div class="form-group">
+                        <label for="edit_last_name">Прізвище:</label>
+                        <input type="text" id="edit_last_name" name="last_name" value="<?php echo htmlspecialchars($editUserData['last_name'] ?? ''); ?>">
+                    </div>
+        
+                    <h4 style="margin-top:20px; margin-bottom:10px;">Налаштування приватності</h4>
+                    <div class="form-group checkbox-group">
+                         <input type="checkbox" id="edit_hide_results" name="hide_results" value="1" <?php echo ($editUserData['hide_results'] ?? true) ? 'checked' : ''; ?>>
+                         <label for="edit_hide_results">Приховати результати від інших</label>
+                    </div>
+                    <div class="form-group checkbox-group">
+                         <input type="checkbox" id="edit_hide_test_link" name="hide_test_link" value="1" <?php echo ($editUserData['hide_test_link'] ?? false) ? 'checked' : ''; ?>>
+                         <label for="edit_hide_test_link">Приховати посилання на тест про користувача</label>
+                    </div>
+                    <div class="form-group checkbox-group">
+                         <input type="checkbox" id="edit_participate_in_ratings" name="participate_in_ratings" value="1" <?php echo ($editUserData['participate_in_ratings'] ?? true) ? 'checked' : ''; ?>>
+                         <label for="edit_participate_in_ratings">Бере участь у рейтингах</label>
+                    </div>
+        
+                    <p class="form-note">Пароль не змінюється через адмін-панель.</p>
+                    <button type="submit" class="btn btn-primary">Оновити користувача</button>
+                    <a href="admin.php?search_query=<?php echo urlencode($searchQuery); ?>&page=<?php echo $currentPage; ?>#users-section" class="cancel-btn">Скасувати</a>
+                </form>
+            </div>
+        
+         <?php else: ?>
+            <div id="add-user-form" class="section-form">
+                <h3>Додати нового користувача</h3>
+                <form action="admin.php#users-section" method="POST">
+                     <input type="hidden" name="action_user" value="add_user">
+                     <input type="hidden" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>">
+                     <input type="hidden" name="page" value="<?php echo $currentPage; ?>">
+                    <div class="form-group">
+                        <label for="add_username">Логін:</label>
+                        <input type="text" id="add_username" name="username" required pattern="^[a-zA-Z0-9_]+$" title="Тільки латинські літери, цифри та _">
+                    </div>
+                     <div class="form-group">
+                        <label for="add_first_name">Ім'я:</label>
+                        <input type="text" id="add_first_name" name="first_name">
+                    </div>
+                     <div class="form-group">
+                        <label for="add_last_name">Прізвище:</label>
+                        <input type="text" id="add_last_name" name="last_name">
+                    </div>
+                    <p class="form-note">Пароль буде встановлено за замовчуванням: <code>mindflow2025</code></p>
+                    <button type="submit" class="btn add-btn">Додати користувача</button>
+                </form>
+            </div>
+        <?php endif; ?>
 
             <!-- Таблиця користувачів -->
             <h3>Список користувачів</h3>
