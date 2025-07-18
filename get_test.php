@@ -103,9 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_access'])) {
 }
 include __DIR__ . '/includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="uk">
-<head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle); ?></title>
@@ -124,8 +122,7 @@ include __DIR__ . '/includes/header.php';
         .message.warning { background-color: #fff3cd; color: #856404; border-color: #ffeeba; }
         .cooldown-note { font-size: 0.9em; color: #7f8c8d; margin-top: 10px; }
     </style>
-</head>
-<body>
+    
     <div class="container">
         <h1>Доступ обмежено</h1>
         <?php if ($message): ?>
@@ -144,6 +141,5 @@ include __DIR__ . '/includes/header.php';
             </p>
         <?php endif; ?>
     </div>
-</body>
-</html>
+
 <?php include __DIR__ . '/includes/footer.php'; ?>
