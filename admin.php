@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             switch ($action_user) {
                 case 'add_user':
                     $username = trim($_POST['username'] ?? ''); $firstName = trim($_POST['first_name'] ?? ''); $lastName = trim($_POST['last_name'] ?? ''); $defaultPassword = 'mindflow2025';
-                    if (empty($username) || mb_strlen($username) < USERNAME_MIN_LENGTH || mb_strlen($username) > USERNAME_MAX_LENGTH || !preg_match('/^[a-zA-Z0-9_]+$/', $username)) throw new Exception('Некоректне ім\'я користувача (логін)...');
+                    if (empty($username) || mb_strlen($username) < USERNAME_MIN_LENGTH || mb_strlen($username) > USERNAME_MAX_LENGTH || !preg_match('/^[a-zA-Z0-9_.]+$/', $username)) throw new Exception('Некоректне ім\'я користувача (логін)...');
                     foreach ($allUsers as $user) { if (isset($user['username']) && strtolower($user['username']) === strtolower($username)) throw new Exception("Користувач з логіном '{$username}' вже існує."); }
                     $passwordHash = password_hash($defaultPassword, PASSWORD_DEFAULT); if (!$passwordHash) throw new Exception("Помилка хешування пароля.");
                     $userId = generateUniqueId('user_');
@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 case 'update_user':
                     $userIdToUpdate = $_POST['user_id'] ?? null; $newUsername = trim($_POST['username'] ?? ''); $newFirstName = trim($_POST['first_name'] ?? ''); $newLastName = trim($_POST['last_name'] ?? ''); $userIndex = -1;
                     if (empty($userIdToUpdate)) throw new Exception("Не вказано ID користувача для оновлення.");
-                    if (empty($newUsername) || mb_strlen($newUsername) < USERNAME_MIN_LENGTH || mb_strlen($newUsername) > USERNAME_MAX_LENGTH || !preg_match('/^[a-zA-Z0-9_]+$/', $newUsername)) throw new Exception('Некоректне ім\'я користувача (логін).');
+                    if (empty($newUsername) || mb_strlen($newUsername) < USERNAME_MIN_LENGTH || mb_strlen($newUsername) > USERNAME_MAX_LENGTH || !preg_match('/^[a-zA-Z0-9_.]+$/', $newUsername)) throw new Exception('Некоректне ім\'я користувача (логін).');
                     foreach ($allUsers as $index => $user) { if (isset($user['id']) && $user['id'] === $userIdToUpdate) { $userIndex = $index; if (strtolower($user['username']) !== strtolower($newUsername)) { foreach ($allUsers as $otherIndex => $otherUser) { if ($index !== $otherIndex && isset($otherUser['username']) && strtolower($otherUser['username']) === strtolower($newUsername)) throw new Exception("Користувач з логіном '{$newUsername}' вже існує."); } } break; } }
                     if ($userIndex === -1) throw new Exception("Користувача з ID '{$userIdToUpdate}' не знайдено.");
                     $allUsers[$userIndex]['username'] = $newUsername; 
