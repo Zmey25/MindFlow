@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['request_access'])) {
                 $requesterInfo = isUserLoggedIn() ? "Користувач '" . $_SESSION['username'] . "'" : "Анонімний користувач";
                 $content = "<p>Привіт, " . htmlspecialchars($targetUser['username']) . "!</p>";
                 $content .= "<p>" . $requesterInfo . " хоче пройти тест про вас на сайті MindFlow.ovh.</p>";
-                $content .= "<p>Наразі доступ до вашого тесту обмежено в налаштуваннях приватності. Якщо ви хочете надати доступ, будь ласка, змініть налаштування у вашому профілі.</p>";
+                $content .= "<p>Наразі публічний доступ до вашого тесту обмежено в налаштуваннях приватності. Якщо ви хочете надати доступ, будь ласка, передайте користувачу посилання на тест або змініть налаштування приватності у вашому профілі.</p>";
                 $content .= '<p><a href="https://mindflow.ovh/profile.php" style="padding:10px 15px; background-color:#3498db; color:white; text-decoration:none; border-radius:4px;">Перейти до профілю</a></p>';
                 if(sendMindFlowEmail($targetUser['email'], $subject, $content)) {
                    $emailSent = true;
