@@ -112,7 +112,7 @@ include __DIR__ . '/includes/header.php';
                         <td><?php echo htmlspecialchars($user['last_name'] ?? '-'); ?></td>
                         <td class="actions-cell">
                             <a href="results.php?user=<?php echo urlencode($user['username']); ?>" class="btn btn-results" target="_blank" title="Дивитись результат">Результат</a>
-                            <a href="get_test.php?user=<?php echo urlencode($user['username']); ?>" class="btn btn-test" target="_blank" title="Пройти тест">Пройти</a>
+                            <a href="get_test.php?user=<?php echo urlencode($user['username']); ?>" class="btn btn-results" target="_blank" title="Пройти тест">Тест</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>
