@@ -65,9 +65,9 @@ include __DIR__ . '/includes/header.php';
         .cancel-btn { background-color: #e0e0e0; color: #333; }
         .cancel-btn:hover { background-color: #cccccc; }
         td .btn { padding: 6px 10px; font-size: 0.85em; }
-        td .btn-results { background-color: #5cb85c; color: white; }
+        td .btn-results { background-color: #5cb85c; color: white; margin: 5px; }
         td .btn-results:hover { background-color: #4cae4c; }
-        td .btn-test { background-color: #f0ad4e; color: white; }
+        td .btn-test { background-color: #f0ad4e; color: white; margin: 5px; }
         td .btn-test:hover { background-color: #ec971f; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
         th, td { border: 1px solid #e0e0e0; padding: 10px; text-align: left; vertical-align: middle; word-wrap: break-word; overflow-wrap: break-word; }
@@ -112,7 +112,7 @@ include __DIR__ . '/includes/header.php';
                         <td><?php echo htmlspecialchars($user['last_name'] ?? '-'); ?></td>
                         <td class="actions-cell">
                             <a href="results.php?user=<?php echo urlencode($user['username']); ?>" class="btn btn-results" target="_blank" title="Дивитись результат">Результат</a>
-                            <a href="get_test.php?user=<?php echo urlencode($user['username']); ?>" class="btn btn-results" target="_blank" title="Пройти тест">Тест</a>
+                            <a href="get_test.php?user=<?php echo urlencode($user['username']); ?>" class="btn btn-test" target="_blank" title="Пройти тест">Тест</a>
                         </td>
                     </tr>
                     <?php endforeach; ?>
