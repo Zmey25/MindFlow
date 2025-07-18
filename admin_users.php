@@ -64,7 +64,7 @@
                      <input type="hidden" name="page" value="<?php echo $currentPage; ?>">
                     <div class="form-group">
                         <label for="add_username">Логін:</label>
-                        <input type="text" id="add_username" name="username" required pattern="^[a-zA-Z0-9_]+$" title="Тільки латинські літери, цифри та _">
+                        <input type="text" id="add_username" name="username" required pattern="^[a-zA-Z0-9_.]+$" title="Тільки латинські літери, цифри та _">
                     </div>
                      <div class="form-group">
                         <label for="add_first_name">Ім'я:</label>
