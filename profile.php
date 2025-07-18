@@ -162,12 +162,12 @@ include __DIR__ . '/includes/header.php';
              <span class="field-note">Ви завжди бачите свої результати.</span>
         </div>
         <div class="form-group checkbox-group">
-             <input type="checkbox" id="hide_test_link" name="hide_test_link" value="1" <?php echo ($currentUser['hide_test_link'] ?? false) ? 'checked' : ''; ?>>
+             <input type="checkbox" id="hide_test_link" name="hide_test_link" value="1" <?php echo ($currentUser['hide_test_link'] ?? true) ? 'checked' : ''; ?>>
              <label for="hide_test_link">Приховати посилання на тест про мене</label>
              <span class="field-note">Якщо відмічено, посилання на проходження тесту про вас не буде публічно доступне. Важливо, люди, які мають посилання все одно зможуть проходити тест про вас.</span>
         </div>
         <div class="form-group checkbox-group">
-             <input type="checkbox" id="participate_in_ratings" name="participate_in_ratings" value="1" <?php echo ($currentUser['participate_in_ratings'] ?? true) ? 'checked' : ''; ?>>
+             <input type="checkbox" id="participate_in_ratings" name="participate_in_ratings" value="1" <?php echo ($currentUser['participate_in_ratings'] ?? false) ? 'checked' : ''; ?>>
              <label for="participate_in_ratings">Брати участь у таблиці рейтингів</label>
              <span class="field-note">Якщо не відмічено, ваші показники не будуть враховуватись у публічних рейтингах.</span>
         </div>
