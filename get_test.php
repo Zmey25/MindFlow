@@ -10,11 +10,11 @@ require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/mail_helper.php';
 
 $pageTitle = "Доступ до тесту";
-$username = trim($_GET['user'] ?? '');
+$target_username = trim($_GET['user'] ?? '');
 $message = '';
 $message_type = 'info';
 
-if (empty($username)) {
+if (empty($target_username)) {
     include __DIR__ . '/includes/header.php';
     echo "<div class='container'><p class='message error'>Помилка: не вказано логін користувача.</p></div>";
     include __DIR__ . '/includes/footer.php';
@@ -27,7 +27,7 @@ $targetUserIndex = null;
 
 if ($allUsers) {
     foreach ($allUsers as $index => $user) {
-        if (isset($user['username']) && strcasecmp($user['username'], $username) === 0) {
+        if (isset($user['username']) && strcasecmp($user['username'], $target_username) === 0) {
             $targetUser = $user;
             $targetUserIndex = $index;
             break;
@@ -37,7 +37,7 @@ if ($allUsers) {
 
 if ($targetUser === null) {
     include __DIR__ . '/includes/header.php';
-    echo "<div class='container'><p class='message error'>Користувача з логіном '" . htmlspecialchars($username) . "' не знайдено.</p></div>";
+    echo "<div class='container'><p class='message error'>Користувача з логіном '" . htmlspecialchars($target_username) . "' не знайдено.</p></div>";
     include __DIR__ . '/includes/footer.php';
     exit;
 }
@@ -132,10 +132,10 @@ include __DIR__ . '/includes/header.php';
         <?php if ($message): ?>
             <div class="message <?php echo $message_type; ?>"><?php echo htmlspecialchars($message); ?></div>
         <?php endif; ?>
-        <p>Користувач <strong><?php echo htmlspecialchars($username); ?></strong> обмежив доступ до тесту про себе у налаштуваннях приватності.</p>
+        <p>Користувач <strong><?php echo htmlspecialchars($target_username); ?></strong> обмежив доступ до тесту про себе у налаштуваннях приватності.</p>
         <p>Ви можете натиснути кнопку нижче, щоб попросити його надати доступ. Користувачу буде надіслано сповіщення.</p>
         
-        <form action="get_test.php?user=<?php echo urlencode($username); ?>" method="POST">
+        <form action="get_test.php?user=<?php echo urlencode($target_username); ?>" method="POST">
             <button type="submit" name="request_access" class="btn" <?php echo !$canRequest ? 'disabled' : ''; ?>>Наполягти та попросити доступ</button>
         </form>
         
