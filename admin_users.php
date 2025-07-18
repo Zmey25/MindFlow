@@ -41,11 +41,11 @@
                          <label for="edit_hide_results">Приховати результати від інших</label>
                     </div>
                     <div class="form-group checkbox-group">
-                         <input type="checkbox" id="edit_hide_test_link" name="hide_test_link" value="1" <?php echo ($editUserData['hide_test_link'] ?? false) ? 'checked' : ''; ?>>
+                         <input type="checkbox" id="edit_hide_test_link" name="hide_test_link" value="1" <?php echo ($editUserData['hide_test_link'] ?? true) ? 'checked' : ''; ?>>
                          <label for="edit_hide_test_link">Приховати посилання на тест про користувача</label>
                     </div>
                     <div class="form-group checkbox-group">
-                         <input type="checkbox" id="edit_participate_in_ratings" name="participate_in_ratings" value="1" <?php echo ($editUserData['participate_in_ratings'] ?? true) ? 'checked' : ''; ?>>
+                         <input type="checkbox" id="edit_participate_in_ratings" name="participate_in_ratings" value="1" <?php echo ($editUserData['participate_in_ratings'] ?? false) ? 'checked' : ''; ?>>
                          <label for="edit_participate_in_ratings">Бере участь у рейтингах</label>
                     </div>
         
