@@ -128,8 +128,7 @@
             {"questionId": "q_risk_taking"},
             {"questionId": "q_nonconforming"},
             {"questionId": "q_conservatism", "isReversed": true},
-            {"questionId": "q_inactivity_preference", "isReversed": true},
-            {"questionId": "q_pleasure_seeking"},
+            {"questionId": "q_inactivity_preference", "isReversed": true}
             {"questionId": "q_hobby"}
         ]
     }
