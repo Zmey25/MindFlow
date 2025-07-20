@@ -63,9 +63,7 @@
             {"questionId": "q_assertiveness"},
             {"questionId": "q_team_influence"},
             {"questionId": "q_responsibility"},
-            {"questionId": "q_decision_speed"},
-            {"questionId": "q_critical_thinking"},
-            {"questionId": "q_optimism"}
+            {"questionId": "q_critical_thinking"}
         ]
     },
     {
