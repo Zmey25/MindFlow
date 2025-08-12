@@ -2,7 +2,10 @@
 
 require_once __DIR__ . '/functions.php'; // Підключаємо наші функції
 
-const USERS_FILE_PATH = __DIR__ . '/../data/users.json'; // Шлях до файлу користувачів
+if (!defined('USERS_FILE_PATH')) {
+    const USERS_FILE_PATH = __DIR__ . '/../data/users.json'; // Шлях до файлу користувачів
+}
+
 
 define('USERNAME_MIN_LENGTH', 3);
 define('USERNAME_MAX_LENGTH', 25);
