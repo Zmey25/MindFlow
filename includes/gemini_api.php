@@ -164,8 +164,8 @@ function determineRelevantData(string $userQuery): array {
 
     $systemInstruction = sprintf(
         $instructionTemplate,
-        json_encode($usersForLLMSubset, JSON_UNESCAPED_UNICODE),
-        json_encode($questionsForLLMSubset, JSON_UNESCAPED_UNICODE),
+        json_encode($usersForLLMSubset, JSON_UNESCAPED_UNICODE), // Компактний JSON
+        json_encode($questionsForLLMSubset, JSON_UNESCAPED_UNICODE), // Компактний JSON
         $exampleTraitStructure,
         $exampleBadgeStructure
     );
@@ -237,7 +237,7 @@ function determineRelevantData(string $userQuery): array {
  * Отримує остаточну відповідь від Gemini на основі уточненого запиту та даних контексту (LLM2).
  *
  * @param string $refinedQuery Уточнений запит від LLM1.
- * @param string $contextDataJson JSON-рядок з усіма завантаженими даними.
+ * @param string $contextDataJson Компактний JSON-рядок з усіма завантаженими даними.
  * @return string|null Сгенерована відповідь або null у разі помилки.
  */
 function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string {
@@ -262,7 +262,14 @@ function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string
         ['role' => 'user', 'parts' => [['text' => $systemInstruction]]]
     ];
 
-    custom_log("Request to LLM2 (analyzer): " . json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 'gemini_answer_request');
+    // Логуємо розгорнуту версію запиту для легкого читання
+    $loggableMessages = json_decode(json_encode($messages), true); // deep copy
+    if (strlen($loggableMessages[0]['parts'][0]['text']) > 500) { // тільки для довгих промптів з даними
+         $loggableMessages[0]['parts'][0]['text'] = sprintf($instructionTemplate, json_encode(json_decode($contextDataJson, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), htmlspecialchars($refinedQuery));
+    }
+    custom_log("Request to LLM2 (analyzer):\n" . json_encode($loggableMessages, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 'gemini_answer_request');
+    
+    // Викликаємо API з компактними даними
     $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash');
     custom_log("Response from LLM2 (analyzer):\n" . ($geminiResponseText ?? 'NULL'), 'gemini_answer_response');
 
