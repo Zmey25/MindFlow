@@ -81,16 +81,6 @@ function generateUniqueId(string $prefix = 'user_'): string {
 }
 
 /**
- * Отримує шлях до файлу відповідей користувача.
- *
- * @param string $username
- * @return string
- */
-function getUserAnswersFilePath(string $username): string {
-    return ANSWERS_DIR_PATH . '/' . $username . '.json';
-}
-
-/**
  * Зберігає дані користувача у файл.
  *
  * @param string $username
