@@ -24,6 +24,9 @@ if (!function_exists('custom_log')) {
 
 /**
  * Завантажує шаблон інструкції з файлу.
+ *
+ * @param string $instructionFileName Назва файлу інструкції (наприклад, 'determine_data_instruction').
+ * @return string|false Вміст файлу або false у разі помилки.
  */
 function loadInstructionFromFile(string $instructionFileName): string|false {
     $filePath = PROMPTS_DIR . '/' . $instructionFileName . '.txt';
@@ -40,9 +43,13 @@ function loadInstructionFromFile(string $instructionFileName): string|false {
 }
 
 /**
- * Здійснює HTTP-запит до Google Gemini API.
+ * Здійснює HTTP-запит до Google Gemini API та логує використання токенів.
+ *
+ * @param array $messages Масив повідомлень для API.
+ * @param string $model Модель для використання.
+ * @return string|null Відповідь від API або null у разі помилки.
  */
-function callGeminiApi(array $messages, string $model = 'gemini-2.5-flash'): ?string {
+function callGeminiApi(array $messages, string $model = 'gemini-1.5-flash-latest'): ?string {
     $apiKey = getenv('GEMINI_API_KEY');
     if (!$apiKey) {
         custom_log('GEMINI_API_KEY не встановлено в файлі .env. Неможливо викликати Gemini API.', 'gemini_error');
@@ -55,7 +62,7 @@ function callGeminiApi(array $messages, string $model = 'gemini-2.5-flash'): ?st
         'contents' => $messages,
         'generationConfig' => [
             'temperature' => 0.6,
-            'maxOutputTokens' => 9000,
+            'maxOutputTokens' => 8192,
         ]
     ];
 
@@ -78,29 +85,41 @@ function callGeminiApi(array $messages, string $model = 'gemini-2.5-flash'): ?st
     }
 
     $responseData = json_decode($response, true);
+    
+    $tokenUsageLog = '';
+    if (isset($responseData['usageMetadata'])) {
+        $promptTokens = $responseData['usageMetadata']['promptTokenCount'] ?? 'N/A';
+        $completionTokens = $responseData['usageMetadata']['candidatesTokenCount'] ?? 'N/A';
+        $tokenUsageLog = "[Tokens: Prompt={$promptTokens}, Completion={$completionTokens}]";
+    }
 
     if ($httpCode !== 200) {
         $errorDetails = $responseData['error']['message'] ?? 'Невідома помилка від API';
-         $responseBody = is_string($response) ? $response : json_encode($response);
-        custom_log("Gemini API ({$model}) повернув HTTP {$httpCode}: " . $errorDetails . " Відповідь: " . $responseBody, 'gemini_error');
+        $responseBody = is_string($response) ? $response : json_encode($response);
+        custom_log("Gemini API ({$model}) повернув HTTP {$httpCode}: {$errorDetails} {$tokenUsageLog} Відповідь: {$responseBody}", 'gemini_error');
         return null;
     }
 
     if (isset($responseData['candidates'][0]['content']['parts'][0]['text'])) {
+        custom_log("Gemini API ({$model}) успішна відповідь. {$tokenUsageLog}", 'gemini_success');
         return $responseData['candidates'][0]['content']['parts'][0]['text'];
     } elseif (isset($responseData['promptFeedback']['blockReason'])) {
         $reason = $responseData['promptFeedback']['blockReason'];
-        $safetyRatings = $responseData['promptFeedback']['safetyRatings'] ?? [];
-        custom_log("Gemini API ({$model}) заблокував відповідь через: " . $reason . ". Ratings: ".json_encode($safetyRatings). " Запит: " . json_encode($messages), 'gemini_safety_block');
+        $safetyRatings = json_encode($responseData['promptFeedback']['safetyRatings'] ?? []);
+        custom_log("Gemini API ({$model}) заблокував відповідь: {$reason}. {$tokenUsageLog} Ratings: {$safetyRatings}", 'gemini_safety_block');
         return "Вибачте, ваш запит не може бути оброблений через обмеження безпеки. Спробуйте переформулювати його.";
     } else {
-        custom_log("Неочікувана структура відповіді Gemini API ({$model}): " . $response, 'gemini_error');
+        custom_log("Неочікувана структура відповіді Gemini API ({$model}): {$tokenUsageLog} {$response}", 'gemini_error');
         return null;
     }
 }
 
+
 /**
  * Визначає, які джерела даних є релевантними для запиту користувача, та уточнює запит (LLM1).
+ *
+ * @param string $userQuery Оригінальний запит користувача.
+ * @return array Повертає асоціативний масив з полями.
  */
 function determineRelevantData(string $userQuery): array {
     $allUsers = readJsonFile(USERS_FILE_PATH);
@@ -145,8 +164,8 @@ function determineRelevantData(string $userQuery): array {
 
     $systemInstruction = sprintf(
         $instructionTemplate,
-        json_encode($usersForLLMSubset, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
-        json_encode($questionsForLLMSubset, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT),
+        json_encode($usersForLLMSubset, JSON_UNESCAPED_UNICODE),
+        json_encode($questionsForLLMSubset, JSON_UNESCAPED_UNICODE),
         $exampleTraitStructure,
         $exampleBadgeStructure
     );
@@ -155,18 +174,15 @@ function determineRelevantData(string $userQuery): array {
         ['role' => 'user', 'parts' => [['text' => $systemInstruction . "\n\nЗапит користувача: " . $userQuery]]]
     ];
 
-    custom_log("Request to LLM1:\n" . json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 'gemini_route_request');
-
-    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash');
-
-    custom_log("Response from LLM1:\n" . ($geminiResponseText ?? 'NULL'), 'gemini_route_response');
+    custom_log("Request to LLM1 (router): " . json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 'gemini_route_request');
+    $geminiResponseText = callGeminiApi($messages, 'gemini-1.5-flash-latest');
+    custom_log("Response from LLM1 (router):\n" . ($geminiResponseText ?? 'NULL'), 'gemini_route_response');
 
     if ($geminiResponseText === null) {
         return ['error' => 'Помилка отримання відповіді від ШІ маршрутизатора (LLM1 API error).'];
     }
 
-    $geminiResponseText = preg_replace('/^```(?:json)?\s*(.*?)\s*```$/s', '$1', $geminiResponseText);
-    $geminiResponseText = trim($geminiResponseText);
+    $geminiResponseText = preg_replace('/^```(?:json)?\s*(.*?)\s*```$/s', '$1', trim($geminiResponseText));
     $geminiResponse = json_decode($geminiResponseText, true);
 
     if (json_last_error() !== JSON_ERROR_NONE) {
@@ -174,12 +190,11 @@ function determineRelevantData(string $userQuery): array {
         return ['error' => 'Помилка обробки відповіді від ШІ маршрутизатора (недійсний JSON).'];
     }
 
-    if (!isset($geminiResponse['potential_data_sources']) || !is_array($geminiResponse['potential_data_sources']) ||
-        !isset($geminiResponse['target_usernames']) || !is_array($geminiResponse['target_usernames']) ||
-        !isset($geminiResponse['refined_query']) || !is_string($geminiResponse['refined_query']))
+    if (!isset($geminiResponse['potential_data_sources'], $geminiResponse['target_usernames'], $geminiResponse['refined_query']) ||
+        !is_array($geminiResponse['potential_data_sources']) || !is_array($geminiResponse['target_usernames']) || !is_string($geminiResponse['refined_query']))
     {
         custom_log("Невірна структура відповіді LLM1: " . $geminiResponseText, 'gemini_error');
-        return ['error' => 'Невірна структура відповіді від ШІ маршрутизатора (відсутні або некоректні поля).'];
+        return ['error' => 'Невірна структура відповіді від ШІ маршрутизатора.'];
     }
 
     $validUsernames = [];
@@ -202,28 +217,14 @@ function determineRelevantData(string $userQuery): array {
                  }
              }
 
-            if ($foundCanonicalUsername) {
-                if (!in_array($foundCanonicalUsername, $validUsernames)) {
-                    $validUsernames[] = $foundCanonicalUsername;
-                }
-            } else {
-                 custom_log("LLM1 suggested username '{$requestedName}' not found in full users list.", 'gemini_route_warning');
+            if ($foundCanonicalUsername && !in_array($foundCanonicalUsername, $validUsernames)) {
+                $validUsernames[] = $foundCanonicalUsername;
             }
         }
          $geminiResponse['target_usernames'] = $validUsernames;
     } else {
         $geminiResponse['target_usernames'] = [];
     }
-
-     if (empty($geminiResponse['potential_data_sources']) && !empty($userQuery) && $geminiResponse['refined_query'] !== "Загальне привітання.") {
-         if (!in_array('none', $geminiResponse['potential_data_sources'])) {
-             $geminiResponse['potential_data_sources'] = ['none'];
-             if (empty($geminiResponse['refined_query']) || $geminiResponse['refined_query'] === $userQuery) {
-                 $geminiResponse['refined_query'] = "Не вдалося точно визначити, які дані вам потрібні. Спробуйте переформулювати запит.";
-             }
-             custom_log("LLM1 returned empty potential_data_sources for query '{$userQuery}', defaulting to 'none'.", 'gemini_route_warning');
-         }
-     }
 
     return [
         'potential_data_sources' => $geminiResponse['potential_data_sources'],
@@ -234,6 +235,10 @@ function determineRelevantData(string $userQuery): array {
 
 /**
  * Отримує остаточну відповідь від Gemini на основі уточненого запиту та даних контексту (LLM2).
+ *
+ * @param string $refinedQuery Уточнений запит від LLM1.
+ * @param string $contextDataJson JSON-рядок з усіма завантаженими даними.
+ * @return string|null Сгенерована відповідь або null у разі помилки.
  */
 function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string {
     $instructionTemplate = loadInstructionFromFile('get_answer_instruction');
@@ -242,15 +247,14 @@ function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string
     }
 
     $maxContextLength = 100000;
-    $contextDataJsonShortened = $contextDataJson;
     if (strlen($contextDataJson) > $maxContextLength) {
-        $contextDataJsonShortened = substr($contextDataJson, 0, $maxContextLength) . "\n... (дані обрізано через великий розмір)";
-        custom_log("Context data for LLM2 was too long (" . strlen($contextDataJson) . " bytes), shortened to {$maxContextLength}.", "gemini_warning");
+        $contextDataJson = substr($contextDataJson, 0, $maxContextLength) . "\n... (дані обрізано через великий розмір)";
+        custom_log("Context data for LLM2 was shortened to {$maxContextLength} bytes.", "gemini_warning");
     }
 
     $systemInstruction = sprintf(
         $instructionTemplate,
-        $contextDataJsonShortened,
+        $contextDataJson,
         htmlspecialchars($refinedQuery)
     );
 
@@ -258,17 +262,15 @@ function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string
         ['role' => 'user', 'parts' => [['text' => $systemInstruction]]]
     ];
 
-    custom_log("Request to LLM2:\n" . json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 'gemini_answer_request');
-
-    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash');
-
-    custom_log("Response from LLM2:\n" . ($geminiResponseText ?? 'NULL'), 'gemini_answer_response');
+    custom_log("Request to LLM2 (analyzer): " . json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 'gemini_answer_request');
+    $geminiResponseText = callGeminiApi($messages, 'gemini-1.5-flash-latest');
+    custom_log("Response from LLM2 (analyzer):\n" . ($geminiResponseText ?? 'NULL'), 'gemini_answer_response');
 
     if ($geminiResponseText === null) {
         return 'Вибачте, сталася помилка під час генерації відповіді від ШІ аналізатора (LLM2 API error).';
     }
 
-    $geminiResponseText = preg_replace('/^```(?:html)?\s*(.*?)\s*```$/s', '$1', $geminiResponseText);
+    $geminiResponseText = preg_replace('/^```(?:html|markdown)?\s*(.*?)\s*```$/s', '$1', $geminiResponseText);
     $geminiResponseText = trim($geminiResponseText);
 
     if (empty($geminiResponseText)) {
@@ -278,5 +280,4 @@ function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string
 
     return $geminiResponseText;
 }
-
 ?>
