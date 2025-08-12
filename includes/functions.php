@@ -478,3 +478,4 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
     }
 }
 
+?>
