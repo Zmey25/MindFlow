@@ -1,11 +1,6 @@
 <?php // includes/functions.php
 
-/**
- * Читає дані з JSON файлу.
- *
- * @param string $filePath Шлях до файлу.
- * @return array Повертає масив даних або порожній масив у разі помилки.
- */
+// ... (функції readJsonFile, writeJsonFile, generateUniqueId, getUserAnswersFilePath залишаються без змін) ...
 function readJsonFile(string $filePath): array {
     if (!file_exists($filePath)) {
         return [];
@@ -22,14 +17,6 @@ function readJsonFile(string $filePath): array {
     }
     return is_array($data) ? $data : [];
 }
-
-/**
- * Записує дані у JSON файл.
- *
- * @param string $filePath Шлях до файлу.
- * @param array $data Дані для запису.
- * @return bool Повертає true у разі успіху, false у разі помилки.
- */
 function writeJsonFile(string $filePath, array $data): bool {
     $jsonContent = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     if ($jsonContent === false) {
@@ -43,24 +30,18 @@ function writeJsonFile(string $filePath, array $data): bool {
              return false;
         }
     }
-
     if (file_put_contents($filePath, $jsonContent, LOCK_EX) === false) {
         error_log("Помилка запису у файл: " . $filePath);
         return false;
     }
     return true;
 }
-
-/**
- * Генерує унікальний ID.
- *
- * @param string $prefix Префікс для ID (необов'язково).
- * @return string Унікальний ID.
- */
 function generateUniqueId(string $prefix = 'user_'): string {
     return uniqid($prefix, true);
 }
-
+function getUserAnswersFilePath(string $username): string {
+    return ANSWERS_DIR_PATH . '/' . $username . '.json';
+}
 /**
  * Завантажує, перевіряє права доступу та стискає дані користувача для LLM.
  *
@@ -69,10 +50,12 @@ function generateUniqueId(string $prefix = 'user_'): string {
  * @return array Масив з результатом: ['success' => bool, 'message' => string, 'data' => array|null]
  */
 function loadAndSummarizeUserData(string $username, bool $isAdminRequest = false): array {
+    custom_log("Inside loadAndSummarizeUserData for '{$username}'. Admin: " . ($isAdminRequest ? 'Yes' : 'No'), 'telegram_debug');
+    
     $allUsers = readJsonFile(USERS_FILE_PATH);
     $targetUser = null;
     foreach ($allUsers as $user) {
-        if ($user['username'] === $username) {
+        if (isset($user['username']) && $user['username'] === $username) {
             $targetUser = $user;
             break;
         }
@@ -95,6 +78,7 @@ function loadAndSummarizeUserData(string $username, bool $isAdminRequest = false
     if (empty($fullUserData)) {
          return ['success' => false, 'message' => "Файл з даними для '{$username}' порожній або пошкоджений.", 'data' => null];
     }
+    custom_log("User data file read successfully for '{$username}'.", 'telegram_debug');
 
     $summarizedData = [];
     $summarizedData['username_queried'] = $username;
@@ -104,15 +88,15 @@ function loadAndSummarizeUserData(string $username, bool $isAdminRequest = false
     }
 
     if (!empty($fullUserData['others']) && is_array($fullUserData['others'])) {
+        custom_log("Found " . count($fullUserData['others']) . " entries in 'others' array for '{$username}'. Starting processing.", 'telegram_debug');
         $otherAnswersSum = [];
         $otherAnswersCount = [];
         $openQuestions = [];
         $evaluators = [];
 
         foreach ($fullUserData['others'] as $assessment) {
-            // КЛЮЧОВА ЗМІНА: перевіряємо, чи є $assessment масивом і чи є в ньому 'answers'
             if (!is_array($assessment) || empty($assessment['answers']) || !is_array($assessment['answers'])) {
-                custom_log("Пропущено пошкоджений або неповний запис в 'others' для користувача {$username}.", 'data_warning');
+                custom_log("Skipping malformed/incomplete entry in 'others' for user {$username}. Entry: " . json_encode($assessment), 'data_warning');
                 continue;
             }
             
@@ -154,6 +138,7 @@ function loadAndSummarizeUserData(string $username, bool $isAdminRequest = false
                 'open_questions' => $openQuestions
             ];
         }
+        custom_log("Finished processing 'others' array for '{$username}'.", 'telegram_debug');
     }
 
     if (!empty($fullUserData['achievements']) && is_array($fullUserData['achievements'])) {
@@ -169,15 +154,11 @@ function loadAndSummarizeUserData(string $username, bool $isAdminRequest = false
         $summarizedData['badges_summary'] = $fullUserData['badges_summary'];
     }
 
+    custom_log("Data summarization complete for '{$username}'.", 'telegram_debug');
     return ['success' => true, 'message' => 'Дані успішно завантажені та стиснуті.', 'data' => $summarizedData];
 }
 
-/**
- * Створює стислий переказ файлу користувачів для LLM.
- *
- * @param array $allUsersData Повний масив даних з users.json.
- * @return array Стислий масив даних.
- */
+// ... (решта функцій: summarizeUsersList, saveUserData, mergeUsers, custom_log) ...
 function summarizeUsersList(array $allUsersData): array {
     if (empty($allUsersData)) {
         return [];
@@ -191,16 +172,10 @@ function summarizeUsersList(array $allUsersData): array {
         ];
     }, $allUsersData);
 }
-
-/**
- * Об'єднує дані двох користувачів, переносячи дані sourceUser до targetUser.
- *
- * @param string $sourceUserId ID користувача-джерела (буде видалено).
- * @param string $targetUserId ID цільового користувача (залишиться).
- * @param string $priorityUserId ID користувача, чиї дані мають пріоритет при конфліктах.
- * @param string $defaultPassword Пароль за замовчуванням для цільового користувача.
- * @return array Масив з результатом: ['success' => bool, 'message' => string]
- */
+function saveUserData(string $username, array $data): bool {
+    $filePath = getUserAnswersFilePath($username);
+    return writeJsonFile($filePath, $data);
+}
 function mergeUsers(string $sourceUserId, string $targetUserId, string $priorityUserId, string $defaultPassword = 'qwerty'): array
 {
     if ($sourceUserId === $targetUserId) {
@@ -209,7 +184,6 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
     $allUsers = readJsonFile(USERS_FILE_PATH);
     $sourceUser = null; $targetUser = null;
     $sourceUserIndex = -1; $targetUserIndex = -1;
-
     foreach ($allUsers as $index => $user) {
         if ($user['id'] === $sourceUserId) {
             $sourceUser = $user;
@@ -220,46 +194,37 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
             $targetUserIndex = $index;
         }
     }
-
     if (!$sourceUser || !$targetUser) {
         return ['success' => false, 'message' => 'Один або обидва користувачі не знайдені.'];
     }
     if ($priorityUserId !== $sourceUserId && $priorityUserId !== $targetUserId) {
         return ['success' => false, 'message' => 'Невірний ID пріоритетного користувача.'];
     }
-
     $backupAllUsers = $allUsers;
     $sourceAnswersPath = getUserAnswersFilePath($sourceUser['username']);
     $targetAnswersPath = getUserAnswersFilePath($targetUser['username']);
-    
     $sourceAnswersData = file_exists($sourceAnswersPath) ? readJsonFile($sourceAnswersPath) : ['self' => null, 'others' => []];
     $targetAnswersData = file_exists($targetAnswersPath) ? readJsonFile($targetAnswersPath) : ['self' => null, 'others' => []];
     $backupTargetAnswersData = $targetAnswersData;
-
     try {
         $priorityUser = ($priorityUserId === $sourceUserId) ? $sourceUser : $targetUser;
         $nonPriorityUser = ($priorityUserId === $sourceUserId) ? $targetUser : $sourceUser;
         $priorityAnswers = ($priorityUserId === $sourceUserId) ? $sourceAnswersData : $targetAnswersData;
         $nonPriorityAnswers = ($priorityUserId === $sourceUserId) ? $targetAnswersData : $sourceAnswersData;
-
         $mergedUserData = $targetUser;
         $mergedUserData['first_name'] = !empty(trim($targetUser['first_name'] ?? '')) ? $targetUser['first_name'] : $sourceUser['first_name'] ?? '';
         $mergedUserData['last_name'] = !empty(trim($targetUser['last_name'] ?? '')) ? $targetUser['last_name'] : $sourceUser['last_name'] ?? '';
-
         $passwordHash = password_hash($defaultPassword, PASSWORD_DEFAULT);
         if (!$passwordHash) {
             throw new Exception("Помилка хешування пароля для користувача '{$targetUser['username']}'.");
         }
         $mergedUserData['password_hash'] = $passwordHash;
-
         $mergedAnswersData = ['self' => null, 'others' => []];
-
         if (!empty($priorityAnswers['self'])) {
             $mergedAnswersData['self'] = $priorityAnswers['self'];
         } elseif (!empty($nonPriorityAnswers['self'])) {
             $mergedAnswersData['self'] = $nonPriorityAnswers['self'];
         }
-
         $mergedAnswersData['others'] = $targetAnswersData['others'] ?? [];
         $existingRespondentIds = array_column($mergedAnswersData['others'], 'respondentUserId');
         foreach ($sourceAnswersData['others'] ?? [] as $sourceOtherAssessment) {
@@ -274,7 +239,6 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
         if (isset($priorityAnswers['expertAnalysis'])) {
              $mergedAnswersData['expertAnalysis'] = $priorityAnswers['expertAnalysis'];
         }
-
         $allAnswerFiles = glob(ANSWERS_DIR_PATH . '/*.json');
         foreach ($allAnswerFiles as $filePath) {
             if ($filePath === $sourceAnswersPath || $filePath === $targetAnswersPath) {
@@ -282,16 +246,13 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
             }
             $otherUsername = pathinfo(basename($filePath), PATHINFO_FILENAME);
             if (empty($otherUsername)) continue;
-
             $otherUserData = readJsonFile($filePath);
             $otherUserAnswersModified = false;
             $sourceAssessmentIndex = -1;
             $targetAssessmentIndex = -1;
-
             if (empty($otherUserData['others']) || !is_array($otherUserData['others'])) {
                 continue;
             }
-
             foreach ($otherUserData['others'] as $index => $assessment) {
                 if (($assessment['respondentUserId'] ?? null) === $sourceUserId) {
                     $sourceAssessmentIndex = $index;
@@ -300,7 +261,6 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
                     $targetAssessmentIndex = $index;
                 }
             }
-
             if ($sourceAssessmentIndex !== -1 && $targetAssessmentIndex !== -1) {
                 if ($priorityUserId === $targetUserId) {
                     array_splice($otherUserData['others'], $sourceAssessmentIndex, 1);
@@ -315,7 +275,6 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
                          $targetAssessmentIndex = $indices_to_process[0];
                          $sourceAssessmentIndex = $indices_to_process[1];
                     }
-
                     array_splice($otherUserData['others'], $targetAssessmentIndex, 1);
                     $otherUserData['others'][$sourceAssessmentIndex > $targetAssessmentIndex ? $sourceAssessmentIndex-1 : $sourceAssessmentIndex]['respondentUserId'] = $targetUserId;
                     $otherUserData['others'][$sourceAssessmentIndex > $targetAssessmentIndex ? $sourceAssessmentIndex-1 : $sourceAssessmentIndex]['respondentUsername'] = $targetUser['username'];
@@ -326,18 +285,15 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
                 $otherUserData['others'][$sourceAssessmentIndex]['respondentUsername'] = $targetUser['username'];
                 $otherUserAnswersModified = true;
             }
-
             if ($otherUserAnswersModified) {
                 if (!saveUserData($otherUsername, $otherUserData)) {
                     throw new Exception("Не вдалося оновити файл відповідей для користувача '{$otherUsername}'.");
                 }
             }
         }
-
         if (!saveUserData($targetUser['username'], $mergedAnswersData)) {
             throw new Exception("Не вдалося зберегти об'єднані відповіді для користувача '{$targetUser['username']}'.");
         }
-
         $adminsFilePath = DATA_DIR . '/admins.json';
         if (file_exists($adminsFilePath)) {
             $adminsData = readJsonFile($adminsFilePath);
@@ -345,7 +301,6 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
             if (isset($adminsData['admin_ids']) && is_array($adminsData['admin_ids'])) {
                 $isAdminSource = in_array($sourceUserId, $adminsData['admin_ids']);
                 $isAdminTarget = in_array($targetUserId, $adminsData['admin_ids']);
-
                 if ($isAdminSource && !$isAdminTarget) {
                     $adminsData['admin_ids'][] = $targetUserId;
                     $adminsModified = true;
@@ -362,26 +317,21 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
                 }
             }
         }
-        
         $allUsers[$targetUserIndex] = $mergedUserData;
         array_splice($allUsers, $sourceUserIndex, 1);
-
         if (!writeJsonFile(USERS_FILE_PATH, $allUsers)) {
             throw new Exception("Не вдалося оновити основний файл користувачів.");
         }
-
         if (file_exists($sourceAnswersPath)) {
             if (!unlink($sourceAnswersPath)) {
                 error_log("Не вдалося видалити файл відповідей джерела: " . $sourceAnswersPath);
             }
         }
-
         return [
             'success' => true,
             'message' => "Користувачі '{$sourceUser['username']}' та '{$targetUser['username']}' успішно об'єднані. "
                        . "Користувач '{$sourceUser['username']}' видалений. Пароль для '{$targetUser['username']}' скинуто до '{$defaultPassword}'."
         ];
-
     } catch (Exception $e) {
         writeJsonFile(USERS_FILE_PATH, $backupAllUsers);
         if (isset($backupTargetAnswersData)) {
@@ -390,18 +340,9 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
         return ['success' => false, 'message' => 'Помилка під час об\'єднання: ' . $e->getMessage() . ' Зміни частково або повністю скасовано.'];
     }
 }
-
-
 if (!defined('LOG_DIR')) {
     define('LOG_DIR', dirname(__DIR__) . '/logs');
 }
-
-/**
- * Записує повідомлення у спеціальний лог-файл.
- *
- * @param string $message Повідомлення для запису.
- * @param string $logFile Назва лог-файлу (без розширення).
- */
 function custom_log(string $message, string $logFile = 'app_debug'): void {
     if (!is_dir(LOG_DIR)) {
         @mkdir(LOG_DIR, 0775, true);
@@ -411,11 +352,8 @@ function custom_log(string $message, string $logFile = 'app_debug'): void {
         error_log("Original Message for {$logFile}.log: " . $message);
         return;
     }
-
     $timestamp = date('Y-m-d H:i:s');
     $logEntry = "[{$timestamp}] {$message}" . PHP_EOL;
-    
     @file_put_contents(LOG_DIR . '/' . $logFile . '.log', $logEntry, FILE_APPEND | LOCK_EX);
 }
-
 ?>
