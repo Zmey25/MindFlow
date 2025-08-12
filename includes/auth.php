@@ -2,8 +2,17 @@
 
 require_once __DIR__ . '/functions.php'; // Підключаємо наші функції
 
+if (!defined('ROOT_DIR')) {
+    define('ROOT_DIR', dirname(__DIR__));
+}
+if (!defined('DATA_DIR')) {
+    define('DATA_DIR', ROOT_DIR . '/data');
+}
+if (!defined('LOG_DIR')) {
+    define('LOG_DIR', ROOT_DIR . '/logs');
+}
 if (!defined('USERS_FILE_PATH')) {
-    const USERS_FILE_PATH = __DIR__ . '/../data/users.json'; // Шлях до файлу користувачів
+    define('USERS_FILE_PATH', DATA_DIR . '/users.json');
 }
 
 
