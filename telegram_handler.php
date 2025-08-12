@@ -151,11 +151,15 @@ if (isset($update['message'])) {
             } elseif (empty($contextData) && !in_array('none', $potentialDataSources)) {
                 $responseText = "Не вдалося завантажити необхідні дані для відповіді. Можливо, вони відсутні.";
             } else {
-                $contextDataJson = json_encode($contextData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                // Створюємо компактний JSON для API
+                $contextDataJsonForApi = json_encode($contextData, JSON_UNESCAPED_UNICODE);
+                
                 if (json_last_error() !== JSON_ERROR_NONE) {
                      $responseText = "Внутрішня помилка: не вдалося підготувати дані для аналізу.";
                 } else {
-                    $finalAnswer = getGeminiAnswer($refinedQuery, $contextDataJson);
+                    // Викликаємо LLM2 з компактним JSON
+                    $finalAnswer = getGeminiAnswer($refinedQuery, $contextDataJsonForApi);
+                    
                     if ($finalAnswer) {
                         $responseText = $finalAnswer;
                         if (!empty($partialDataWarnings)) {
