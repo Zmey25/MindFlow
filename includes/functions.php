@@ -1,6 +1,5 @@
 <?php // includes/functions.php
 
-// ... (функції readJsonFile, writeJsonFile, generateUniqueId, getUserAnswersFilePath залишаються без змін) ...
 function readJsonFile(string $filePath): array {
     if (!file_exists($filePath)) {
         return [];
@@ -38,9 +37,6 @@ function writeJsonFile(string $filePath, array $data): bool {
 }
 function generateUniqueId(string $prefix = 'user_'): string {
     return uniqid($prefix, true);
-}
-function getUserAnswersFilePath(string $username): string {
-    return ANSWERS_DIR_PATH . '/' . $username . '.json';
 }
 /**
  * Завантажує, перевіряє права доступу та стискає дані користувача для LLM.
@@ -158,7 +154,6 @@ function loadAndSummarizeUserData(string $username, bool $isAdminRequest = false
     return ['success' => true, 'message' => 'Дані успішно завантажені та стиснуті.', 'data' => $summarizedData];
 }
 
-// ... (решта функцій: summarizeUsersList, saveUserData, mergeUsers, custom_log) ...
 function summarizeUsersList(array $allUsersData): array {
     if (empty($allUsersData)) {
         return [];
@@ -172,10 +167,7 @@ function summarizeUsersList(array $allUsersData): array {
         ];
     }, $allUsersData);
 }
-function saveUserData(string $username, array $data): bool {
-    $filePath = getUserAnswersFilePath($username);
-    return writeJsonFile($filePath, $data);
-}
+
 function mergeUsers(string $sourceUserId, string $targetUserId, string $priorityUserId, string $defaultPassword = 'qwerty'): array
 {
     if ($sourceUserId === $targetUserId) {
