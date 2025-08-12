@@ -192,18 +192,6 @@ function summarizeUsersList(array $allUsersData): array {
 }
 
 /**
- * Зберігає дані користувача у відповідний JSON файл.
- *
- * @param string $username Ім'я користувача.
- * @param array $data Дані для запису.
- * @return bool
- */
-function saveUserData(string $username, array $data): bool {
-    $filePath = getUserAnswersFilePath($username);
-    return writeJsonFile($filePath, $data);
-}
-
-/**
  * Об'єднує дані двох користувачів, переносячи дані sourceUser до targetUser.
  *
  * @param string $sourceUserId ID користувача-джерела (буде видалено).
