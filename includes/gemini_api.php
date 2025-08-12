@@ -49,7 +49,7 @@ function loadInstructionFromFile(string $instructionFileName): string|false {
  * @param string $model Модель для використання.
  * @return string|null Відповідь від API або null у разі помилки.
  */
-function callGeminiApi(array $messages, string $model = 'gemini-1.5-flash-latest'): ?string {
+function callGeminiApi(array $messages, string $model = 'gemini-2.5-flash'): ?string {
     $apiKey = getenv('GEMINI_API_KEY');
     if (!$apiKey) {
         custom_log('GEMINI_API_KEY не встановлено в файлі .env. Неможливо викликати Gemini API.', 'gemini_error');
@@ -175,7 +175,7 @@ function determineRelevantData(string $userQuery): array {
     ];
 
     custom_log("Request to LLM1 (router): " . json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 'gemini_route_request');
-    $geminiResponseText = callGeminiApi($messages, 'gemini-1.5-flash-latest');
+    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash');
     custom_log("Response from LLM1 (router):\n" . ($geminiResponseText ?? 'NULL'), 'gemini_route_response');
 
     if ($geminiResponseText === null) {
@@ -263,7 +263,7 @@ function getGeminiAnswer(string $refinedQuery, string $contextDataJson): ?string
     ];
 
     custom_log("Request to LLM2 (analyzer): " . json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), 'gemini_answer_request');
-    $geminiResponseText = callGeminiApi($messages, 'gemini-1.5-flash-latest');
+    $geminiResponseText = callGeminiApi($messages, 'gemini-2.5-flash');
     custom_log("Response from LLM2 (analyzer):\n" . ($geminiResponseText ?? 'NULL'), 'gemini_answer_response');
 
     if ($geminiResponseText === null) {
