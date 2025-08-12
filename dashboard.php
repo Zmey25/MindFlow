@@ -1,5 +1,7 @@
 <?php // dashboard.php
-
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 // Найперше - перевіряємо, чи користувач залогінений
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/questionnaire_logic.php';
