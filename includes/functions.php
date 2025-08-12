@@ -1,22 +1,5 @@
 <?php // includes/functions.php
 
-if (!defined('ROOT_DIR')) {
-    define('ROOT_DIR', dirname(__DIR__));
-}
-if (!defined('DATA_DIR')) {
-    define('DATA_DIR', ROOT_DIR . '/data');
-}
-if (!defined('LOG_DIR')) {
-    define('LOG_DIR', ROOT_DIR . '/logs');
-}
-if (!defined('USERS_FILE_PATH')) {
-    define('USERS_FILE_PATH', DATA_DIR . '/users.json');
-}
-if (!defined('ANSWERS_DIR_PATH')) {
-     define('ANSWERS_DIR_PATH', DATA_DIR . '/answers');
-}
-
-
 /**
  * Читає дані з JSON файлу.
  *
@@ -32,12 +15,11 @@ function readJsonFile(string $filePath): array {
         error_log("Помилка читання файлу: " . $filePath);
         return [];
     }
-    $data = json_decode($jsonContent, true); // true для асоціативного масиву
+    $data = json_decode($jsonContent, true);
     if (json_last_error() !== JSON_ERROR_NONE) {
         error_log("Помилка декодування JSON з файлу: " . $filePath . " - " . json_last_error_msg());
-        return []; // Повертаємо порожній масив у разі помилки
+        return [];
     }
-    // Переконуємося, що повертаємо масив
     return is_array($data) ? $data : [];
 }
 
@@ -54,7 +36,6 @@ function writeJsonFile(string $filePath, array $data): bool {
         error_log("Помилка кодування JSON для файлу: " . $filePath . " - " . json_last_error_msg());
         return false;
     }
-    // Переконуємося, що директорія існує
     $dir = dirname($filePath);
     if (!is_dir($dir)) {
         if (!mkdir($dir, 0775, true)) {
@@ -63,7 +44,7 @@ function writeJsonFile(string $filePath, array $data): bool {
         }
     }
 
-    if (file_put_contents($filePath, $jsonContent, LOCK_EX) === false) { // LOCK_EX для запобігання конфліктам запису
+    if (file_put_contents($filePath, $jsonContent, LOCK_EX) === false) {
         error_log("Помилка запису у файл: " . $filePath);
         return false;
     }
@@ -77,21 +58,160 @@ function writeJsonFile(string $filePath, array $data): bool {
  * @return string Унікальний ID.
  */
 function generateUniqueId(string $prefix = 'user_'): string {
-    return uniqid($prefix, true); // Використовуємо more_entropy для кращої унікальності
+    return uniqid($prefix, true);
 }
 
 /**
- * Зберігає дані користувача у файл.
+ * Отримує шлях до файлу відповідей користувача.
  *
- * @param string $username
- * @param array $data
+ * @param string $username Ім'я користувача.
+ * @return string Шлях до файлу.
+ */
+function getUserAnswersFilePath(string $username): string {
+    return ANSWERS_DIR_PATH . '/' . $username . '.json';
+}
+
+/**
+ * Завантажує, перевіряє права доступу та стискає дані користувача для LLM.
+ *
+ * @param string $username Ім'я користувача для завантаження.
+ * @param bool $isAdminRequest Чи є запит від адміністратора.
+ * @return array Масив з результатом: ['success' => bool, 'message' => string, 'data' => array|null]
+ */
+function loadAndSummarizeUserData(string $username, bool $isAdminRequest = false): array {
+    $allUsers = readJsonFile(USERS_FILE_PATH);
+    $targetUser = null;
+    foreach ($allUsers as $user) {
+        if ($user['username'] === $username) {
+            $targetUser = $user;
+            break;
+        }
+    }
+
+    if (!$targetUser) {
+        return ['success' => false, 'message' => "Користувач '{$username}' не знайдений у системі.", 'data' => null];
+    }
+
+    if (isset($targetUser['hide_results']) && $targetUser['hide_results'] === true && !$isAdminRequest) {
+        return ['success' => false, 'message' => "Результати користувача '{$username}' приховані.", 'data' => null];
+    }
+
+    $filePath = getUserAnswersFilePath($username);
+    if (!file_exists($filePath)) {
+        return ['success' => false, 'message' => "Файл з даними для '{$username}' не знайдено.", 'data' => null];
+    }
+
+    $fullUserData = readJsonFile($filePath);
+    if (empty($fullUserData)) {
+         return ['success' => false, 'message' => "Файл з даними для '{$username}' порожній або пошкоджений.", 'data' => null];
+    }
+
+    $summarizedData = [];
+    $summarizedData['username_queried'] = $username;
+
+    if (isset($fullUserData['self']['answers'])) {
+        $summarizedData['self_answers'] = $fullUserData['self']['answers'];
+    }
+
+    if (!empty($fullUserData['others']) && is_array($fullUserData['others'])) {
+        $otherAnswersSum = [];
+        $otherAnswersCount = [];
+        $openQuestions = [];
+        $evaluators = [];
+
+        foreach ($fullUserData['others'] as $assessment) {
+            if (empty($assessment['answers'])) continue;
+            
+            // Рахуємо унікальних оцінювачів
+            if (isset($assessment['respondentUserId']) && !in_array($assessment['respondentUserId'], $evaluators)) {
+                $evaluators[] = $assessment['respondentUserId'];
+            }
+
+            foreach ($assessment['answers'] as $questionId => $value) {
+                // Обробка числових відповідей
+                if (str_starts_with($questionId, 'q_') || $questionId === 'fin_literacy') {
+                    if (!isset($otherAnswersSum[$questionId])) {
+                        $otherAnswersSum[$questionId] = 0;
+                        $otherAnswersCount[$questionId] = 0;
+                    }
+                    if (is_numeric($value)) {
+                       $otherAnswersSum[$questionId] += (float)$value;
+                       $otherAnswersCount[$questionId]++;
+                    }
+                } 
+                // Обробка текстових (відкритих) відповідей
+                elseif (str_starts_with($questionId, 'open_q_')) {
+                     if (!empty(trim((string)$value))) {
+                        $respondent = $assessment['respondentUsername'] ?? 'анонім';
+                        $openQuestions[$questionId][] = "Від {$respondent}: " . trim((string)$value);
+                    }
+                }
+            }
+        }
+
+        $averagedAnswers = [];
+        foreach ($otherAnswersSum as $questionId => $sum) {
+            if ($otherAnswersCount[$questionId] > 0) {
+                $averagedAnswers[$questionId] = round($sum / $otherAnswersCount[$questionId], 2);
+            }
+        }
+        
+        if (count($evaluators) > 0) {
+            $summarizedData['other_answers_summary'] = [
+                'evaluators_count' => count($evaluators),
+                'average_scores' => $averagedAnswers,
+                'open_questions' => $openQuestions
+            ];
+        }
+    }
+
+    if (!empty($fullUserData['achievements']) && is_array($fullUserData['achievements'])) {
+        $summarizedData['achievements'] = array_map(function($ach) {
+            return [
+                'name' => $ach['name'] ?? 'N/A',
+                'description' => $ach['description'] ?? 'N/A'
+            ];
+        }, $fullUserData['achievements']);
+    }
+
+    if (isset($fullUserData['badges_summary'])) {
+        $summarizedData['badges_summary'] = $fullUserData['badges_summary'];
+    }
+
+    return ['success' => true, 'message' => 'Дані успішно завантажені та стиснуті.', 'data' => $summarizedData];
+}
+
+/**
+ * Створює стислий переказ файлу користувачів для LLM.
+ *
+ * @param array $allUsersData Повний масив даних з users.json.
+ * @return array Стислий масив даних.
+ */
+function summarizeUsersList(array $allUsersData): array {
+    if (empty($allUsersData)) {
+        return [];
+    }
+    return array_map(function($user) {
+        return [
+            'username' => $user['username'] ?? 'N/A',
+            'first_name' => $user['first_name'] ?? '',
+            'last_name' => $user['last_name'] ?? '',
+            'hide_results' => $user['hide_results'] ?? false,
+        ];
+    }, $allUsersData);
+}
+
+/**
+ * Зберігає дані користувача у відповідний JSON файл.
+ *
+ * @param string $username Ім'я користувача.
+ * @param array $data Дані для запису.
  * @return bool
  */
 function saveUserData(string $username, array $data): bool {
     $filePath = getUserAnswersFilePath($username);
     return writeJsonFile($filePath, $data);
 }
-
 
 /**
  * Об'єднує дані двох користувачів, переносячи дані sourceUser до targetUser.
@@ -132,6 +252,8 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
     $backupAllUsers = $allUsers;
     $sourceAnswersPath = getUserAnswersFilePath($sourceUser['username']);
     $targetAnswersPath = getUserAnswersFilePath($targetUser['username']);
+    
+    // Використовуємо readJsonFile замість loadUserData, щоб отримати сирі дані без обробки
     $sourceAnswersData = file_exists($sourceAnswersPath) ? readJsonFile($sourceAnswersPath) : ['self' => null, 'others' => []];
     $targetAnswersData = file_exists($targetAnswersPath) ? readJsonFile($targetAnswersPath) : ['self' => null, 'others' => []];
     $backupTargetAnswersData = $targetAnswersData;
@@ -188,29 +310,39 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
             $sourceAssessmentIndex = -1;
             $targetAssessmentIndex = -1;
 
-            foreach ($otherUserData['others'] ?? [] as $index => $assessment) {
-                if ($assessment['respondentUserId'] === $sourceUserId) $sourceAssessmentIndex = $index;
-                if ($assessment['respondentUserId'] === $targetUserId) $targetAssessmentIndex = $index;
+            if (empty($otherUserData['others']) || !is_array($otherUserData['others'])) {
+                continue;
+            }
+
+            foreach ($otherUserData['others'] as $index => $assessment) {
+                if (($assessment['respondentUserId'] ?? null) === $sourceUserId) {
+                    $sourceAssessmentIndex = $index;
+                }
+                if (($assessment['respondentUserId'] ?? null) === $targetUserId) {
+                    $targetAssessmentIndex = $index;
+                }
             }
 
             if ($sourceAssessmentIndex !== -1 && $targetAssessmentIndex !== -1) {
                 if ($priorityUserId === $targetUserId) {
                     array_splice($otherUserData['others'], $sourceAssessmentIndex, 1);
+                    $otherUserAnswersModified = true;
                 } else {
-                    $targetIndexToDelete = $targetAssessmentIndex > $sourceAssessmentIndex ? $targetAssessmentIndex : $sourceAssessmentIndex;
-                    $sourceIndexToUpdate = $targetAssessmentIndex < $sourceAssessmentIndex ? $targetAssessmentIndex : $sourceAssessmentIndex;
-                    if ($targetAssessmentIndex > $sourceAssessmentIndex) {
-                        array_splice($otherUserData['others'], $targetIndexToDelete, 1);
+                    $indices_to_process = [$sourceAssessmentIndex, $targetAssessmentIndex];
+                    rsort($indices_to_process);
+                    if ($otherUserData['others'][$indices_to_process[1]]['respondentUserId'] === $targetUserId) {
+                         $targetAssessmentIndex = $indices_to_process[1];
+                         $sourceAssessmentIndex = $indices_to_process[0];
                     } else {
-                        array_splice($otherUserData['others'], $targetIndexToDelete, 1);
-                        $sourceIndexToUpdate--;
+                         $targetAssessmentIndex = $indices_to_process[0];
+                         $sourceAssessmentIndex = $indices_to_process[1];
                     }
-                    if (isset($otherUserData['others'][$sourceIndexToUpdate])) {
-                        $otherUserData['others'][$sourceIndexToUpdate]['respondentUserId'] = $targetUserId;
-                        $otherUserData['others'][$sourceIndexToUpdate]['respondentUsername'] = $targetUser['username'];
-                    }
+
+                    array_splice($otherUserData['others'], $targetAssessmentIndex, 1);
+                    $otherUserData['others'][$sourceAssessmentIndex > $targetAssessmentIndex ? $sourceAssessmentIndex-1 : $sourceAssessmentIndex]['respondentUserId'] = $targetUserId;
+                    $otherUserData['others'][$sourceAssessmentIndex > $targetAssessmentIndex ? $sourceAssessmentIndex-1 : $sourceAssessmentIndex]['respondentUsername'] = $targetUser['username'];
+                    $otherUserAnswersModified = true;
                 }
-                $otherUserAnswersModified = true;
             } elseif ($sourceAssessmentIndex !== -1) {
                 $otherUserData['others'][$sourceAssessmentIndex]['respondentUserId'] = $targetUserId;
                 $otherUserData['others'][$sourceAssessmentIndex]['respondentUsername'] = $targetUser['username'];
@@ -229,29 +361,33 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
         }
 
         $adminsFilePath = DATA_DIR . '/admins.json';
-        $adminsData = readJsonFile($adminsFilePath);
-        $adminsModified = false;
-        if (isset($adminsData['admin_ids']) && is_array($adminsData['admin_ids'])) {
-            $isAdminSource = in_array($sourceUserId, $adminsData['admin_ids']);
-            $isAdminTarget = in_array($targetUserId, $adminsData['admin_ids']);
-            if ($isAdminSource && !$isAdminTarget) {
-                $adminsData['admin_ids'][] = $targetUserId;
-                $adminsModified = true;
-            }
-            $sourceAdminKey = array_search($sourceUserId, $adminsData['admin_ids']);
-            if ($sourceAdminKey !== false) {
-                array_splice($adminsData['admin_ids'], $sourceAdminKey, 1);
-                $adminsModified = true;
-            }
-        }
-        if ($adminsModified) {
-            if (!writeJsonFile($adminsFilePath, $adminsData)) {
-                 throw new Exception("Не вдалося оновити список адміністраторів.");
-            }
-        }
+        if (file_exists($adminsFilePath)) {
+            $adminsData = readJsonFile($adminsFilePath);
+            $adminsModified = false;
+            if (isset($adminsData['admin_ids']) && is_array($adminsData['admin_ids'])) {
+                $isAdminSource = in_array($sourceUserId, $adminsData['admin_ids']);
+                $isAdminTarget = in_array($targetUserId, $adminsData['admin_ids']);
 
+                if ($isAdminSource && !$isAdminTarget) {
+                    $adminsData['admin_ids'][] = $targetUserId;
+                    $adminsModified = true;
+                }
+                $sourceAdminKey = array_search($sourceUserId, $adminsData['admin_ids']);
+                if ($sourceAdminKey !== false) {
+                    array_splice($adminsData['admin_ids'], $sourceAdminKey, 1);
+                    $adminsModified = true;
+                }
+            }
+            if ($adminsModified) {
+                if (!writeJsonFile($adminsFilePath, $adminsData)) {
+                     throw new Exception("Не вдалося оновити список адміністраторів.");
+                }
+            }
+        }
+        
         $allUsers[$targetUserIndex] = $mergedUserData;
         array_splice($allUsers, $sourceUserIndex, 1);
+
         if (!writeJsonFile(USERS_FILE_PATH, $allUsers)) {
             throw new Exception("Не вдалося оновити основний файл користувачів.");
         }
@@ -278,139 +414,8 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
 }
 
 
-/**
- * Завантажує та перевіряє доступ до даних користувача.
- *
- * @param string $username Ім'я користувача для завантаження.
- * @param bool $isAdminRequest Чи є запит від адміністратора.
- * @return array ['success' => bool, 'message' => string, 'data' => array]
- */
-function loadUserData(string $username, bool $isAdminRequest = false): array {
-    $allUsers = readJsonFile(USERS_FILE_PATH);
-    $targetUser = null;
-    foreach ($allUsers as $user) {
-        if (isset($user['username']) && strcasecmp($user['username'], $username) === 0) {
-            $targetUser = $user;
-            break;
-        }
-    }
-
-    if (!$targetUser) {
-        return ['success' => false, 'message' => 'Користувач не знайдений.', 'data' => []];
-    }
-
-    if (isset($targetUser['hide_results']) && $targetUser['hide_results'] === true && !$isAdminRequest) {
-        return ['success' => false, 'message' => 'Результати цього користувача приватні.', 'data' => []];
-    }
-
-    $filePath = getUserAnswersFilePath($username);
-    if (!file_exists($filePath)) {
-        return ['success' => false, 'message' => 'Файл з відповідями користувача не знайдено.', 'data' => []];
-    }
-
-    $userData = readJsonFile($filePath);
-    if (empty($userData)) {
-        return ['success' => false, 'message' => 'Файл з відповідями порожній або пошкоджений.', 'data' => []];
-    }
-
-    $userData['username_queried'] = $username;
-
-    return ['success' => true, 'message' => 'Дані успішно завантажено.', 'data' => $userData];
-}
-
-/**
- * Створює стислий виклад даних користувача для передачі в LLM.
- *
- * @param array $fullUserData Повний масив даних з файлу відповідей користувача.
- * @return array Стислий масив даних.
- */
-function summarizeUserData(array $fullUserData): array {
-    $summary = [];
-
-    if (isset($fullUserData['self'])) {
-        $summary['self'] = $fullUserData['self'];
-    }
-
-    if (!empty($fullUserData['others']) && is_array($fullUserData['others'])) {
-        $aggregatedScores = [];
-        $openQuestions = [];
-        $respondentUserIds = [];
-
-        foreach ($fullUserData['others'] as $assessment) {
-            if (!isset($assessment['answers']) || !is_array($assessment['answers'])) {
-                continue;
-            }
-            if (isset($assessment['respondentUserId']) && !in_array($assessment['respondentUserId'], $respondentUserIds)) {
-                $respondentUserIds[] = $assessment['respondentUserId'];
-            }
-
-            foreach ($assessment['answers'] as $key => $value) {
-                if (str_starts_with($key, 'q_') || $key === 'fin_literacy') {
-                     if (is_numeric($value)) {
-                        $aggregatedScores[$key][] = (float)$value;
-                    }
-                }
-                elseif (str_starts_with($key, 'open_q_') && !empty(trim((string)$value))) {
-                    $openQuestions[$key][] = (string)$value;
-                }
-            }
-        }
-
-        $averageScores = [];
-        foreach ($aggregatedScores as $key => $scores) {
-            if(count($scores) > 0) {
-                 $averageScores[$key] = round(array_sum($scores) / count($scores), 2);
-            }
-        }
-
-        $summary['other_answers_summary'] = [
-            'evaluator_count' => count($respondentUserIds),
-            'average_scores' => $averageScores,
-            'open_questions' => $openQuestions
-        ];
-    }
-
-    if (!empty($fullUserData['achievements']) && is_array($fullUserData['achievements'])) {
-        $summary['achievements'] = [];
-        foreach ($fullUserData['achievements'] as $achievement) {
-            if (isset($achievement['name']) && isset($achievement['description'])) {
-                $summary['achievements'][] = [
-                    'name' => $achievement['name'],
-                    'description' => $achievement['description']
-                ];
-            }
-        }
-    }
-    
-    if (isset($fullUserData['badges_summary'])) {
-        $summary['badges_summary'] = $fullUserData['badges_summary'];
-    }
-    
-    if(isset($fullUserData['username_queried'])) {
-        $summary['username_queried'] = $fullUserData['username_queried'];
-    }
-
-    return $summary;
-}
-
-
-/**
- * Створює стислий виклад списку всіх користувачів.
- *
- * @param array $allUsers Повний масив користувачів з users.json.
- * @return array Стислий масив користувачів.
- */
-function summarizeUsersList(array $allUsers): array {
-    $summaryList = [];
-    foreach ($allUsers as $user) {
-        $summaryList[] = [
-            'username' => $user['username'] ?? 'N/A',
-            'first_name' => $user['first_name'] ?? '',
-            'last_name' => $user['last_name'] ?? '',
-            'hide_results' => $user['hide_results'] ?? false
-        ];
-    }
-    return $summaryList;
+if (!defined('LOG_DIR')) {
+    define('LOG_DIR', dirname(__DIR__) . '/logs');
 }
 
 /**
