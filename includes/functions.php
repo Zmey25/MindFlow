@@ -110,15 +110,17 @@ function loadAndSummarizeUserData(string $username, bool $isAdminRequest = false
         $evaluators = [];
 
         foreach ($fullUserData['others'] as $assessment) {
-            if (empty($assessment['answers'])) continue;
+            // КЛЮЧОВА ЗМІНА: перевіряємо, чи є $assessment масивом і чи є в ньому 'answers'
+            if (!is_array($assessment) || empty($assessment['answers']) || !is_array($assessment['answers'])) {
+                custom_log("Пропущено пошкоджений або неповний запис в 'others' для користувача {$username}.", 'data_warning');
+                continue;
+            }
             
-            // Рахуємо унікальних оцінювачів
             if (isset($assessment['respondentUserId']) && !in_array($assessment['respondentUserId'], $evaluators)) {
                 $evaluators[] = $assessment['respondentUserId'];
             }
 
             foreach ($assessment['answers'] as $questionId => $value) {
-                // Обробка числових відповідей
                 if (str_starts_with($questionId, 'q_') || $questionId === 'fin_literacy') {
                     if (!isset($otherAnswersSum[$questionId])) {
                         $otherAnswersSum[$questionId] = 0;
@@ -129,7 +131,6 @@ function loadAndSummarizeUserData(string $username, bool $isAdminRequest = false
                        $otherAnswersCount[$questionId]++;
                     }
                 } 
-                // Обробка текстових (відкритих) відповідей
                 elseif (str_starts_with($questionId, 'open_q_')) {
                      if (!empty(trim((string)$value))) {
                         $respondent = $assessment['respondentUsername'] ?? 'анонім';
@@ -231,7 +232,6 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
     $sourceAnswersPath = getUserAnswersFilePath($sourceUser['username']);
     $targetAnswersPath = getUserAnswersFilePath($targetUser['username']);
     
-    // Використовуємо readJsonFile замість loadUserData, щоб отримати сирі дані без обробки
     $sourceAnswersData = file_exists($sourceAnswersPath) ? readJsonFile($sourceAnswersPath) : ['self' => null, 'others' => []];
     $targetAnswersData = file_exists($targetAnswersPath) ? readJsonFile($targetAnswersPath) : ['self' => null, 'others' => []];
     $backupTargetAnswersData = $targetAnswersData;
