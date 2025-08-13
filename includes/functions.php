@@ -35,9 +35,17 @@ function writeJsonFile(string $filePath, array $data): bool {
     }
     return true;
 }
-if (!defined('ANSWERS_DIR_PATH')) {
-    define('ANSWERS_DIR_PATH', '/path/to/your/answers');
+
+if (!defined('ROOT_DIR')) {
+    define('ROOT_DIR', __DIR__);
 }
+if (!defined('DATA_DIR')) {
+    define('DATA_DIR', ROOT_DIR . '/data');
+}
+if (!defined('ANSWERS_DIR_PATH')) {
+    define('ANSWERS_DIR_PATH', DATA_DIR . '/answers');
+}
+
 function getUserAnswersFilePath_for_this_file(string $username): string {
     return ANSWERS_DIR_PATH . '/' . $username . '.json';
 }
