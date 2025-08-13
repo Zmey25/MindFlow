@@ -35,6 +35,21 @@ function writeJsonFile(string $filePath, array $data): bool {
     }
     return true;
 }
+if (!defined('ANSWERS_DIR_PATH')) {
+    define('ANSWERS_DIR_PATH', '/path/to/your/answers');
+}
+
+if (!function_exists('getUserAnswersFilePath')) {
+    function getUserAnswersFilePath(string $username): string {
+        return ANSWERS_DIR_PATH . '/' . $username . '.json';
+    }
+}
+if (!function_exists('saveUserData')) {
+    function saveUserData(string $username, array $data): bool {
+        $filePath = getUserAnswersFilePath($username);
+        return writeJsonFile($filePath, $data);
+    }
+}
 function generateUniqueId(string $prefix = 'user_'): string {
     return uniqid($prefix, true);
 }
@@ -348,4 +363,5 @@ function custom_log(string $message, string $logFile = 'app_debug'): void {
     $logEntry = "[{$timestamp}] {$message}" . PHP_EOL;
     @file_put_contents(LOG_DIR . '/' . $logFile . '.log', $logEntry, FILE_APPEND | LOCK_EX);
 }
+
 ?>
