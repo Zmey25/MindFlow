@@ -35,7 +35,9 @@ function writeJsonFile(string $filePath, array $data): bool {
     }
     return true;
 }
-
+if (!defined('ROOT_DIR')) {
+    define('ROOT_DIR', dirname(__DIR__)); 
+}
 if (!defined('DATA_DIR')) {
     define('DATA_DIR', ROOT_DIR . '/data');
 }
