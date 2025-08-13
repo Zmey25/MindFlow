@@ -4,7 +4,16 @@ require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/auth.php'; // Needed for findUserById to get usernames
 
 const QUESTIONS_FILE_PATH = __DIR__ . '/../data/questions.json';
-const ANSWERS_DIR_PATH = __DIR__ . '/../data/answers'; // New directory path
+
+if (!defined('ROOT_DIR')) {
+    define('ROOT_DIR', __DIR__); // Приклад, якщо ROOT_DIR не визначено
+}
+if (!defined('DATA_DIR')) {
+    define('DATA_DIR', ROOT_DIR . '/data');
+}
+if (!defined('ANSWERS_DIR_PATH')) {
+    define('ANSWERS_DIR_PATH', DATA_DIR . '/answers');
+}
 
 /**
  * Ensures the answers directory exists.
