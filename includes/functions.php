@@ -46,11 +46,11 @@ if (!defined('ANSWERS_DIR_PATH')) {
     define('ANSWERS_DIR_PATH', DATA_DIR . '/answers');
 }
 
-function getUserAnswersFilePath_for_this_file(string $username): string {
+function getUserAnswersFilePath(string $username): string {
     return ANSWERS_DIR_PATH . '/' . $username . '.json';
 }
-function saveUserData_for_this_file(string $username, array $data): bool {
-    $filePath = getUserAnswersFilePath_for_this_file($username);
+function saveUserData(string $username, array $data): bool {
+    $filePath = getUserAnswersFilePath($username);
     return writeJsonFile($filePath, $data);
 }
 function generateUniqueId(string $prefix = 'user_'): string {
@@ -83,7 +83,7 @@ function loadAndSummarizeUserData(string $username, bool $isAdminRequest = false
         return ['success' => false, 'message' => "Результати користувача '{$username}' приховані.", 'data' => null];
     }
 
-    $filePath = getUserAnswersFilePath_for_this_file($username);
+    $filePath = getUserAnswersFilePath($username);
     if (!file_exists($filePath)) {
         return ['success' => false, 'message' => "Файл з даними для '{$username}' не знайдено.", 'data' => null];
     }
@@ -211,8 +211,8 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
         return ['success' => false, 'message' => 'Невірний ID пріоритетного користувача.'];
     }
     $backupAllUsers = $allUsers;
-    $sourceAnswersPath = getUserAnswersFilePath_for_this_file($sourceUser['username']);
-    $targetAnswersPath = getUserAnswersFilePath_for_this_file($targetUser['username']);
+    $sourceAnswersPath = getUserAnswersFilePath($sourceUser['username']);
+    $targetAnswersPath = getUserAnswersFilePath($targetUser['username']);
     $sourceAnswersData = file_exists($sourceAnswersPath) ? readJsonFile($sourceAnswersPath) : ['self' => null, 'others' => []];
     $targetAnswersData = file_exists($targetAnswersPath) ? readJsonFile($targetAnswersPath) : ['self' => null, 'others' => []];
     $backupTargetAnswersData = $targetAnswersData;
@@ -296,12 +296,12 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
                 $otherUserAnswersModified = true;
             }
             if ($otherUserAnswersModified) {
-                if (!saveUserData_for_this_file($otherUsername, $otherUserData)) {
+                if (!saveUserData($otherUsername, $otherUserData)) {
                     throw new Exception("Не вдалося оновити файл відповідей для користувача '{$otherUsername}'.");
                 }
             }
         }
-        if (!saveUserData_for_this_file($targetUser['username'], $mergedAnswersData)) {
+        if (!saveUserData($targetUser['username'], $mergedAnswersData)) {
             throw new Exception("Не вдалося зберегти об'єднані відповіді для користувача '{$targetUser['username']}'.");
         }
         $adminsFilePath = DATA_DIR . '/admins.json';
@@ -345,7 +345,7 @@ function mergeUsers(string $sourceUserId, string $targetUserId, string $priority
     } catch (Exception $e) {
         writeJsonFile(USERS_FILE_PATH, $backupAllUsers);
         if (isset($backupTargetAnswersData)) {
-             saveUserData_for_this_file($targetUser['username'], $backupTargetAnswersData);
+             saveUserData($targetUser['username'], $backupTargetAnswersData);
         }
         return ['success' => false, 'message' => 'Помилка під час об\'єднання: ' . $e->getMessage() . ' Зміни частково або повністю скасовано.'];
     }
