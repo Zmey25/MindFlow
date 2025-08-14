@@ -98,6 +98,54 @@ if (!empty($badgeDefinitions)) {
         #participation-note { font-size: 0.85em; text-align: center; color: #777; margin-top: 20px; }
         #participation-note a { color: #3498db; text-decoration: none; }
         #participation-note a:hover { text-decoration: underline; }
+
+        /* === НОВИЙ КОД: ЦЕНТРУВАННЯ КИЦЬКИ === */
+        .cat-container {
+            text-align: center;
+            margin-top: 25px;
+        }
+        .cat-container img {
+            max-width: 100%; /* Забезпечує адаптивність зображення */
+            height: auto;
+        }
+
+        /* === НОВИЙ КОД: АДАПТИВНІСТЬ ДЛЯ МОБІЛЬНИХ ПРИСТРОЇВ === */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                padding: 10px;
+                margin: 10px 0;
+            }
+            h1 {
+                font-size: 1.6em;
+            }
+
+            /* Адаптуємо блок керування */
+            .controls-container {
+                flex-direction: column; /* Елементи один під одним */
+                align-items: stretch; /* Елементи на всю ширину */
+                gap: 10px;
+            }
+            .comparison-controls {
+                flex-wrap: wrap; /* Дозволяємо перенос, якщо потрібно */
+            }
+            .comparison-controls input[type="search"] {
+                min-width: 150px; /* Зменшуємо мінімальну ширину пошуку */
+            }
+
+            /* Адаптуємо таблицю */
+            th, td {
+                padding: 8px 5px; /* Зменшуємо відступи в комірках */
+                font-size: 0.9em; /* Трохи зменшуємо шрифт для компактності */
+            }
+            th.user-col {
+                min-width: 150px; /* Зменшуємо мінімальну ширину колонки користувача */
+            }
+            th.badge-col {
+                height: 150px; /* Трохи зменшуємо висоту заголовків */
+                min-width: 40px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -108,7 +156,6 @@ if (!empty($badgeDefinitions)) {
             <div class="view-toggle">
                 <button id="default-view-btn" class="btn btn-secondary active">Загальний рейтинг</button>
                 <button id="comparison-view-btn" class="btn btn-secondary">Порівняння</button>
-                <img src="assets/images/cat_ratings.png" width="250" alt="Кицька">
             </div>
             <div id="comparison-controls-container" class="comparison-controls" style="display: none;">
                 <div style="flex-grow:1; position:relative;">
@@ -140,6 +187,11 @@ if (!empty($badgeDefinitions)) {
         <div id="pagination-container" class="pagination"></div>
         <p id="info-text-container" class="info-text"></p>
         <p id="participation-note" style="display: none;">Щоб потрапити до загального рейтингу, <a href="profile.php">встановіть відповідну позначку</a> у своєму профілі.</p>
+        
+        <!-- === ЗМІНЕНО: Додано контейнер для кицьки === -->
+        <div class="cat-container">
+            <img src="assets/images/cat_ratings.png" width="250" alt="Кицька">
+        </div>
     </div>
 
     <?php include __DIR__ . '/includes/footer.php'; ?>
