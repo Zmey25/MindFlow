@@ -41,6 +41,9 @@ if (!defined('ROOT_DIR')) {
 if (!defined('DATA_DIR')) {
     define('DATA_DIR', ROOT_DIR . '/data');
 }
+if (!defined('USERS_FILE_PATH')) {
+    define('USERS_FILE_PATH', DATA_DIR . '/users.json');
+}
 if (!defined('ANSWERS_DIR_PATH')) {
     define('ANSWERS_DIR_PATH', DATA_DIR . '/answers');
 }
@@ -364,6 +367,74 @@ function custom_log(string $message, string $logFile = 'app_debug'): void {
     $timestamp = date('Y-m-d H:i:s');
     $logEntry = "[{$timestamp}] {$message}" . PHP_EOL;
     @file_put_contents(LOG_DIR . '/' . $logFile . '.log', $logEntry, FILE_APPEND | LOCK_EX);
+}
+
+/**
+ * Генерує файл з даними для сторінки рейтингів.
+ * Збирає бали по бейджам для всіх користувачів, а також їх імена.
+ * @return array Масив з результатом: ['success' => bool, 'message' => string]
+ */
+function generateRatingsData(): array {
+    $allUsers = readJsonFile(USERS_FILE_PATH);
+    if (empty($allUsers)) {
+        return ['success' => false, 'message' => 'Файл users.json не знайдено або порожній.'];
+    }
+
+    $allBadgeIds = [];
+    $answerFiles = glob(ANSWERS_DIR_PATH . '/*.json');
+    if ($answerFiles === false) {
+        return ['success' => false, 'message' => 'Не вдалося прочитати директорію з відповідями.'];
+    }
+
+    foreach ($answerFiles as $file) {
+        $profileData = readJsonFile($file);
+        if (isset($profileData['badges_summary']) && is_array($profileData['badges_summary'])) {
+            foreach ($profileData['badges_summary'] as $badge) {
+                if (isset($badge['badgeId']) && !in_array($badge['badgeId'], $allBadgeIds)) {
+                    $allBadgeIds[] = $badge['badgeId'];
+                }
+            }
+        }
+    }
+    sort($allBadgeIds);
+
+    $ratingsData = [];
+    foreach ($allUsers as $user) {
+        if (!isset($user['id'], $user['username'])) {
+            continue; 
+        }
+
+        $userRating = [
+            'userId' => $user['id'],
+            'username' => $user['username'],
+            'firstName' => $user['first_name'] ?? '',
+            'lastName' => $user['last_name'] ?? '',
+            'participateInRatings' => $user['participate_in_ratings'] ?? false
+        ];
+        
+        $userBadgeScores = array_fill_keys($allBadgeIds, 0);
+
+        $profilePath = getUserAnswersFilePath_fake($user['username']);
+        if (file_exists($profilePath)) {
+            $profileData = readJsonFile($profilePath);
+            if (isset($profileData['badges_summary']) && is_array($profileData['badges_summary'])) {
+                foreach ($profileData['badges_summary'] as $badge) {
+                    if (isset($badge['badgeId'], $badge['score']) && isset($userBadgeScores[$badge['badgeId']])) {
+                        $userBadgeScores[$badge['badgeId']] = $badge['score'];
+                    }
+                }
+            }
+        }
+        
+        $ratingsData[] = array_merge($userRating, $userBadgeScores);
+    }
+    
+    $outputFilePath = DATA_DIR . '/ratings_summary.json';
+    if (writeJsonFile($outputFilePath, $ratingsData)) {
+        return ['success' => true, 'message' => 'Файл рейтингів ratings_summary.json успішно оновлено. Оброблено ' . count($ratingsData) . ' користувачів.'];
+    } else {
+        return ['success' => false, 'message' => 'Не вдалося записати фінальний файл рейтингів.'];
+    }
 }
 
 ?>
