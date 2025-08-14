@@ -33,9 +33,10 @@ if (!empty($allRatingsData)) {
 $badgeHeaders = [];
 if (!empty($badgeDefinitions)) {
     foreach ($badgeDefinitions as $badge) {
+        // Виправлено: використовуємо 'badgeName'
         $badgeHeaders[] = [
             'id' => $badge['badgeId'],
-            'name' => $badge['badgeName'],
+            'name' => $badge['badgeName'], 
             'description' => $badge['badgeDescription']
         ];
     }
@@ -71,20 +72,21 @@ if (!empty($badgeDefinitions)) {
 
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
-        th, td { border: 1px solid #e0e0e0; padding: 10px; text-align: left; vertical-align: middle; white-space: nowrap; }
+        th, td { border: 1px solid #e0e0e0; padding: 10px; text-align: left; vertical-align: middle; }
         th { background-color: #f0f2f5; font-weight: bold; color: #555; position: sticky; top: 0; z-index: 1; }
         th.sortable { cursor: pointer; user-select: none; }
         th.sortable:hover { background-color: #e4e7eb; }
         th .sort-icon { margin-left: 5px; color: #999; display: inline-block; width: 1em; }
-        th.user-col { min-width: 250px; width: 30%; } /* Increased width for user column */
-        th.badge-col { height: 180px; text-align: center; vertical-align: bottom; padding: 10px 4px; min-width: 45px; } /* Vertical header styles */
+        th.user-col { min-width: 250px; width: 30%; }
+        td.user-col-data { max-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* Ellipsis for long names */
+        th.badge-col { height: 180px; text-align: center; vertical-align: bottom; padding: 10px 4px; min-width: 45px; }
         th.badge-col > div { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; }
-        td.badge-data { text-align: center; } /* Center align badge numbers */
+        td.badge-data { text-align: center; }
         
         tbody tr:nth-child(even) { background-color: #f9f9f9; }
         tbody tr:hover { background-color: #f1f1f1; }
         
-        .hidden-score { color: #95a5a6; font-style: italic; }
+        .hidden-score { font-style: normal; cursor: help; } /* Style for hidden icon */
         .pagination { text-align: center; margin: 25px 0; }
         .pagination button { background-color: white; border: 1px solid #ddd; color: #3498db; }
         .pagination button:hover { background-color: #f0f2f5; }
@@ -93,6 +95,9 @@ if (!empty($badgeDefinitions)) {
         
         .info-text { text-align: center; font-size: 0.9em; color: #6c757d; margin-top: 10px; }
         #no-data-message { text-align: center; padding: 20px; font-size: 1.1em; color: #777; }
+        #participation-note { font-size: 0.85em; text-align: center; color: #777; margin-top: 20px; }
+        #participation-note a { color: #3498db; text-decoration: none; }
+        #participation-note a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -133,6 +138,7 @@ if (!empty($badgeDefinitions)) {
         <div id="no-data-message" style="display: none;">Немає даних для відображення.</div>
         <div id="pagination-container" class="pagination"></div>
         <p id="info-text-container" class="info-text"></p>
+        <p id="participation-note" style="display: none;">Щоб потрапити до загального рейтингу, <a href="profile.php">встановіть відповідну позначку</a> у своєму профілі.</p>
     </div>
 
     <?php include __DIR__ . '/includes/footer.php'; ?>
@@ -164,6 +170,7 @@ if (!empty($badgeDefinitions)) {
         const paginationContainer = document.getElementById('pagination-container');
         const noDataMessage = document.getElementById('no-data-message');
         const infoTextContainer = document.getElementById('info-text-container');
+        const participationNote = document.getElementById('participation-note');
         
         // --- INITIALIZATION ---
         function init() {
@@ -188,6 +195,7 @@ if (!empty($badgeDefinitions)) {
             defaultViewBtn.classList.add('active');
             comparisonViewBtn.classList.remove('active');
             comparisonControls.style.display = 'none';
+            participationNote.style.display = 'block';
             currentPage = 1;
             render();
         }
@@ -197,6 +205,7 @@ if (!empty($badgeDefinitions)) {
             comparisonViewBtn.classList.add('active');
             defaultViewBtn.classList.remove('active');
             comparisonControls.style.display = 'flex';
+            participationNote.style.display = 'none';
             currentPage = 1;
             render();
         }
@@ -252,12 +261,14 @@ if (!empty($badgeDefinitions)) {
                 const row = document.createElement('tr');
                 const displayName = (user.firstName || user.lastName) ? `${user.firstName} ${user.lastName} (${user.username})` : user.username;
                 
-                let userCellHTML = `<td class="user-col">${escapeHtml(displayName)}</td>`;
+                let userCellHTML = `<td class="user-col-data" title="${escapeHtml(displayName)}">${escapeHtml(displayName)}</td>`;
                 
                 let badgesCellHTML = badgeHeaders.map(badge => {
                     const score = user[badge.id];
                     const showHidden = !user.participateInRatings && !isAdmin && isComparisonMode;
-                    const cellContent = showHidden ? `<span class="hidden-score">Приховано</span>` : (score !== undefined ? score : '0');
+                    const cellContent = showHidden 
+                        ? `<span class="hidden-score" title="Приховано">👁️‍🗨️</span>` 
+                        : (score !== undefined ? score : '0');
                     return `<td class="badge-data">${cellContent}</td>`;
                 }).join('');
 
