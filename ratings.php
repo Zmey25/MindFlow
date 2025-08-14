@@ -227,6 +227,23 @@ if (!empty($badgeDefinitions)) {
         
         // --- INITIALIZATION ---
         function init() {
+
+            // === НОВИЙ БЛОК: Зчитування параметрів сортування з URL ===
+            const urlParams = new URLSearchParams(window.location.search);
+            const sortKeyFromUrl = urlParams.get('sort_key');
+            const sortDirFromUrl = urlParams.get('sort_dir');
+    
+            if (sortKeyFromUrl) {
+                // Перевіряємо, чи існує такий ключ для сортування
+                const isValidKey = badgeHeaders.some(h => h.id === sortKeyFromUrl) || sortKeyFromUrl === 'username';
+                if (isValidKey) {
+                    sortState.key = sortKeyFromUrl;
+                    // Встановлюємо напрямок, за замовчуванням 'desc' для рейтингів
+                    sortState.direction = (sortDirFromUrl === 'asc') ? 'asc' : 'desc';
+                }
+            }
+            // === КІНЕЦЬ НОВОГО БЛОКУ ===
+                
             defaultViewBtn.addEventListener('click', switchToDefaultMode);
             comparisonViewBtn.addEventListener('click', switchToComparisonMode);
             userSearchInput.addEventListener('input', handleSearchInput);
