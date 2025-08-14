@@ -56,6 +56,9 @@ include __DIR__ . '/includes/header.php';
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; }
         .container { max-width: 960px; margin: 20px auto; padding: 20px; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px; }
         h1 { color: #2c3e50; margin-bottom: 20px; text-align: center; }
+        .ratings-link { text-align: center; margin-bottom: 25px; padding: 12px; background-color: #eaf2f8; border-radius: 5px; }
+        .ratings-link a { font-weight: bold; text-decoration: none; color: #2980b9; }
+        .ratings-link a:hover { text-decoration: underline; }
         .search-form { display: flex; align-items: center; margin-bottom: 25px; gap: 8px; flex-wrap: wrap; }
         .search-form label { font-weight: bold; margin-right: 4px; white-space: nowrap; }
         .search-form input[type="search"] { flex-grow: 1; padding: 9px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95em; min-width: 140px; }
@@ -86,6 +89,11 @@ include __DIR__ . '/includes/header.php';
 <body>
     <div class="container">
         <h1>Список користувачів</h1>
+
+        <div class="ratings-link">
+            Переглянути <a href="ratings.php">рейтинг користувачів</a> за результатами тестів.
+        </div>
+
         <form action="users.php" method="GET" class="search-form">
              <label for="search_query">Пошук:</label>
              <input type="search" id="search_query" name="search_query" value="<?php echo htmlspecialchars($searchQuery); ?>" placeholder="Логін, ім'я або прізвище...">
