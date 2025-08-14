@@ -49,13 +49,17 @@ if (!empty($badgeDefinitions)) {
     <title><?php echo $pageTitle; ?></title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f7f6; color: #333; }
-        .container { max-width: 1200px; margin: 20px auto; padding: 20px; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px; }
+        .container { max-width: 95%; margin: 20px auto; padding: 20px; background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px; }
         h1 { color: #2c3e50; margin-bottom: 20px; text-align: center; }
         
         .controls-container { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 6px; }
         .view-toggle { display: flex; gap: 5px; }
-        .comparison-controls { display: flex; gap: 10px; align-items: center; flex-grow: 1; }
-        .comparison-controls input[type="search"] { padding: 9px; border: 1px solid #ddd; border-radius: 4px; flex-grow: 1; min-width: 200px; }
+        .comparison-controls { display: flex; gap: 10px; align-items: center; flex-grow: 1; position: relative; }
+        .comparison-controls input[type="search"] { padding: 9px; border: 1px solid #ddd; border-radius: 4px; flex-grow: 1; min-width: 250px; }
+        #search-suggestions { position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid #ccc; border-top: none; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: none; }
+        .suggestion-item { padding: 10px; cursor: pointer; }
+        .suggestion-item:hover { background-color: #f0f2f5; }
+        .suggestion-item strong { color: #3498db; }
 
         .btn { padding: 9px 13px; border: 1px solid transparent; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 0.9em; transition: all 0.2s ease; display: inline-block; text-align: center; white-space: nowrap; }
         .btn-primary { background-color: #3498db; color: white; border-color: #3498db; }
@@ -66,15 +70,16 @@ if (!empty($badgeDefinitions)) {
         .btn-danger:hover { background-color: #c0392b; border-color: #c0392b; }
 
         .table-responsive { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
         th, td { border: 1px solid #e0e0e0; padding: 10px; text-align: left; vertical-align: middle; white-space: nowrap; }
         th { background-color: #f0f2f5; font-weight: bold; color: #555; position: sticky; top: 0; z-index: 1; }
         th.sortable { cursor: pointer; user-select: none; }
         th.sortable:hover { background-color: #e4e7eb; }
         th .sort-icon { margin-left: 5px; color: #999; display: inline-block; width: 1em; }
-        th .sort-icon.asc { content: '▲'; }
-        th .sort-icon.desc { content: '▼'; }
-        th.user-col { min-width: 150px; }
+        th.user-col { min-width: 250px; width: 30%; } /* Increased width for user column */
+        th.badge-col { height: 180px; text-align: center; vertical-align: bottom; padding: 10px 4px; min-width: 45px; } /* Vertical header styles */
+        th.badge-col > div { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; }
+        td.badge-data { text-align: center; } /* Center align badge numbers */
         
         tbody tr:nth-child(even) { background-color: #f9f9f9; }
         tbody tr:hover { background-color: #f1f1f1; }
@@ -100,8 +105,10 @@ if (!empty($badgeDefinitions)) {
                 <button id="comparison-view-btn" class="btn btn-secondary">Порівняння</button>
             </div>
             <div id="comparison-controls-container" class="comparison-controls" style="display: none;">
-                <input type="search" id="user-search-input" placeholder="Почніть вводити логін, ім'я...">
-                <button id="add-user-btn" class="btn btn-primary">Додати</button>
+                <div style="flex-grow:1; position:relative;">
+                    <input type="search" id="user-search-input" placeholder="Введіть 3+ символи для пошуку...">
+                    <div id="search-suggestions"></div>
+                </div>
                 <button id="clear-list-btn" class="btn btn-danger">Скинути список</button>
             </div>
         </div>
@@ -110,17 +117,16 @@ if (!empty($badgeDefinitions)) {
             <table>
                 <thead id="ratings-table-head">
                     <tr>
-                        <th class="sortable user-col" data-sort-key="username" title="Сортувати за логіном">Користувач <span class="sort-icon"></span></th>
+                        <th class="sortable user-col" data-sort-key="username" title="Сортувати за логіном">Користувач <span class="sort-icon">▲</span></th>
                         <?php foreach ($badgeHeaders as $badge): ?>
-                            <th class="sortable" data-sort-key="<?php echo htmlspecialchars($badge['id']); ?>" title="<?php echo htmlspecialchars($badge['description']); ?>">
-                                <?php echo htmlspecialchars($badge['name']); ?>
+                            <th class="sortable badge-col" data-sort-key="<?php echo htmlspecialchars($badge['id']); ?>" title="<?php echo htmlspecialchars($badge['badgeName']) . '&#10;---&#10;' . htmlspecialchars($badge['description']); ?>">
+                                <div><?php echo htmlspecialchars($badge['badgeName']); ?></div>
                                 <span class="sort-icon"></span>
                             </th>
                         <?php endforeach; ?>
                     </tr>
                 </thead>
                 <tbody id="ratings-table-body">
-                    <!-- Рядки будуть вставлені за допомогою JavaScript -->
                 </tbody>
             </table>
         </div>
@@ -136,7 +142,6 @@ if (!empty($badgeDefinitions)) {
         // --- DATA FROM PHP ---
         const allRatingsData = <?php echo json_encode($allRatingsData ?? []); ?>;
         const badgeHeaders = <?php echo json_encode($badgeHeaders ?? []); ?>;
-        const usersForSearch = <?php echo json_encode($usersForSearch ?? []); ?>;
         const isAdmin = <?php echo json_encode($isAdmin ?? false); ?>;
 
         // --- STATE ---
@@ -152,7 +157,7 @@ if (!empty($badgeDefinitions)) {
         const comparisonViewBtn = document.getElementById('comparison-view-btn');
         const comparisonControls = document.getElementById('comparison-controls-container');
         const userSearchInput = document.getElementById('user-search-input');
-        const addUserBtn = document.getElementById('add-user-btn');
+        const searchSuggestions = document.getElementById('search-suggestions');
         const clearListBtn = document.getElementById('clear-list-btn');
         const tableHead = document.getElementById('ratings-table-head');
         const tableBody = document.getElementById('ratings-table-body');
@@ -162,17 +167,14 @@ if (!empty($badgeDefinitions)) {
         
         // --- INITIALIZATION ---
         function init() {
-            // Attach event listeners
             defaultViewBtn.addEventListener('click', switchToDefaultMode);
             comparisonViewBtn.addEventListener('click', switchToComparisonMode);
-            addUserBtn.addEventListener('click', addUserToComparison);
-            userSearchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') addUserToComparison();
-            });
+            userSearchInput.addEventListener('input', handleSearchInput);
+            userSearchInput.addEventListener('blur', () => setTimeout(() => searchSuggestions.style.display = 'none', 150));
+            searchSuggestions.addEventListener('click', handleSuggestionClick);
             clearListBtn.addEventListener('click', clearComparisonList);
             tableHead.addEventListener('click', handleSort);
 
-            // Initial view setup
             if (comparisonList.length > 0) {
                 switchToComparisonMode();
             } else {
@@ -213,14 +215,12 @@ if (!empty($badgeDefinitions)) {
                 let valA = a[sortState.key];
                 let valB = b[sortState.key];
                 
-                // For user names, use case-insensitive string comparison
                 if (sortState.key === 'username') {
-                    valA = (a.firstName || a.lastName) ? `${a.firstName} ${a.lastName}`.trim() : a.username;
-                    valB = (b.firstName || b.lastName) ? `${b.firstName} ${b.lastName}`.trim() : b.username;
+                    valA = `${a.firstName} ${a.lastName} ${a.username}`.trim();
+                    valB = `${b.firstName} ${b.lastName} ${b.username}`.trim();
                     return sortState.direction === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
                 }
 
-                // For numeric badge scores
                 const scoreA = Number(valA) || 0;
                 const scoreB = Number(valB) || 0;
                 
@@ -252,13 +252,13 @@ if (!empty($badgeDefinitions)) {
                 const row = document.createElement('tr');
                 const displayName = (user.firstName || user.lastName) ? `${user.firstName} ${user.lastName} (${user.username})` : user.username;
                 
-                let userCellHTML = `<td>${escapeHtml(displayName)}</td>`;
+                let userCellHTML = `<td class="user-col">${escapeHtml(displayName)}</td>`;
                 
                 let badgesCellHTML = badgeHeaders.map(badge => {
                     const score = user[badge.id];
                     const showHidden = !user.participateInRatings && !isAdmin && isComparisonMode;
                     const cellContent = showHidden ? `<span class="hidden-score">Приховано</span>` : (score !== undefined ? score : '0');
-                    return `<td>${cellContent}</td>`;
+                    return `<td class="badge-data">${cellContent}</td>`;
                 }).join('');
 
                 row.innerHTML = userCellHTML + badgesCellHTML;
@@ -294,6 +294,50 @@ if (!empty($badgeDefinitions)) {
         }
 
         // --- EVENT HANDLERS ---
+        function handleSearchInput() {
+            const query = userSearchInput.value.toLowerCase().trim();
+            if (query.length < 3) {
+                searchSuggestions.style.display = 'none';
+                return;
+            }
+            
+            const matches = allRatingsData.filter(user => {
+                const fullName = `${user.firstName} ${user.lastName} ${user.username}`.toLowerCase();
+                return fullName.includes(query);
+            }).slice(0, 3);
+            
+            if (matches.length > 0) {
+                searchSuggestions.innerHTML = matches.map(user => {
+                    const displayName = (user.firstName || user.lastName) ? `${user.firstName} ${user.lastName} (<strong>${user.username}</strong>)` : `<strong>${user.username}</strong>`;
+                    return `<div class="suggestion-item" data-userid="${user.userId}">${displayName}</div>`;
+                }).join('');
+                searchSuggestions.style.display = 'block';
+            } else {
+                searchSuggestions.style.display = 'none';
+            }
+        }
+
+        function handleSuggestionClick(event) {
+            const item = event.target.closest('.suggestion-item');
+            if (!item) return;
+            
+            const userId = item.dataset.userid;
+            addUserToComparison(userId);
+            
+            userSearchInput.value = '';
+            searchSuggestions.style.display = 'none';
+        }
+        
+        function addUserToComparison(userId) {
+            if (!comparisonList.includes(userId)) {
+                comparisonList.push(userId);
+                sessionStorage.setItem('comparisonList', JSON.stringify(comparisonList));
+                render();
+            } else {
+                alert('Цей користувач вже у списку.');
+            }
+        }
+
         function handleSort(event) {
             const header = event.target.closest('th.sortable');
             if (!header) return;
@@ -303,33 +347,10 @@ if (!empty($badgeDefinitions)) {
                 sortState.direction = sortState.direction === 'asc' ? 'desc' : 'asc';
             } else {
                 sortState.key = sortKey;
-                sortState.direction = 'desc'; // Default to descending for scores, asc for names
-                if (sortKey === 'username') sortState.direction = 'asc';
+                sortState.direction = (sortKey === 'username') ? 'asc' : 'desc';
             }
+            currentPage = 1;
             render();
-        }
-
-        function addUserToComparison() {
-            const query = userSearchInput.value.trim().toLowerCase();
-            if (!query) return;
-
-            const userFound = allRatingsData.find(u => 
-                u.username.toLowerCase() === query ||
-                `${u.firstName} ${u.lastName}`.toLowerCase().includes(query)
-            );
-
-            if (userFound) {
-                if (!comparisonList.includes(userFound.userId)) {
-                    comparisonList.push(userFound.userId);
-                    sessionStorage.setItem('comparisonList', JSON.stringify(comparisonList));
-                    userSearchInput.value = '';
-                    render();
-                } else {
-                    alert('Цей користувач вже у списку.');
-                }
-            } else {
-                alert('Користувача не знайдено.');
-            }
         }
 
         function clearComparisonList() {
@@ -340,9 +361,7 @@ if (!empty($badgeDefinitions)) {
 
         // --- UTILITIES ---
         function updateSortIcons() {
-            document.querySelectorAll('th.sortable .sort-icon').forEach(icon => {
-                icon.textContent = '';
-            });
+            document.querySelectorAll('th.sortable .sort-icon').forEach(icon => { icon.textContent = ''; });
             const activeHeader = document.querySelector(`th[data-sort-key="${sortState.key}"] .sort-icon`);
             if (activeHeader) {
                 activeHeader.textContent = sortState.direction === 'asc' ? '▲' : '▼';
@@ -350,12 +369,7 @@ if (!empty($badgeDefinitions)) {
         }
         
         function escapeHtml(unsafe) {
-            return unsafe
-                 .replace(/&/g, "&amp;")
-                 .replace(/</g, "&lt;")
-                 .replace(/>/g, "&gt;")
-                 .replace(/"/g, "&quot;")
-                 .replace(/'/g, "&#039;");
+            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
         // --- START THE APP ---
