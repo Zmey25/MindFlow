@@ -37,8 +37,8 @@ $currentUser['last_name'] = $currentUser['last_name'] ?? '';
 $currentUser['email'] = $currentUser['email'] ?? '';
 $currentUser['custom_question'] = $currentUser['custom_question'] ?? '';
 $currentUser['hide_results'] = $currentUser['hide_results'] ?? true;
-$currentUser['hide_test_link'] = $currentUser['hide_test_link'] ?? false; // Нове поле
-$currentUser['participate_in_ratings'] = $currentUser['participate_in_ratings'] ?? true; // Нове поле
+$currentUser['hide_test_link'] = $currentUser['hide_test_link'] ?? true; 
+$currentUser['participate_in_ratings'] = $currentUser['participate_in_ratings'] ?? false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_profile'])) {
