@@ -139,6 +139,7 @@ if (!empty($badgeDefinitions)) {
         <div id="pagination-container" class="pagination"></div>
         <p id="info-text-container" class="info-text"></p>
         <p id="participation-note" style="display: none;">Щоб потрапити до загального рейтингу, <a href="profile.php">встановіть відповідну позначку</a> у своєму профілі.</p>
+        <img src="assets/images/cat_ratings.png" width="250" alt="Кицька"><br>
     </div>
 
     <?php include __DIR__ . '/includes/footer.php'; ?>
