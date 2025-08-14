@@ -120,7 +120,7 @@ if (!empty($badgeDefinitions)) {
                         <th class="sortable user-col" data-sort-key="username" title="Сортувати за логіном">Користувач <span class="sort-icon">▲</span></th>
                         <?php foreach ($badgeHeaders as $badge): ?>
                             <th class="sortable badge-col" data-sort-key="<?php echo htmlspecialchars($badge['id']); ?>" title="<?php echo htmlspecialchars($badge['badgeName']) . '&#10;---&#10;' . htmlspecialchars($badge['description']); ?>">
-                                <div><?php echo htmlspecialchars($badge['badgeName']); ?></div>
+                                <div><?php echo htmlspecialchars($badge['name']); ?></div>
                                 <span class="sort-icon"></span>
                             </th>
                         <?php endforeach; ?>
